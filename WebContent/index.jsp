@@ -24,6 +24,7 @@
 		<br/><br/>
 		
 		<input class="button" type="submit" value="submit">
+		<input class="button" type="reset" value="reset">
 	
 	</form>
 </body>

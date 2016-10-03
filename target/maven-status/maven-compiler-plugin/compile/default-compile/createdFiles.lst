@@ -1,0 +1,4 @@
+domain\metier\Contact.class
+domain\services\ContactService.class
+domain\dao\ContactDAO.class
+servlets\LoginServlet.class

@@ -1,0 +1,15 @@
+api\musixMatch\MainTest.class
+nosql\NoSQLDB.class
+utils\textMining\ParserTest.class
+api\musixMatch\utils\Constant.class
+api\musixMatch\MainWithJMusixMatch.class
+daemon\DaemonMain.class
+api\musixMatch\requete\Requete.class
+nosql\mongo\MongoService.class
+sql\mysql\MySQLService.class
+sql\SQLDB.class
+server\services\MuzikFinderService.class
+server\servlets\LoginServlet.class
+api\API.class
+api\musixMatch\utils\Fichier.class
+server\metier\Music.class

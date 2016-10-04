@@ -1,3 +1,6 @@
 /build/
 /bin/
 /.settings/
+/target/
+*.class
+!DaemonMain.class

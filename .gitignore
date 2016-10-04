@@ -1,5 +1,4 @@
 /build/
 /bin/
 /.settings/
-!DaemonMain.class
 target/**/pom.properties

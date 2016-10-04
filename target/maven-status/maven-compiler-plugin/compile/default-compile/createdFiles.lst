@@ -8,6 +8,7 @@ api\musixMatch\requete\Requete.class
 nosql\mongo\MongoService.class
 sql\mysql\MySQLService.class
 sql\SQLDB.class
+daemon\DaemonWorker.class
 server\services\MuzikFinderService.class
 server\servlets\LoginServlet.class
 api\API.class

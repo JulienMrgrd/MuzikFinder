@@ -2,6 +2,12 @@ package server.services;
 
 import java.util.List;
 
+import org.jmusixmatch.entity.track.Track;
+
+import api.API;
+import nosql.NoSQLDB;
+import sql.SQLDB;
+
 /**
  * Aucun appel direct aux BD ou Api ici !!
  * @author JulienM
@@ -9,22 +15,14 @@ import java.util.List;
  */
 public class MuzikFinderService {
 	
-	//private NoSQLDB nosql; singleton !
-	//private SQLDB sql; singleton !
-	//private APIService api; singleton !
+	private NoSQLDB nosql;
+	private SQLDB sql;
+	private API api;
 	
 	public MuzikFinderService(){
-		/*
-		 nosql = new NoSQLDB(); (va instancier ou récupérer le singleton du NoSQL, Mongo ou autre) 
-		 sql = new SQLDB(); (va instancier ou récupérer le singleton du SQL, MySQL ou autre) 
-		 api = new APIService(); (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
-		 */
-	}
-	
-	public void insertNewLyricsProcess(int nbLyrics){
-		/**
-		 * TODO: utiliser les fonctions private (en suivant le diag de séquence)
-		 */
+		 nosql = new NoSQLDB(); // (va instancier ou récupérer le singleton du NoSQL, Mongo ou autre) 
+		 sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL ou autre) 
+		 api = new API(); // (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
 	}
 	
 	private List<String> getRandomArtistsFromAPI(){
@@ -37,9 +35,8 @@ public class MuzikFinderService {
 		return true;
 	}
 	
-	private List<String> getMusicsFromAPI(String artist /* artistID?? */){
-		//TODO : api.getBLABBLA
-		return null;
+	public List<Track> getTracksFromAPI(int nbTracksToGet){
+		return api.getTracks(nbTracksToGet);
 	}
 	
 	private List<String> getTopMusicsFromAPI(int from, int to){

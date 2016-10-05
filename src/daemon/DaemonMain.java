@@ -2,40 +2,29 @@ package daemon;
 
 import java.io.IOException;
 
+import server.services.MuzikFinderService;
+
 /**
  * ATTENTION : Renommer cette classe ou le package doit entraîner une modification de la tâche "SCHEDULER" sur Heroku
  * @author JulienM
  * Cette classe s'occupe du remplissage de la base NOSQL avec les données de l'API de musiques.
  */
 public class DaemonMain {
-
-	public static void main(String[] args) throws IOException {
-		new DaemonWorker().process();
-//		//15445219
-//		List<String> listArtiste;
-//
-//		//On recupere les 5 meilleurs artiste aux US
-//		listArtiste=Requete.getChartArtist();
-//		List<String> listAlbum;
-//		List<String> listIdTrack;
-//
-//		//for(int i=0; i<listArtiste.size();i++){
-//		for(int i=0; i<2;i++){ //Pour tester et pas niquer tous le quota
-//			System.out.println("Artiste n°"+i+" = "+listArtiste.get(i));
-//
-//			//On recupere les 3 albums les plus recents de chaque artiste
-//			listAlbum=Requete.getAlbum(listArtiste.get(i));
-//
-//			for(int j=0;j<listAlbum.size();j++){
-//
-//				//recupere les id de chaque musique de l'album
-//				listIdTrack=Requete.getTrackAlbum(listAlbum.get(j));
-//
-//				//recupere les paroles de la 1ere musique de l'album
-//				Requete.getTrackLyric(listIdTrack.get(0));
-//			}
-//
-//		}
+	
+	private static final int NB_TRACKS_PROCESS = 20;
+	private MuzikFinderService service;
+	
+	public DaemonMain() {
+		service = new MuzikFinderService();
+	}
+	
+	public void process() {
+		System.out.println("===========> Daemon de remplissage de Mongo <============");
+		service.getTracksFromAPI(NB_TRACKS_PROCESS);
+		System.out.println("=========> Fin du daemon de remplissage de Mongo <==========");
 	}
 
+	public static void main(String[] args) throws IOException {
+		new DaemonMain().process();
+	}
 }

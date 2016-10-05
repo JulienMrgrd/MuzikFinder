@@ -1,4 +1,4 @@
-package api.musixMatch;
+package api.musixMatch.tests;
 
 import java.io.IOException;
 import java.util.HashMap;

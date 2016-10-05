@@ -1,4 +1,4 @@
-package api.musixMatch;
+package api.musixMatch.tests;
 import org.jmusixmatch.MusixMatch;
 import org.jmusixmatch.MusixMatchException;
 import org.jmusixmatch.entity.track.Track;

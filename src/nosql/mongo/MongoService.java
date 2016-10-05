@@ -1,9 +1,142 @@
 package nosql.mongo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bson.Document;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+
 public class MongoService {
 
+	ServerAddress serverAddress;
+	MongoCredential mongoCredential;
+	MongoClient mongoClient;
+	MongoDatabase db;
+
 	public MongoService() {
-		// TODO Auto-generated constructor stub
+		// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+		serverAddress = new ServerAddress("ds049456.mlab.com", 49456);
+		mongoCredential = MongoCredential.createCredential("heroku_1dpqh3kq", "heroku_1dpqh3kq", "gv7mru79jbtgn52lrl5mg301qh".toCharArray());
+		mongoClient = new MongoClient(serverAddress, Arrays.asList(mongoCredential));
+		db = mongoClient.getDatabase("heroku_1dpqh3kq");
+	}
+
+
+	// this creates collection if not exists
+	public void insertMany(MongoCollection<Document> collection, List<Document> docs){
+		collection.insertMany(docs);
+	}
+
+	// this creates collection if not exists
+	public void insertOne(MongoCollection<Document> collection, Document doc){
+		collection.insertOne(doc);
+	}
+
+	// this creates collection if not exists
+	public void updateOne(MongoCollection<Document> collection, Document before, Document after){
+		collection.updateOne(before, after);
+	}
+
+	public MongoCursor<Document> findAll(MongoCollection<Document> collection, Document findQuery){
+		return collection.find().iterator();
+	}
+
+	public MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
+		return collection.find(findQuery).iterator();
+	}
+
+	public MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery, Document orderBy){
+		return collection.find(findQuery).sort(orderBy).iterator();
+	}
+
+	public MongoCollection<Document> getCollection(String collectionName){
+		return db.getCollection(collectionName);
+	}
+
+	public boolean dropCollection(String collectionName){
+		try{
+			db.getCollection(collectionName).drop();
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+	}
+
+	public boolean dropCollection(MongoCollection<Document> collection){
+		try{
+			collection.drop();
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+	}
+
+	public void close(){
+		mongoClient.close();
+	}
+	
+	// Example
+	public List<Document> createFakeDocuments(){
+
+		Document seventies = new Document();
+		seventies.put("decade", "1970s");
+		seventies.put("artist", "Debby Boone");
+		seventies.put("song", "You Light Up My Life");
+		seventies.put("weeksAtOne", 10);
+
+		Document eighties = new Document();
+		eighties.put("decade", "1980s");
+		eighties.put("artist", "Olivia Newton-John");
+		eighties.put("song", "Physical");
+		eighties.put("weeksAtOne", 10);
+
+		Document nineties = new Document();
+		nineties.put("decade", "1990s");
+		nineties.put("artist", "Mariah Carey");
+		nineties.put("song", "One Sweet Day");
+		nineties.put("weeksAtOne", 16);
+		List<Document> fakeData = new ArrayList<>(3);
+		fakeData.add(seventies);
+		fakeData.add(eighties);
+		fakeData.add(nineties);
+		return fakeData;
+	}
+
+	public static void main(String[] args){
+		
+		MongoService mongo = new MongoService();
+		MongoCollection<Document> collection = mongo.getCollection("songs");
+		
+		List<Document> docs = mongo.createFakeDocuments();
+		mongo.insertMany(collection, docs);
+
+		Document before = new Document("song", "One Sweet Day");
+		Document after = new Document("$set", new Document("artist", "Mariah Carey ft. Boyz II Men"));
+		mongo.updateOne(collection, before, after);
+
+		Document findQuery = new Document("weeksAtOne", new Document("$gte",10));
+		Document orderBy = new Document("decade", 1);
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery, orderBy);
+
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			System.out.println(
+					"In the " + doc.get("decade") + ", " + doc.get("song") + 
+					" by " + doc.get("artist") + " topped the charts for " + 
+					doc.get("weeksAtOne") + " straight weeks."
+					);
+		}
+
+		mongo.dropCollection(collection);
+
+		mongo.close();
 	}
 
 }

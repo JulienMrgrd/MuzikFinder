@@ -3,6 +3,8 @@ package nosql.mongo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -21,6 +23,9 @@ public class MongoService {
 	DB db;
 
 	public MongoService() {
+		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+		mongoLogger.setLevel(Level.WARNING); // e.g. or Log.WARNING, etc.
+		
 		// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 		serverAddress = new ServerAddress("ds049456.mlab.com", 49456);
 		mongoCredential = MongoCredential.createCredential("heroku_1dpqh3kq", "heroku_1dpqh3kq", "gv7mru79jbtgn52lrl5mg301qh".toCharArray());
@@ -108,22 +113,20 @@ public class MongoService {
 		fakeData.add(nineties);
 		return fakeData;
 	}
-
-	public static void main(String[] args){
+	
+	public void fakeUse(){
+		DBCollection collection = this.getCollection("songs");
 		
-		MongoService mongo = new MongoService();
-		DBCollection collection = mongo.getCollection("songs");
-		
-		List<BasicDBObject> docs = mongo.createFakeBasicDBObjects();
-		mongo.insertMany(collection, docs);
+		List<BasicDBObject> docs = this.createFakeBasicDBObjects();
+		this.insertMany(collection, docs);
 
 		BasicDBObject before = new BasicDBObject("song", "One Sweet Day");
 		BasicDBObject after = new BasicDBObject("$set", new BasicDBObject("artist", "Mariah Carey ft. Boyz II Men"));
-		mongo.updateOne(collection, before, after);
+		this.updateOne(collection, before, after);
 
 		BasicDBObject findQuery = new BasicDBObject("weeksAtOne", new BasicDBObject("$gte",10));
 		BasicDBObject orderBy = new BasicDBObject("decade", 1);
-		DBCursor cursor = mongo.findBy(collection, findQuery, orderBy);
+		DBCursor cursor = this.findBy(collection, findQuery, orderBy);
 
 		while(cursor.hasNext()){
 			DBObject doc = cursor.next();
@@ -134,9 +137,13 @@ public class MongoService {
 					);
 		}
 
-		mongo.dropCollection(collection);
+		this.dropCollection(collection);
 
-		mongo.close();
+		this.close();
+	}
+
+	public static void main(String[] args){
+		new MongoService().fakeUse();
 	}
 
 }

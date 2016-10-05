@@ -49,4 +49,9 @@ public class MuzikFinderService {
 		return null;
 	}
 
+	// TODO : to delete
+	public void startMongo() {
+		nosql.fakeUse();
+	}
+
 }

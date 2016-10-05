@@ -2,10 +2,10 @@ package daemon;
 
 import java.util.List;
 
-import org.bson.Document;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 import nosql.mongo.MongoService;
 
@@ -19,23 +19,23 @@ public class DaemonWorker {
 		System.out.println("===========> Daemon de remplissage de Mongo <============");
 		MongoService mongo = new MongoService();
 		System.out.println("mongoservice OK");
-		MongoCollection<Document> collection = mongo.getCollection("songs");
+		DBCollection collection = mongo.getCollection("songs");
 		System.out.println("mongo collection OK");
 		
-		List<Document> docs = mongo.createFakeDocuments();
+		List<BasicDBObject> docs = mongo.createFakeBasicDBObjects();
 		mongo.insertMany(collection, docs);
 		System.out.println("mongo insert many OK");
 		
-		Document before = new Document("song", "One Sweet Day");
-		Document after = new Document("$set", new Document("artist", "Mariah Carey ft. Boyz II Men"));
+		BasicDBObject before = new BasicDBObject("song", "One Sweet Day");
+		BasicDBObject after = new BasicDBObject("$set", new BasicDBObject("artist", "Mariah Carey ft. Boyz II Men"));
 		mongo.updateOne(collection, before, after);
 
-		Document findQuery = new Document("weeksAtOne", new Document("$gte",10));
-		Document orderBy = new Document("decade", 1);
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery, orderBy);
+		BasicDBObject findQuery = new BasicDBObject("weeksAtOne", new BasicDBObject("$gte",10));
+		BasicDBObject orderBy = new BasicDBObject("decade", 1);
+		DBCursor cursor = mongo.findBy(collection, findQuery, orderBy);
 
 		while(cursor.hasNext()){
-			Document doc = cursor.next();
+			DBObject doc = cursor.next();
 			System.out.println(
 					"In the " + doc.get("decade") + ", " + doc.get("song") + 
 					" by " + doc.get("artist") + " topped the charts for " + 

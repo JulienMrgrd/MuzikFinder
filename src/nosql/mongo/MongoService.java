@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import sources.mongo.com.mongodb.BasicDBObject;
+import sources.mongo.com.mongodb.DB;
+import sources.mongo.com.mongodb.DBCollection;
+import sources.mongo.com.mongodb.DBCursor;
+import sources.mongo.com.mongodb.DBObject;
+import sources.mongo.com.mongodb.MongoClient;
+import sources.mongo.com.mongodb.MongoCredential;
+import sources.mongo.com.mongodb.ServerAddress;
 
 public class MongoService {
 

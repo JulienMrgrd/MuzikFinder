@@ -2,12 +2,11 @@ package daemon;
 
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
 import nosql.mongo.MongoService;
+import sources.mongo.com.mongodb.BasicDBObject;
+import sources.mongo.com.mongodb.DBCollection;
+import sources.mongo.com.mongodb.DBCursor;
+import sources.mongo.com.mongodb.DBObject;
 
 public class DaemonWorker {
 

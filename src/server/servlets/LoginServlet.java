@@ -9,12 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
 import nosql.mongo.MongoService;
+import sources.mongo.com.mongodb.BasicDBObject;
+import sources.mongo.com.mongodb.DBCollection;
+import sources.mongo.com.mongodb.DBCursor;
+import sources.mongo.com.mongodb.DBObject;
 
 /**
  * Servlet implementation class ContactServlet

@@ -18,11 +18,14 @@ public class DaemonWorker {
 	public void process() {
 		System.out.println("===========> Daemon de remplissage de Mongo <============");
 		MongoService mongo = new MongoService();
+		System.out.println("mongoservice OK");
 		MongoCollection<Document> collection = mongo.getCollection("songs");
+		System.out.println("mongo collection OK");
 		
 		List<Document> docs = mongo.createFakeDocuments();
 		mongo.insertMany(collection, docs);
-
+		System.out.println("mongo insert many OK");
+		
 		Document before = new Document("song", "One Sweet Day");
 		Document after = new Document("$set", new Document("artist", "Mariah Carey ft. Boyz II Men"));
 		mongo.updateOne(collection, before, after);

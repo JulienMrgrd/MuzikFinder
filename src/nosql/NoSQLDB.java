@@ -46,7 +46,7 @@ public class NoSQLDB {
 			System.out.println("Artist already present in the collection\n");
 			return false;
 		}
-		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
+		MongoCollection<Document> collection = mongo.getCollection("Artists"); // rï¿½cupï¿½re la collection mongo qui stocke les artistes
 		Document doc = new Document();
 		doc.put("idArtist", artistId);
 		doc.put("nameArtist",artistName);
@@ -54,20 +54,20 @@ public class NoSQLDB {
 		return true;
 	}
 
-	//TODO : permet de chercher un artiste dans la base mongoDB. Retourne vrai si il est présent, non sinon.
+	//TODO : permet de chercher un artiste dans la base mongoDB. Retourne vrai si il est prï¿½sent, non sinon.
 
 	public boolean presentArtist(String artistName){
-		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document("artisteName", new Document("$eq",artistName)); // crée le document retournant les informations présentes dans la collection Artists correspondantes
+		MongoCollection<Document> collection = mongo.getCollection("Artists"); // rï¿½cupï¿½re la collection mongo qui stocke les artistes
+		Document doc = new Document("artisteName", new Document("$eq",artistName)); // crï¿½e le document retournant les informations prï¿½sentes dans la collection Artists correspondantes
 		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
 		while(cursor.hasNext())
 			return true;
 		return false;
 	}
 	
-	public boolean presentLyrics(String lyrics){
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document doc = new Document("lyrics", new Document("$eq",lyrics)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+	public boolean presentLyrics(String musicId){
+		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // rï¿½cupï¿½re la collection mongo qui stocke les musiques
+		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crï¿½e le document retournant les informations prï¿½sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
 		while(cursor.hasNext())
 			return true;

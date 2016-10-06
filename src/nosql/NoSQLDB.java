@@ -29,5 +29,11 @@ public class NoSQLDB {
 		// mongo....
 		return true;
 	}
-
+	
+	//TODO : permet de chercher un artiste dans la base mongoDB. Retourne vrai si il est présent, non sinon.
+	
+	public boolean presentArtist(String artistName){
+		// mongo....
+		return true;
+	}
 }

@@ -31,8 +31,7 @@ public class MuzikFinderService {
 	}
 	
 	private boolean containsArtistsInNoSQL(String artist){
-		//TODO : nosql.containsBLABBLA
-		return true;
+		return nosql.presentArtist(artist);
 	}
 	
 	public List<Track> getTracksFromAPI(int nbTracksToGet){

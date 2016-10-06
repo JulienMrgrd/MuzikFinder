@@ -28,7 +28,7 @@ public class DaemonMain {
 	public void process() {
 		System.out.println("===========> Daemon de remplissage de Mongo <============");
 		service.getTracksFromAPI(NB_TRACKS_PROCESS);
-		service.startMongo();
+		
 		System.out.println("=========> Fin du daemon de remplissage de Mongo <==========");
 	}
 

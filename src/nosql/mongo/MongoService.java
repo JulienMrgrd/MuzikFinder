@@ -28,7 +28,8 @@ public class MongoService {
 		
 		// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 		serverAddress = new ServerAddress("ds049456.mlab.com", 49456);
-		mongoCredential = MongoCredential.createCredential("heroku_1dpqh3kq", "heroku_1dpqh3kq", "gv7mru79jbtgn52lrl5mg301qh".toCharArray());
+		mongoCredential = MongoCredential.createCredential("heroku_1dpqh3kq", "heroku_1dpqh3kq",
+				"gv7mru79jbtgn52lrl5mg301qh".toCharArray());
 		mongoClient = new MongoClient(serverAddress, Arrays.asList(mongoCredential));
 		db = mongoClient.getDatabase("heroku_1dpqh3kq");
 	}
@@ -57,7 +58,8 @@ public class MongoService {
 		return collection.find(findQuery).iterator();
 	}
 
-	public MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery, Document orderBy){
+	public MongoCursor<Document> findBy(MongoCollection<Document> collection, 
+			Document findQuery, Document orderBy){
 		return collection.find(findQuery).sort(orderBy).iterator();
 	}
 
@@ -115,6 +117,7 @@ public class MongoService {
 	}
 	
 	public void fakeUse(){
+		System.out.println("on entre ici");
 		MongoCollection<Document> collection = this.getCollection("songs");
 		
 		List<Document> docs = this.createFakeDocuments();
@@ -127,8 +130,17 @@ public class MongoService {
 		Document findQuery = new Document("weeksAtOne", new Document("$gte",10));
 		Document orderBy = new Document("decade", 1);
 		MongoCursor<Document> cursor = this.findBy(collection, findQuery, orderBy);
+		System.out.println(findQuery.isEmpty());
 		while(cursor.hasNext()){
+			System.out.println("Je rentre ici");
 			Document doc = cursor.next();
+			Document doc2;
+			String listeId = doc.getString("decade");
+			System.out.println(listeId);
+			listeId=listeId.concat(";dklknvlk");
+			System.out.println(listeId);
+			doc2=new Document("$set",new Document("decade", listeId));
+			this.updateOne(collection, doc, doc2);
 			System.out.println(
 					"In the " + doc.get("decade") + ", " + doc.get("song") + 
 					" by " + doc.get("artist") + " topped the charts for " + 
@@ -136,7 +148,7 @@ public class MongoService {
 					);
 		}
 
-		this.dropCollection(collection);
+		//this.dropCollection(collection);
 
 		this.close();
 	}

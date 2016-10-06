@@ -1,6 +1,8 @@
 package server.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jmusixmatch.entity.track.Track;
 
@@ -26,6 +28,7 @@ public class MuzikFinderService {
 	}
 	
 	private List<String> getRandomArtistsFromAPI(){
+		
 		//TODO : api.getBLABBLA
 		return null;
 	}
@@ -51,6 +54,24 @@ public class MuzikFinderService {
 	// TODO : to delete
 	public void startMongo() {
 		nosql.fakeUse();
+	}
+	
+	public Set<String> getMusicByTag(String tag){
+		if(!nosql.presentTag(tag))
+			return null;
+		else
+			return nosql.getMusicByTag(tag);
+	}
+	
+	public Set<String> getMusicByIdArtist(String artist){
+		if(!nosql.presentArtist(artist))
+			return null;
+		else
+			return nosql.getMusicByIdArtist(artist);
+	}
+	
+	public Set<String> getMusicByLyric(String lyric){
+		return nosql.getMusicByLyric(lyric);
 	}
 
 }

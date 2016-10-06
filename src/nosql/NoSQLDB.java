@@ -1,6 +1,9 @@
 package nosql;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
@@ -86,7 +89,7 @@ public class NoSQLDB {
 
 	public boolean presentArtist(String artistId){
 		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document("artisteName", new Document("$eq",artistId)); // crée le document retournant les informations pr�sentes dans la collection Artists correspondantes
+		Document doc = new Document("nameArtist", new Document("$eq",artistId)); // crée le document retournant les informations pr�sentes dans la collection Artists correspondantes
 		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
 		while(cursor.hasNext())
 			return true;
@@ -103,9 +106,10 @@ public class NoSQLDB {
 	}
 	
 	public boolean presentTag(String tag){
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
-		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
+		MongoCollection<Document> collection = mongo.getCollection("Tags");
+		Document findQuery = new Document("tag", new Document("$eq",tag));
+		System.out.println(findQuery);
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
 		while(cursor.hasNext())
 			return true;
 		return false;
@@ -119,4 +123,48 @@ public class NoSQLDB {
 			return true;
 		return false;
 	}
+
+	public Set<String> getMusicByTag(String tag){
+		
+		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document("tag", new Document("$eq",tag));
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
+		
+		Set<String> listeId = new HashSet<String>();
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			listeId.add(doc.getString("idMusic"));
+		}
+		return listeId;
+	}
+	
+	public Set<String> getMusicByIdArtist(String idArtiste){
+		
+		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document("idArtist", new Document("$eq",idArtiste));
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
+		
+		Set<String> listeId = new HashSet<String>();
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			listeId.add(doc.getString("idMusic"));
+		}
+		return listeId;
+	}
+	
+	public Set<String> getMusicByLyric(String lyric){
+		
+		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
+		//Remplacer l'operateur de la recherche "$eq" par un qui correspond a contient
+		Document findQuery = new Document("lyric", new Document("$eq",lyric));
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
+		
+		Set<String> listeId = new HashSet<String>();
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			listeId.add(doc.getString("idMusic"));
+		}
+		return listeId;
+	}
+
 }

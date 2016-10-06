@@ -28,7 +28,7 @@ public class NoSQLDB {
 	}
 
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId ){
-		if(presentLyrics(words)){
+		if(presentLyrics(musicId)){
 			System.out.println("Lyrics already presents in the collection\n");
 			return false; 
 		}

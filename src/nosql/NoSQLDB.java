@@ -152,17 +152,30 @@ public class NoSQLDB {
 		return listeId;
 	}
 	
+	public String getidArtist(String nameArtiste){
+		
+		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document("nameArtist", new Document("$eq",nameArtiste));
+		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
+		
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			return doc.getString("idArtist");
+		}
+		return null;
+	}
+	
 	public Set<String> getMusicByLyric(String lyric){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		//Remplacer l'operateur de la recherche "$eq" par un qui correspond a contient
-		Document findQuery = new Document("lyric", new Document("$eq",lyric));
+		Document findQuery = new Document("decade", new Document("$regex",lyric));
+		System.out.println(findQuery);
 		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
 		
 		Set<String> listeId = new HashSet<String>();
 		while(cursor.hasNext()){
 			Document doc = cursor.next();
-			listeId.add(doc.getString("idMusic"));
+			listeId.add(doc.getString("decade"));
 		}
 		return listeId;
 	}

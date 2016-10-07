@@ -48,9 +48,10 @@ public class NoSQLDB {
 			while(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				String listeId = doc1.getString("idMusic");
+				String listeId = doc1.getString("musicId");
+				System.out.println(listeId);
 				listeId = listeId.concat(";"+musicId);
-				doc2 = new Document("$set",new Document("idMusic",listeId));
+				doc2 = new Document("$set",new Document("musicId",listeId));
 				mongo.updateOne(collection, doc1,doc2);
 				return true;
 			}
@@ -58,7 +59,7 @@ public class NoSQLDB {
 		return true;
 	}
 	
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId ){
+	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String nameMusic, String langue, String spotifyId, String soundCloudId){
 		if(presentLyrics(musicId)){
 			System.out.println("Lyrics already presents in the collection\n");
 			return false; 
@@ -68,6 +69,10 @@ public class NoSQLDB {
 		doc.put("idMusic",musicId);
 		doc.put("lyrics",words);
 		doc.put("idArtist",artistId);
+		doc.put("nameMusic", nameMusic);
+		doc.put("langue", langue);
+		doc.put("spotifyId", spotifyId);
+		doc.put("soundCloudId",soundCloudId);
 		mongo.insertOne(collection, doc);
 		return true;
 	}
@@ -116,11 +121,20 @@ public class NoSQLDB {
 	}
 	
 	public boolean presentIdMusicOnTag(String tag, String idMusic){
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document doc = new Document("tag", new Document("idMusic",new Document("$eq",idMusic))); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
+		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
+		
+		Document doc = new Document("tag",new Document("$regex",tag)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
-		while(cursor.hasNext())
-			return true;
+		while(cursor.hasNext()){
+			Document doc1 = cursor.next();
+			String chaine = doc1.getString("musicId");
+			//System.out.println(chaine);
+			String[] tab = chaine.split(";");
+			for( String s : tab){
+				if(s.equals(idMusic))
+					return true;
+			}
+		}
 		return false;
 	}
 
@@ -179,5 +193,4 @@ public class NoSQLDB {
 		}
 		return listeId;
 	}
-
 }

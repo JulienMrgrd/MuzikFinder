@@ -1,4 +1,4 @@
-Collection Lyrics:
+Collection Musics:
 idMusic:XXX
 lyrics:XXX
 nameMusic:XXX

@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
 
-import org.jmusixmatch.config.Constants;
-
 import utils.MuzikFinderConstants;
 
 public final class RequestHelper {
@@ -20,7 +18,7 @@ public final class RequestHelper {
 	public static String createRequest(String method, Map<String, String> params){
 		String url = MuzikFinderConstants.API_URL;
 		url+= method + "?";
-		url+= Constants.API_KEY+"="+MuzikFinderConstants.API_KEY;
+		url+= MuzikFinderConstants.API_KEY+"="+MuzikFinderConstants.API_KEY;
 		
 		for(String key : params.keySet()){
 			url += "&" + key+ "=" + params.get(key);

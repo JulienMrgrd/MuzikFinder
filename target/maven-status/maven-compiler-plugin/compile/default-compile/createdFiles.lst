@@ -21,6 +21,5 @@ interfaces\MFAlbum.class
 interfaces\MFArtist.class
 nosql\mongo\MongoService.class
 sql\SQLDB.class
-api\musixMatch\tests\MainWithJMusixMatch.class
 daemon\DaemonMain$1.class
 nosql\TagScore.class

@@ -2,7 +2,9 @@ package api.musixMatch.metier;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Album {
+import interfaces.MFAlbum;
+
+public class Album implements MFAlbum{
 
 	@SerializedName("album_id")
     private String albumId;

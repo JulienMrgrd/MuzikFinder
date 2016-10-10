@@ -1,18 +1,124 @@
 package api.musixMatch;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.jmusixmatch.entity.track.Track;
+import org.jmusixmatch.config.Constants;
+import org.jmusixmatch.config.Methods;
+
+import api.musixMatch.metier.Album;
+import api.musixMatch.metier.Artist;
+import api.musixMatch.metier.Music;
+import api.musixMatch.utils.MusixMatchUtils;
+import api.musixMatch.utils.RequestHelper;
+import utils.MuzikFinderAPIHelper;
+import utils.MuzikFinderConstants;
 
 public class MusixMatchService {
 
 	public MusixMatchService() {
-		// TODO Auto-generated constructor stub
+		// TODO SINGLETON
 	}
 
-	public List<Track> getTracks(int nbToGet) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> getAllAlbumIds(String artistId) {
+		Map<String, String> params = new HashMap<>();
+		int page=1;
+		List<String> allIds = new ArrayList<>();
+		List<Album> acceptedAlbums = new ArrayList<>();
+		List<Album> albumsFromAPI = null;
+		
+		do {
+			params.put(MuzikFinderConstants.ARTIST_ID, artistId);
+			params.put(Constants.PAGE, Integer.toString(page));
+			params.put(Constants.PAGE_SIZE, Integer.toString(MuzikFinderConstants.MAX_PAGE) );
+			params.put(MuzikFinderConstants.RELEASE_DATE, MuzikFinderConstants.RELEASE_DATE_DESC);
+			String request = RequestHelper.createRequest(Methods.ARTIST_ALBUMS_GET, params);
+			
+//			System.out.println("Requête in MusixMatch : "+request);
+
+			String response = RequestHelper.sendRequest(request);
+			
+			albumsFromAPI = MuzikFinderAPIHelper.getAlbumList(response);
+			for(Album alb : albumsFromAPI){
+				if( MusixMatchUtils.isAnAlbum(alb) && !MusixMatchUtils.containsSameAlbum(alb, acceptedAlbums)) {
+					acceptedAlbums.add(alb);
+				}
+			}
+		} while ( albumsFromAPI.size()>MuzikFinderConstants.MAX_PAGE );
+		
+		acceptedAlbums.forEach(alb -> allIds.add(alb.getAlbumId()));
+		return allIds;
 	}
+	
+	/**
+	 * Récupère la liste des musiques (avec paroles) d'un album
+	 * API url example : http://api.musixmatch.com/ws/1.1/album.musics.get?apikey=f29172a320a83fa2eae8802fa44cbb01&album_id=16742456&page=1&page_size=100
+	 * @param albumId
+	 * @return
+	 */
+	public List<Music> getMusicsInAlbum(String albumId) {
+		Map<String, String> params = new HashMap<>();
+
+		params.put(Constants.PAGE_SIZE, Integer.toString(MuzikFinderConstants.MAX_PAGE) );
+		params.put(MuzikFinderConstants.ALBUM_ID, albumId);
+		String request = RequestHelper.createRequest(Methods.ALBUM_TRACKS_GET, params);
+		
+//		System.out.println("Requête in MusixMatch : "+request);
+
+		String response = RequestHelper.sendRequest(request);
+		
+		List<Music> musics = MuzikFinderAPIHelper.getMusicsList(response);
+		musics.forEach(music -> addLyricsToMusic(music)); // add Lyrics from API
+		
+		return musics;
+	}
+
+	private void addLyricsToMusic(Music music) {
+		if( !music.getHasLyrics().equals(MuzikFinderConstants.NO_LYRICS) ){
+			Map<String, String> params = new HashMap<>();
+
+			params.put(MuzikFinderConstants.TRACK_ID, music.getTrackId());
+			String request = RequestHelper.createRequest(Methods.TRACK_LYRICS_GET, params);
+			
+//			System.out.println("Requête in MusixMatch : "+request);
+
+			String response = RequestHelper.sendRequest(request);
+			
+			music.setLyrics( MuzikFinderAPIHelper.getLyrics(response) );
+		}
+	}
+
+	public List<Music> getTopMusics(int from, int to, String country) {
+		Map<String, String> params = new HashMap<>();
+
+		params.put(Constants.PAGE_SIZE, Integer.toString(to));
+		params.put(Constants.PAGE, Integer.toString(from));
+		params.put(MuzikFinderConstants.COUNTRY, country);
+		String request = RequestHelper.createRequest(Methods.TRACK_CHART_GET, params);
+		
+//		System.out.println("Requête in MusixMatch : "+request);
+
+		String response = RequestHelper.sendRequest(request);
+		
+		return MuzikFinderAPIHelper.getMusicsList(response);
+	}
+	
+	public List<Artist> getTopArtists(int pos, int nbArtistsToGet, String country) {
+		Map<String, String> params = new HashMap<>();
+
+		params.put(Constants.PAGE_SIZE, Integer.toString(nbArtistsToGet));
+		params.put(Constants.PAGE, Integer.toString(pos));
+		params.put(MuzikFinderConstants.COUNTRY, country);
+		String request = RequestHelper.createRequest(Methods.ARTIST_CHART_GET, params);
+		
+//		System.out.println("Requête in MusixMatch : "+request);
+
+		String response = RequestHelper.sendRequest(request);
+		
+		return MuzikFinderAPIHelper.getArtistsList(response);
+	}
+
 
 }

@@ -1,14 +1,16 @@
 package server.services;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.jmusixmatch.entity.track.Track;
-
 import api.API;
+import api.musixMatch.metier.Artist;
+import api.musixMatch.metier.Music;
 import nosql.NoSQLDB;
 import sql.SQLDB;
+import utils.MuzikFinderPreferences;
 
 /**
  * Aucun appel direct aux BD ou Api ici !!
@@ -27,51 +29,76 @@ public class MuzikFinderService {
 		 api = new API(); // (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
 	}
 	
-	private List<String> getRandomArtistsFromAPI(){
-		
-		//TODO : api.getBLABBLA
-		return null;
+	
+	////====== API PART ====== ////
+	
+	public List<Artist> getTopArtistsFromAPI(int pos, int nbArtistsToGet, String country) {
+		return api.getTopArtists(pos, nbArtistsToGet, country);
 	}
+
+	public List<String> getAllAlbumIdsFromAPI(String artistId) {
+		return api.getAllAlbumIds(artistId);
+	}
+
+	public List<Music> getAllMusicsFromAPI(String albumId) {
+		return api.getMusicsInAlbum(albumId);
+	}
+	
+	private List<Music> getTopMusicsFromAPI(int from, int to, String country){
+		return api.getTopMusics(from, to, country);
+	}
+	
+	
+	//// ====== NOSQL PART ====== ////
 	
 	private boolean containsArtistsInNoSQL(String artist){
 		return nosql.presentArtist(artist);
 	}
 	
-	public List<Track> getTracksFromAPI(int nbTracksToGet){
-		return api.getTracks(nbTracksToGet);
+	public Set<String> getMusicByTagInNoSQL(String tag){
+		if(!nosql.presentTag(tag))
+			return null;
+		else
+			return nosql.getMusicsByTag(tag);
 	}
 	
-	private List<String> getTopMusicsFromAPI(int from, int to){
-		//TODO : api.getBLABBLA
-		return null;
+	public Set<String> getMusicByIdArtistInNoSQL(String artist){
+		if(!nosql.presentArtist(artist))
+			return null;
+		else
+			return nosql.getMusicsByIdArtist(artist);
 	}
+	
+	public Set<String> getMusicsByLyricsInNoSQL(String lyrics){
+		return nosql.getMusicsByLyrics(lyrics);
+	}
+	
+	
+	////====== SQL PART ====== ////
+	
+	
+	////====== DAEMON PART ====== ////
 	
 	private List<String> extractImportantWords(String lyrics){
 		//TODO: utiliser TextParser du package utils.textMining;
 		return null;
 	}
 
-	// TODO : to delete
-	public void startMongo() {
-		nosql.fakeUse();
+	public void startFilingDatabaseProcess() {
+		List<Music> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.COUNTRY_ORDER[0]);
+		System.out.println(musics.size()+" musiques");
+		//TODO: remove if exists in mongo
+		Map<String, List<Music>> fromSameAlbum = new HashMap<>();
+		int cpt = 0;
+		for(Music music : musics){
+			if(music!=null && music.getAlbumId()!=null){
+				fromSameAlbum.put( music.getAlbumId(), getAllMusicsFromAPI(music.getAlbumId()) );
+			}
+			System.out.println("Album "+music.getAlbumId()+" = "+fromSameAlbum.get(music.getAlbumId()).size()+" musics...");
+			cpt+=fromSameAlbum.get(music.getAlbumId()).size();
+		}
+		System.out.println("\nNombre de musiques récupérées au final : "+cpt);
+		// insert in mongo
 	}
 	
-	public Set<String> getMusicByTag(String tag){
-		if(!nosql.presentTag(tag))
-			return null;
-		else
-			return nosql.getMusicByTag(tag);
-	}
-	
-	public Set<String> getMusicByIdArtist(String artist){
-		if(!nosql.presentArtist(artist))
-			return null;
-		else
-			return nosql.getMusicByIdArtist(artist);
-	}
-	
-	public Set<String> getMusicByLyric(String lyric){
-		return nosql.getMusicByLyric(lyric);
-	}
-
 }

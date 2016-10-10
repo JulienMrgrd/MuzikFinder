@@ -18,14 +18,13 @@ import nosql.mongo.MongoService;
 public class NoSQLDB {
 
 	private MongoService mongo;
+	// éventuellement private CassandraService cassandra;
+	// éventuellement private DynamoDBService dynamo;
 
 	public NoSQLDB() {
 		mongo = new MongoService();
-	}
-
-	// TODO : to delete
-	public void fakeUse(){
-		mongo.fakeUse();
+		// éventuellement cassandra = new CassandraService() ;
+		// éventuellement dynamo = new DynamoDBService();
 	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
@@ -138,7 +137,7 @@ public class NoSQLDB {
 		return false;
 	}
 
-	public Set<String> getMusicByTag(String tag){
+	public Set<String> getMusicsByTag(String tag){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("tag", new Document("$eq",tag));
@@ -152,7 +151,7 @@ public class NoSQLDB {
 		return listeId;
 	}
 	
-	public Set<String> getMusicByIdArtist(String idArtiste){
+	public Set<String> getMusicsByIdArtist(String idArtiste){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("idArtist", new Document("$eq",idArtiste));
@@ -166,7 +165,7 @@ public class NoSQLDB {
 		return listeId;
 	}
 	
-	public String getidArtist(String nameArtiste){
+	public String getIdArtist(String nameArtiste){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("nameArtist", new Document("$eq",nameArtiste));
@@ -179,10 +178,10 @@ public class NoSQLDB {
 		return null;
 	}
 	
-	public Set<String> getMusicByLyric(String lyric){
+	public Set<String> getMusicsByLyrics(String lyrics){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("decade", new Document("$regex",lyric));
+		Document findQuery = new Document("decade", new Document("$regex",lyrics));
 		System.out.println(findQuery);
 		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
 		

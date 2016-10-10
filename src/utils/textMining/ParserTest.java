@@ -43,9 +43,8 @@ public class ParserTest {
 	    }
 	}
 	
-	
 	public void parserAction() throws Exception {
-		InputStream is = new FileInputStream("en-parser-chunking.bin");
+		InputStream is = new FileInputStream("res/en-parser-chunking.bin");
 	    ParserModel model = new ParserModel(is);
 	    Parser parser = ParserFactory.create(model);
 	    Parse topParses[] = ParserTool.parseLine(line, parser, 1);

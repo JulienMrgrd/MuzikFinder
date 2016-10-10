@@ -2,6 +2,7 @@ package nosql;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bson.Document;
@@ -9,6 +10,7 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
+import interfaces.MFMusic;
 import nosql.mongo.MongoService;
 
 /**
@@ -36,12 +38,10 @@ public class NoSQLDB {
 			doc.put("musicId",musicId);
 			mongo.insertOne(collection, doc);
 			return true;
-		}
-		else{
-			if(presentIdMusicOnTag(tag,musicId)){
-				System.out.println("IdMusic already corresponding in the Tag Collection\n");
-				return false;
-			}
+		}else if(presentIdMusicOnTag(tag,musicId)){
+			System.out.println("IdMusic already corresponding in the Tag Collection\n");
+			return false;
+		} else {
 			doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = mongo.findBy(collection, doc);
 			while(cursor.hasNext()){
@@ -88,8 +88,6 @@ public class NoSQLDB {
 		mongo.insertOne(collection, doc);
 		return true;
 	}
-
-	//TODO : permet de chercher un artiste dans la base mongoDB. Retourne vrai si il est présent, non sinon.
 
 	public boolean presentArtist(String artistId){
 		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
@@ -191,5 +189,15 @@ public class NoSQLDB {
 			listeId.add(doc.getString("decade"));
 		}
 		return listeId;
+	}
+
+	/**
+	 * Reduced the given list in parameter if one of these musics exists in Mongo 
+	 * @param musics
+	 * @return the reduced list
+	 */
+	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

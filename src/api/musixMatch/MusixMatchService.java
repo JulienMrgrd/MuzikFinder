@@ -11,9 +11,11 @@ import org.jmusixmatch.config.Methods;
 import api.musixMatch.metier.Album;
 import api.musixMatch.metier.Artist;
 import api.musixMatch.metier.Music;
+import api.musixMatch.utils.MusixMatchAPIHelper;
 import api.musixMatch.utils.MusixMatchUtils;
 import api.musixMatch.utils.RequestHelper;
-import utils.MuzikFinderAPIHelper;
+import interfaces.MFArtist;
+import interfaces.MFMusic;
 import utils.MuzikFinderConstants;
 
 public class MusixMatchService {
@@ -40,7 +42,7 @@ public class MusixMatchService {
 
 			String response = RequestHelper.sendRequest(request);
 			
-			albumsFromAPI = MuzikFinderAPIHelper.getAlbumList(response);
+			albumsFromAPI = MusixMatchAPIHelper.getAlbumList(response);
 			for(Album alb : albumsFromAPI){
 				if( MusixMatchUtils.isAnAlbum(alb) && !MusixMatchUtils.containsSameAlbum(alb, acceptedAlbums)) {
 					acceptedAlbums.add(alb);
@@ -58,7 +60,7 @@ public class MusixMatchService {
 	 * @param albumId
 	 * @return
 	 */
-	public List<Music> getMusicsInAlbum(String albumId) {
+	public List<MFMusic> getMusicsInAlbum(String albumId) {
 		Map<String, String> params = new HashMap<>();
 
 		params.put(Constants.PAGE_SIZE, Integer.toString(MuzikFinderConstants.MAX_PAGE) );
@@ -69,13 +71,13 @@ public class MusixMatchService {
 
 		String response = RequestHelper.sendRequest(request);
 		
-		List<Music> musics = MuzikFinderAPIHelper.getMusicsList(response);
+		List<MFMusic> musics = MusixMatchAPIHelper.getMusicsList(response);
 		musics.forEach(music -> addLyricsToMusic(music)); // add Lyrics from API
 		
 		return musics;
 	}
 
-	private void addLyricsToMusic(Music music) {
+	private void addLyricsToMusic(MFMusic music) {
 		if( !music.getHasLyrics().equals(MuzikFinderConstants.NO_LYRICS) ){
 			Map<String, String> params = new HashMap<>();
 
@@ -86,11 +88,11 @@ public class MusixMatchService {
 
 			String response = RequestHelper.sendRequest(request);
 			
-			music.setLyrics( MuzikFinderAPIHelper.getLyrics(response) );
+			music.setLyrics( MusixMatchAPIHelper.getLyrics(response) );
 		}
 	}
 
-	public List<Music> getTopMusics(int from, int to, String country) {
+	public List<MFMusic> getTopMusics(int from, int to, String country) {
 		Map<String, String> params = new HashMap<>();
 
 		params.put(Constants.PAGE_SIZE, Integer.toString(to));
@@ -102,10 +104,10 @@ public class MusixMatchService {
 
 		String response = RequestHelper.sendRequest(request);
 		
-		return MuzikFinderAPIHelper.getMusicsList(response);
+		return MusixMatchAPIHelper.getMusicsList(response);
 	}
 	
-	public List<Artist> getTopArtists(int pos, int nbArtistsToGet, String country) {
+	public List<MFArtist> getTopArtists(int pos, int nbArtistsToGet, String country) {
 		Map<String, String> params = new HashMap<>();
 
 		params.put(Constants.PAGE_SIZE, Integer.toString(nbArtistsToGet));
@@ -117,8 +119,7 @@ public class MusixMatchService {
 
 		String response = RequestHelper.sendRequest(request);
 		
-		return MuzikFinderAPIHelper.getArtistsList(response);
+		return MusixMatchAPIHelper.getArtistsList(response);
 	}
-
 
 }

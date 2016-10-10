@@ -2,7 +2,9 @@ package api.musixMatch.metier;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Artist {
+import interfaces.MFArtist;
+
+public class Artist implements MFArtist{
 
     @SerializedName("artist_id")
     private String artistId;
@@ -10,12 +12,6 @@ public class Artist {
     @SerializedName("artist_name")
     private String artistName;
 	
-    @SerializedName("artist_country")
-    private String artistCountry;
-	
-    @SerializedName("artist_twitter_url")
-    private String artistTwitterUrl;
-
 	public String getArtistId() {
 		return artistId;
 	}
@@ -32,20 +28,4 @@ public class Artist {
 		this.artistName = artistName;
 	}
 
-	public String getArtistCountry() {
-		return artistCountry;
-	}
-
-	public void setArtistCountry(String artistCountry) {
-		this.artistCountry = artistCountry;
-	}
-
-	public String getArtistTwitterUrl() {
-		return artistTwitterUrl;
-	}
-
-	public void setArtistTwitterUrl(String artistTwitterUrl) {
-		this.artistTwitterUrl = artistTwitterUrl;
-	}
-    
 }

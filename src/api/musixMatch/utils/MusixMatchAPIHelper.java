@@ -1,4 +1,4 @@
-package utils;
+package api.musixMatch.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,14 @@ import api.musixMatch.metier.Album;
 import api.musixMatch.metier.Artist;
 import api.musixMatch.metier.Lyrics;
 import api.musixMatch.metier.Music;
+import interfaces.MFArtist;
+import interfaces.MFLyrics;
+import interfaces.MFMusic;
+import utils.MuzikFinderConstants;
 
-public final class MuzikFinderAPIHelper {
+public final class MusixMatchAPIHelper {
 
-	private MuzikFinderAPIHelper() {
+	private MusixMatchAPIHelper() {
 		// nothing
 	}
 	
@@ -26,7 +30,7 @@ public final class MuzikFinderAPIHelper {
 		return message.getJSONObject("body");
 	}
 	
-	public static List<Artist> getArtistsList(String json){
+	public static List<MFArtist> getArtistsList(String json){
 		JSONObject root = new JSONObject(json);
 		try{
 			root.getJSONObject(MuzikFinderConstants.ARTIST_LIST); // Can throw Exception if key not exists
@@ -34,7 +38,7 @@ public final class MuzikFinderAPIHelper {
 			root = getBody(json);
 		}
 		
-		List<Artist> artists = null;
+		List<MFArtist> artists = null;
 		try {
 			
 			Gson gson = new Gson();
@@ -80,7 +84,7 @@ public final class MuzikFinderAPIHelper {
 		return albums;
 	}
 
-	public static List<Music> getMusicsList(String json) {
+	public static List<MFMusic> getMusicsList(String json) {
 		JSONObject root = new JSONObject(json);
 		try{
 			root.getJSONObject(MuzikFinderConstants.TRACK_LIST); // Can throw Exception if key not exists
@@ -88,7 +92,7 @@ public final class MuzikFinderAPIHelper {
 			root = getBody(json);
 		}
 		
-		List<Music> musics = null;
+		List<MFMusic> musics = null;
 		try {
 			
 			Gson gson = new Gson();
@@ -107,7 +111,7 @@ public final class MuzikFinderAPIHelper {
 		return musics;
 	}
 
-	public static Lyrics getLyrics(String json) {
+	public static MFLyrics getLyrics(String json) {
 		JSONObject root = new JSONObject(json);
 		try{
 			root.getJSONObject(MuzikFinderConstants.LYRICS); // Can throw Exception if key not exists

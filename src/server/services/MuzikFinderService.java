@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import api.API;
-import api.musixMatch.metier.Artist;
-import api.musixMatch.metier.Music;
+import interfaces.MFArtist;
+import interfaces.MFMusic;
 import nosql.NoSQLDB;
 import sql.SQLDB;
 import utils.MuzikFinderPreferences;
@@ -32,19 +32,19 @@ public class MuzikFinderService {
 	
 	////====== API PART ====== ////
 	
-	public List<Artist> getTopArtistsFromAPI(int pos, int nbArtistsToGet, String country) {
+	public List<MFArtist> getTopArtistsFromAPI(int pos, int nbArtistsToGet, String country) {
 		return api.getTopArtists(pos, nbArtistsToGet, country);
 	}
-
+	
 	public List<String> getAllAlbumIdsFromAPI(String artistId) {
 		return api.getAllAlbumIds(artistId);
 	}
 
-	public List<Music> getAllMusicsFromAPI(String albumId) {
+	public List<MFMusic> getAllMusicsFromAPI(String albumId) {
 		return api.getMusicsInAlbum(albumId);
 	}
 	
-	private List<Music> getTopMusicsFromAPI(int from, int to, String country){
+	private List<MFMusic> getTopMusicsFromAPI(int from, int to, String country){
 		return api.getTopMusics(from, to, country);
 	}
 	
@@ -83,22 +83,28 @@ public class MuzikFinderService {
 		//TODO: utiliser TextParser du package utils.textMining;
 		return null;
 	}
+	
 
 	public void startFilingDatabaseProcess() {
-		List<Music> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.COUNTRY_ORDER[0]);
+		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.COUNTRY_ORDER[0]);
 		System.out.println(musics.size()+" musiques");
-		//TODO: remove if exists in mongo
-		Map<String, List<Music>> fromSameAlbum = new HashMap<>();
+		List<MFMusic> musicsNotInNoSQL = nosql.filterByExistingMusics(musics);
+		
+		Map<String, List<MFMusic>> mapAlbumIdWithAlbum = new HashMap<>();
 		int cpt = 0;
-		for(Music music : musics){
+		for(MFMusic music : musicsNotInNoSQL){
 			if(music!=null && music.getAlbumId()!=null){
-				fromSameAlbum.put( music.getAlbumId(), getAllMusicsFromAPI(music.getAlbumId()) );
+				mapAlbumIdWithAlbum.put( music.getAlbumId(), getAllMusicsFromAPI(music.getAlbumId()) );
 			}
-			System.out.println("Album "+music.getAlbumId()+" = "+fromSameAlbum.get(music.getAlbumId()).size()+" musics...");
-			cpt+=fromSameAlbum.get(music.getAlbumId()).size();
+			
+			
+			System.out.println("Album "+music.getAlbumId()+" = "+mapAlbumIdWithAlbum.get(music.getAlbumId()).size()+" musics...");
+			cpt+=mapAlbumIdWithAlbum.get(music.getAlbumId()).size();
 		}
 		System.out.println("\nNombre de musiques récupérées au final : "+cpt);
-		// insert in mongo
+		
+		nosql.insertNewMusics(mapAlbumIdWithAlbum);
 	}
-	
+
+
 }

@@ -3,8 +3,8 @@ package api;
 import java.util.List;
 
 import api.musixMatch.MusixMatchService;
-import api.musixMatch.metier.Artist;
-import api.musixMatch.metier.Music;
+import interfaces.MFArtist;
+import interfaces.MFMusic;
 
 /**
  * Appel les fonctions de l'API choisies (MusixMatch, SoundcloudAPI, etc ...)
@@ -22,15 +22,15 @@ public class API {
 		return musixMatch.getAllAlbumIds(artistId);
 	}
 
-	public List<Music> getMusicsInAlbum(String albumId) {
+	public List<MFMusic> getMusicsInAlbum(String albumId) {
 		return musixMatch.getMusicsInAlbum(albumId);
 	}
 	
-	public List<Artist> getTopArtists(int pos, int nbArtistsToGet, String country) {
+	public List<MFArtist> getTopArtists(int pos, int nbArtistsToGet, String country) {
 		return musixMatch.getTopArtists(pos, nbArtistsToGet, country);
 	}
 
-	public List<Music> getTopMusics(int from, int to, String country) {
+	public List<MFMusic> getTopMusics(int from, int to, String country) {
 		return musixMatch.getTopMusics(from, to, country);
 	}
 

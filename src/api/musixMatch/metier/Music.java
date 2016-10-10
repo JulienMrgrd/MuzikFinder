@@ -2,7 +2,10 @@ package api.musixMatch.metier;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Music {
+import interfaces.MFLyrics;
+import interfaces.MFMusic;
+
+public class Music implements MFMusic {
 
 	@SerializedName("track_id")
 	private String trackId;
@@ -12,6 +15,9 @@ public class Music {
 	
 	@SerializedName("artist_id")
 	private String artistId;
+	
+	@SerializedName("artist_name")
+	private String artistName;
 	
 	@SerializedName("album_id")
 	private String albumId;
@@ -52,6 +58,14 @@ public class Music {
 		this.artistId = artistId;
 	}
 
+	public String getArtistName() {
+		return artistName;
+	}
+
+	public void setArtistName(String artistName) {
+		this.artistName = artistName;
+	}
+
 	public String getAlbumId() {
 		return albumId;
 	}
@@ -84,13 +98,12 @@ public class Music {
 		this.hasLyrics = hasLyrics;
 	}
 
-
-	public Lyrics getLyrics() {
+	public MFLyrics getLyrics() {
 		return lyrics;
 	}
 
-	public void setLyrics(Lyrics lyrics) {
-		this.lyrics = lyrics;
+	public void setLyrics(MFLyrics lyrics) {
+		this.lyrics = (Lyrics) lyrics;
 	}
 
 }

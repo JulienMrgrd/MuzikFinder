@@ -1,0 +1,22 @@
+Collection Lyrics:
+idMusic:XXX
+lyrics:XXX
+nameMusic:XXX
+idArtist:XXX
+langage:XXX
+sportifyId:XXX
+soundcloudId:XXX
+
+
+Collection Tags:
+tag:XXX
+idMusic:XXX
+
+
+Collection Artists:
+nameArtist:XXX
+idArtist:XXX
+
+
+Collection Albums:
+idAlbum:XXX

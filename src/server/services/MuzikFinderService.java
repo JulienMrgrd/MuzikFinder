@@ -13,7 +13,7 @@ import sql.SQLDB;
 import utils.MuzikFinderPreferences;
 
 /**
- * Aucun appel direct aux BD ou Api ici !!
+ * Aucun appel direct aux BD ou API ici !!
  * @author JulienM
  *
  */

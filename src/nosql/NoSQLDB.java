@@ -3,6 +3,7 @@ package nosql;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bson.Document;
@@ -199,5 +200,10 @@ public class NoSQLDB {
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -199,7 +199,7 @@ public class NoSQLDB {
 	 */
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		// TODO Auto-generated method stub
-		return null;
+		return musics;
 	}
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {

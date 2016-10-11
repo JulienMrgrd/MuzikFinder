@@ -89,16 +89,13 @@ public class MusixMatchService {
 
 	public List<MFMusic> getTopMusics(int from, int to, String country) {
 		Map<String, String> params = new HashMap<>();
-
 		params.put(MuzikFinderConstants.PAGE_SIZE, Integer.toString(to));
 		params.put(MuzikFinderConstants.PAGE, Integer.toString(from));
 		params.put(MuzikFinderConstants.COUNTRY, country);
 		String request = RequestHelper.createRequest(MuzikFinderConstants.TRACK_CHART_GET, params);
-		
 //		System.out.println("Requête in MusixMatch : "+request);
 
 		String response = RequestHelper.sendRequest(request);
-		
 		return MusixMatchAPIHelper.getMusicsList(response);
 	}
 	

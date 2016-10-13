@@ -1,18 +1,16 @@
 package nosql;
 
-import java.util.Comparator;
-
-public class TagScore implements Comparator<TagScore>{
+public class TagScore implements Comparable<TagScore>{
 	
-	private int score;
+	private Integer score;
 	private String tag;
 	
-	public TagScore(int score, String tag) {
+	public TagScore(Integer score, String tag) {
 		this.score = score;
 		this.tag = tag;
 	}
 
-	public int getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
@@ -29,8 +27,9 @@ public class TagScore implements Comparator<TagScore>{
 	}
 
 	@Override
-	public int compare(TagScore t1, TagScore t2) {
-		return (t1.getScore() >= t2.getScore()) ? 1 : (t1.getScore() < t2.getScore()) ? -1 : 0;
+	public int compareTo(TagScore t2) {
+		// TODO Auto-generated method stub
+		return (this.getScore() >= t2.getScore()) ? 1 : (this.getScore() < t2.getScore()) ? -1 : 0;
 	}
 
 }

@@ -15,6 +15,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
+import server.services.Search;
+
 public class MongoService {
 
 	ServerAddress serverAddress;
@@ -50,7 +52,7 @@ public class MongoService {
 		collection.updateOne(before, after);
 	}
 
-	public MongoCursor<Document> findAll(MongoCollection<Document> collection, Document findQuery){
+	public MongoCursor<Document> findAll(MongoCollection<Document> collection){
 		return collection.find().iterator();
 	}
 
@@ -154,7 +156,11 @@ public class MongoService {
 	}
 
 	public static void main(String[] args){
-		new MongoService().fakeUse();
+		//new MongoService().fakeUse();
+		List<String> ls=new ArrayList<>();
+		ls.add("Sorry");
+		ls.add("wanted");
+		Search.searchbyTag(ls);
 	}
 
 }

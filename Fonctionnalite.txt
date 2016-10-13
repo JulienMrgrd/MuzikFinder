@@ -1,0 +1,25 @@
+En mode Connecter:
+
+OBLIGER:
+ - Recherche avec Tag ET/OU Artiste ET/OU Nom Track
+ - Deconnexion
+ - Historique recherche
+ - Dire qu'on a pas trouvé une musique avec artiste et nom track qui nous force a la chercher sur musixmatch
+BONUS:
+ - Suivre "amis" pour connaitre les recherches effectuer par nos amis
+ - Chat pour dire les musiques non trouve a partir des tags.
+ 
+
+En mode non Connecter:
+
+OBLIGER:
+ - Recherche musique par tag qui oblige a se connecter pour avoir les résultats
+ - Inscription/Connexion
+ - Consultation des tops recherche
+BONUS:
+ 
+ 
+ 
+BONUS:
+
+BLA BLA bas de page "recrutement, qui sommes nous, ..."

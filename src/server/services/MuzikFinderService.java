@@ -55,7 +55,7 @@ public class MuzikFinderService {
 		return nosql.presentArtist(artist);
 	}
 	
-	public Set<String> getMusicByTagInNoSQL(String tag){
+	public String getMusicByTagInNoSQL(String tag){
 		if(!nosql.presentTag(tag))
 			return null;
 		else

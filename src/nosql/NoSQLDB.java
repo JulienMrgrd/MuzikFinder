@@ -1,6 +1,7 @@
 package nosql;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -136,18 +137,17 @@ public class NoSQLDB {
 		return false;
 	}
 
-	public Set<String> getMusicsByTag(String tag){
+	public String getMusicsByTag(String tag){
 		
 		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		
-		Set<String> listeId = new HashSet<String>();
+		String idMusic="";
 		while(cursor.hasNext()){
 			Document doc = cursor.next();
-			listeId.add(doc.getString("idMusic"));
+			idMusic+=doc.getString("musicId");
 		}
-		return listeId;
+		return idMusic;
 	}
 	
 	public Set<String> getMusicsByIdArtist(String idArtiste){
@@ -192,14 +192,37 @@ public class NoSQLDB {
 		return listeId;
 	}
 
+	public List<String> getAllIdAlbum(){
+		MongoCollection<Document> collection = mongo.getCollection("Albums"); // récupère la collection mongo qui stocke tous les albums
+		MongoCursor<Document> cursor = mongo.findAll(collection);
+		
+		List<String> allIdAlbum = new ArrayList<String>(); 
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			allIdAlbum.add(doc.getString("idAlbum"));
+		}
+		return allIdAlbum;
+	}
+	
 	/**
 	 * Reduced the given list in parameter if one of these musics exists in Mongo 
 	 * @param musics
 	 * @return the reduced list
 	 */
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
-		// TODO Auto-generated method stub
-		return musics;
+		List<String> idAlbumAlreadyExist = getAllIdAlbum();
+		
+		if(idAlbumAlreadyExist==null){
+			return musics;
+		}
+		List<MFMusic> listReduce = new ArrayList<MFMusic>();
+		for(MFMusic mfm : musics){
+			if(!idAlbumAlreadyExist.contains(mfm.getAlbumId())){
+				listReduce.add(mfm);
+			}
+		}
+		
+		return listReduce;
 	}
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {

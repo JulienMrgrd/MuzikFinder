@@ -32,176 +32,59 @@ public class NoSQLDB {
 	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
-		MongoCollection<Document> collection = mongo.getCollection("Tags");
-		Document doc;
-		if(!presentTag(tag)){
-			doc = new Document();
-			doc.put("tag",tag);
-			doc.put("musicId",musicId);
-			mongo.insertOne(collection, doc);
-			return true;
-		}else if(presentIdMusicOnTag(tag,musicId)){
-			System.out.println("IdMusic already corresponding in the Tag Collection\n");
-			return false;
-		} else {
-			doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
-			MongoCursor<Document> cursor = mongo.findBy(collection, doc);
-			while(cursor.hasNext()){
-				Document doc1 = cursor.next();
-				Document doc2;
-				String listeId = doc1.getString("musicId");
-				System.out.println(listeId);
-				listeId = listeId.concat(";"+musicId);
-				doc2 = new Document("$set",new Document("musicId",listeId));
-				mongo.updateOne(collection, doc1,doc2);
-				return true;
-			}
-		}
-		return true;
+		return mongo.insertTagIfNotExists(tag, musicId);
 	}
 	
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String nameMusic, String langue, String spotifyId, String soundCloudId){
-		if(presentLyrics(musicId)){
-			System.out.println("Lyrics already presents in the collection\n");
-			return false; 
-		}
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics");
-		Document doc = new Document();
-		doc.put("idMusic",musicId);
-		doc.put("lyrics",words);
-		doc.put("idArtist",artistId);
-		doc.put("nameMusic", nameMusic);
-		doc.put("langue", langue);
-		doc.put("spotifyId", spotifyId);
-		doc.put("soundCloudId",soundCloudId);
-		mongo.insertOne(collection, doc);
-		return true;
+		return mongo.insertLyricsIfNotExists(words, musicId, artistId, nameMusic, langue, spotifyId, soundCloudId);
 	}
 
 	public boolean insertArtistIfNotExist(String artistName, String artistId ){
-		if(presentArtist(artistId)){
-			System.out.println("Artist already present in the collection\n");
-			return false;
-		}
-		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document();
-		doc.put("idArtist", artistId);
-		doc.put("nameArtist",artistName);
-		mongo.insertOne(collection, doc);
-		return true;
+		return mongo.insertArtistIfNotExist(artistName, artistId);
 	}
 
+	public boolean insertIdAlbumIfNotExist(String idAlbum){
+		return mongo.insertIdAlbumIfNotExist(idAlbum);
+	}
+	
 	public boolean presentArtist(String artistId){
-		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document("nameArtist", new Document("$eq",artistId)); // crée le document retournant les informations pr�sentes dans la collection Artists correspondantes
-		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
-		while(cursor.hasNext())
-			return true;
-		return false;
+		return mongo.presentArtist(artistId);
 	}
 	
 	public boolean presentLyrics(String musicId){
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
-		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
-		while(cursor.hasNext())
-			return true;
-		return false;
+		return mongo.presentLyrics(musicId);
 	}
 	
 	public boolean presentTag(String tag){
-		MongoCollection<Document> collection = mongo.getCollection("Tags");
-		Document findQuery = new Document("tag", new Document("$eq",tag));
-		System.out.println(findQuery);
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		while(cursor.hasNext())
-			return true;
-		return false;
+		return mongo.presentTag(tag);
 	}
 	
 	public boolean presentIdMusicOnTag(String tag, String idMusic){
-		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
-		
-		Document doc = new Document("tag",new Document("$regex",tag)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
-		MongoCursor<Document> cursor = mongo.findBy(collection, doc);
-		while(cursor.hasNext()){
-			Document doc1 = cursor.next();
-			String chaine = doc1.getString("musicId");
-			//System.out.println(chaine);
-			String[] tab = chaine.split(";");
-			for( String s : tab){
-				if(s.equals(idMusic))
-					return true;
-			}
-		}
-		return false;
+		return mongo.presentIdMusicOnTag(tag, idMusic);
+	}
+	
+	public boolean presentIdAlbum(String idAlbum){
+		return mongo.presentIdAlbum(idAlbum);
 	}
 
 	public String getMusicsByTag(String tag){
-		
-		MongoCollection<Document> collection = mongo.getCollection("Tags"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("tag", new Document("$eq",tag));
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		String idMusic="";
-		while(cursor.hasNext()){
-			Document doc = cursor.next();
-			idMusic+=doc.getString("musicId");
-		}
-		return idMusic;
+		return mongo.getMusicsByTag(tag);
 	}
 	
 	public Set<String> getMusicsByIdArtist(String idArtiste){
-		
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("idArtist", new Document("$eq",idArtiste));
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		
-		Set<String> listeId = new HashSet<String>();
-		while(cursor.hasNext()){
-			Document doc = cursor.next();
-			listeId.add(doc.getString("idMusic"));
-		}
-		return listeId;
+		return mongo.getMusicsByIdArtist(idArtiste);
 	}
 	
 	public String getIdArtist(String nameArtiste){
-		
-		MongoCollection<Document> collection = mongo.getCollection("Artists"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("nameArtist", new Document("$eq",nameArtiste));
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		
-		while(cursor.hasNext()){
-			Document doc = cursor.next();
-			return doc.getString("idArtist");
-		}
-		return null;
+		return mongo.getIdArtist(nameArtiste);
 	}
 	
 	public Set<String> getMusicsByLyrics(String lyrics){
-		
-		MongoCollection<Document> collection = mongo.getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("decade", new Document("$regex",lyrics));
-		System.out.println(findQuery);
-		MongoCursor<Document> cursor = mongo.findBy(collection, findQuery);
-		
-		Set<String> listeId = new HashSet<String>();
-		while(cursor.hasNext()){
-			Document doc = cursor.next();
-			listeId.add(doc.getString("decade"));
-		}
-		return listeId;
+		return mongo.getMusicsByLyrics(lyrics);
 	}
 
 	public List<String> getAllIdAlbum(){
-		MongoCollection<Document> collection = mongo.getCollection("Albums"); // récupère la collection mongo qui stocke tous les albums
-		MongoCursor<Document> cursor = mongo.findAll(collection);
-		
-		List<String> allIdAlbum = new ArrayList<String>(); 
-		while(cursor.hasNext()){
-			Document doc = cursor.next();
-			allIdAlbum.add(doc.getString("idAlbum"));
-		}
-		return allIdAlbum;
+		return mongo.getAllIdAlbum();
 	}
 	
 	/**
@@ -210,23 +93,10 @@ public class NoSQLDB {
 	 * @return the reduced list
 	 */
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
-		List<String> idAlbumAlreadyExist = getAllIdAlbum();
-		
-		if(idAlbumAlreadyExist==null){
-			return musics;
-		}
-		List<MFMusic> listReduce = new ArrayList<MFMusic>();
-		for(MFMusic mfm : musics){
-			if(!idAlbumAlreadyExist.contains(mfm.getAlbumId())){
-				listReduce.add(mfm);
-			}
-		}
-		
-		return listReduce;
+		return mongo.filterByExistingMusics(musics);
 	}
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
-		// TODO Auto-generated method stub
-		
+		mongo.insertNewMusics(mapAlbumIdWithAlbum);
 	}
 }

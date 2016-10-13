@@ -97,6 +97,11 @@ public class NoSQLDB {
 	}
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
-		mongo.insertNewMusics(mapAlbumIdWithAlbum);
+		try {
+			mongo.insertNewMusics(mapAlbumIdWithAlbum);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

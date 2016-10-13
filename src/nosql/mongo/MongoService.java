@@ -1,8 +1,6 @@
 package nosql.mongo;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,7 +105,7 @@ public class MongoService {
 		if(!presentTag(tag)){
 			doc = new Document();
 			doc.put("tag",tag);
-			doc.put("musicId",musicId);
+			doc.put("idMusic",musicId);
 			insertOne(collection, doc);
 			return true;
 		}else if(presentIdMusicOnTag(tag,musicId)){
@@ -119,10 +117,10 @@ public class MongoService {
 			while(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				String listeId = doc1.getString("musicId");
+				String listeId = doc1.getString("idMusic");
 				System.out.println(listeId);
 				listeId = listeId.concat(";"+musicId);
-				doc2 = new Document("$set",new Document("musicId",listeId));
+				doc2 = new Document("$set",new Document("idMusic",listeId));
 				updateOne(collection, doc1,doc2);
 				return true;
 			}
@@ -136,7 +134,7 @@ public class MongoService {
 			System.out.println("Lyrics already presents in the collection\n");
 			return false; 
 		}
-		MongoCollection<Document> collection = getCollection("Lyrics");
+		MongoCollection<Document> collection = getCollection("Musics");
 		Document doc = new Document();
 		doc.put("idMusic",musicId);
 		doc.put("lyrics",words);
@@ -185,7 +183,7 @@ public class MongoService {
 	}
 
 	public boolean presentLyrics(String musicId){
-		MongoCollection<Document> collection = getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
+		MongoCollection<Document> collection = getCollection("Musics"); // récupère la collection mongo qui stocke les musiques
 		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = findBy(collection, doc);
 		while(cursor.hasNext())
@@ -210,7 +208,7 @@ public class MongoService {
 		MongoCursor<Document> cursor = findBy(collection, doc);
 		while(cursor.hasNext()){
 			Document doc1 = cursor.next();
-			String chaine = doc1.getString("musicId");
+			String chaine = doc1.getString("idMusic");
 			//System.out.println(chaine);
 			String[] tab = chaine.split(";");
 			for( String s : tab){
@@ -239,13 +237,13 @@ public class MongoService {
 		String idMusic="";
 		while(cursor.hasNext()){
 			Document doc = cursor.next();
-			idMusic+=doc.getString("musicId");
+			idMusic+=doc.getString("idMusic");
 		}
 		return idMusic;
 	}
 
 	public Set<String> getMusicsByIdArtist(String idArtiste){
-		MongoCollection<Document> collection = getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
+		MongoCollection<Document> collection = getCollection("Musics"); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("idArtist", new Document("$eq",idArtiste));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
@@ -272,15 +270,15 @@ public class MongoService {
 
 
 	public Set<String> getMusicsByLyrics(String lyrics){
-		MongoCollection<Document> collection = getCollection("Lyrics"); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("decade", new Document("$regex",lyrics));
+		MongoCollection<Document> collection = getCollection("Musics"); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document("lyrics", new Document("$regex",lyrics));
 		System.out.println(findQuery);
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
 		Set<String> listeId = new HashSet<String>();
 		while(cursor.hasNext()){
 			Document doc = cursor.next();
-			listeId.add(doc.getString("decade"));
+			listeId.add(doc.getString("idMusic"));
 		}
 		return listeId;
 	}

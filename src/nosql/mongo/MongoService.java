@@ -351,15 +351,15 @@ public class MongoService {
 				// et on les ajoute dans la base mongo Tags sans oublier de retirer les caractères
 				// spéciaux
 				for(String s : nounPhrases){
-					s = s.replaceAll("[^A-Za-z0-9]", "");
+					s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
 					insertTagIfNotExists(s, mf.getTrackId());
 				}
 				for(String s : adjectivesPhrases){
-					s = s.replaceAll("[^A-Za-z0-9]", "");
+					s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
 					insertTagIfNotExists(s, mf.getTrackId());
 				}
 				for(String s : verbsPhrases){
-					s = s.replaceAll("[^A-Za-z0-9]", "");
+					s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
 					insertTagIfNotExists(s, mf.getTrackId());
 				}
 			}

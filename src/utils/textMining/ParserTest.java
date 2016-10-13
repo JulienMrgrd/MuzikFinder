@@ -17,12 +17,35 @@ public class ParserTest {
 	static Set<String> adjectivePhrases = new HashSet<>();
 	static Set<String> verbPhrases = new HashSet<>();
 	
+	public static Set<String> getNounPhrases() {
+		return nounPhrases;
+	}
+
+	public static void setNounPhrases(Set<String> nounPhrases) {
+		ParserTest.nounPhrases = nounPhrases;
+	}
+
+	public static Set<String> getAdjectivePhrases() {
+		return adjectivePhrases;
+	}
+
+	public static void setAdjectivePhrases(Set<String> adjectivePhrases) {
+		ParserTest.adjectivePhrases = adjectivePhrases;
+	}
+
+	public static Set<String> getVerbPhrases() {
+		return verbPhrases;
+	}
+
+	public static void setVerbPhrases(Set<String> verbPhrases) {
+		ParserTest.verbPhrases = verbPhrases;
+	}
 	private static String line = "The Moon is a barren, rocky world without air and water. It has dark lava plain on its surface. " +
 			"The Moon is filled wit craters. It has no light of its own. It gets its light from the Sun. The Moo keeps changing its " +
 			"shape as it moves round the Earth. It spins on its axis in 27.3 days stars were named after the Edwin Aldrin were the " +
 			"first ones to set their foot on the Moon on 21 July 1969 They reached the Moon in their space craft named Apollo II";
 	
-	public void getNounPhrases(Parse p) {
+	public static void getNounPhrases(Parse p) {
 	    if (p.getType().equals("NN") || p.getType().equals("NNS") || p.getType().equals("NNP") || p.getType().equals("NNPS")) {
 	         nounPhrases.add(p.getCoveredText());
 	         //System.out.println(p.getCoveredText());

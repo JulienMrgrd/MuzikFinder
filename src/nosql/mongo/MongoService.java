@@ -1,5 +1,9 @@
 package nosql.mongo;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,6 +15,9 @@ import java.util.logging.Logger;
 
 import org.bson.Document;
 
+import opennlp.tools.cmdline.parser.ParserTool;
+import opennlp.tools.parser.*;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -20,7 +27,9 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
+import opennlp.tools.util.InvalidFormatException;
 import server.services.Search;
+import utils.textMining.ParserTest;
 
 public class MongoService {
 
@@ -152,13 +161,13 @@ public class MongoService {
 		insertOne(collection, doc);
 		return true;
 	}
-	
+
 	public boolean insertIdAlbumIfNotExist(String idAlbum){
 		if(presentIdAlbum(idAlbum)){
 			System.out.println("Artist already present in the collection\n");
 			return false;
 		}
-		
+
 		MongoCollection<Document> collection = getCollection("Albums");
 		Document doc = new Document();
 		doc.put("idAlbum", idAlbum);
@@ -211,12 +220,12 @@ public class MongoService {
 		}
 		return false;
 	}
-	
+
 	public boolean presentIdAlbum(String idAlbum){
 		MongoCollection<Document> collection = getCollection("Albums");
 		Document doc = new Document("idAlbum",new Document("$eq",idAlbum));
 		MongoCursor<Document> cursor = findBy(collection, doc);
-		
+
 		while(cursor.hasNext())
 			return true;
 		return false;
@@ -305,25 +314,60 @@ public class MongoService {
 		return listReduce;
 	}
 
-	
-	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum){
+
+	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception{
 		ArrayList<String> listIdAlbum = (ArrayList<String>) mapAlbumIdWithAlbum.keySet();
+
+		ArrayList<String> nounPhrases = new ArrayList<String>(); // noms dans la lyric pour les tags
+		ArrayList<String> adjectivesPhrases = new ArrayList<String>(); // adjectifs dans la lyric pour les tags
+		ArrayList<String> verbsPhrases = new ArrayList<String>(); // verbes dans la lyric pour les tags
+
+		InputStream is = new FileInputStream("res/en-parser-chunking.bin");
+		ParserModel model = new ParserModel(is);
+		Parser parser = ParserFactory.create(model);
+		// Utiliser pour la création des tags de chaque lyrics
 		
 		for(String idAlbum : listIdAlbum){
-			insertIdAlbumIfNotExist(idAlbum);
+			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
-			listMusic = (ArrayList<MFMusic>) filterByExistingMusics(listMusic);
+			
 			for(MFMusic mf : listMusic){
+				// Pour chaque MFMusic présentes dans l'album
 				MFLyrics mfL = mf.getLyrics();
+				// on récupère les lyrics
+				// et on insère dans la base mongo Lyrics
 				insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
 						mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), mf.getTrackSpotifyId()
 						, mf.getTrackSoundcloudId());
 				
-				/*TODO insertTag of All Lyrics. How can we use the class ParserTest ?*/
+				// Début de la création des tags pour chaque lyrics
+
+				Parse topParses[] = ParserTool.parseLine(mfL.getLyricsBody(), parser, 1);
+				for (Parse p : topParses){
+					ParserTest.getNounPhrases(p);
+				}
+				// On stocke tout les tags par type dans les variables suivantes
+				nounPhrases = (ArrayList<String>) ParserTest.getNounPhrases();
+				adjectivesPhrases = (ArrayList<String>) ParserTest.getAdjectivePhrases();
+				verbsPhrases = (ArrayList<String>) ParserTest.getVerbPhrases();
+				// et on les ajoute dans la base mongo Tags sans oublier de retirer les caractères
+				// spéciaux
+				for(String s : nounPhrases){
+					s = s.replaceAll("[^A-Za-z0-9]", "");
+					insertTagIfNotExists(s, mf.getTrackId());
+				}
+				for(String s : adjectivesPhrases){
+					s = s.replaceAll("[^A-Za-z0-9]", "");
+					insertTagIfNotExists(s, mf.getTrackId());
+				}
+				for(String s : verbsPhrases){
+					s = s.replaceAll("[^A-Za-z0-9]", "");
+					insertTagIfNotExists(s, mf.getTrackId());
+				}
 			}
 		}
 	}
-	
+
 	public void close(){
 		mongoClient.close();
 	}

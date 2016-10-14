@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import nosql.TagScore;
 
+//TODO : renommmer MongoSearchUtils et mettre dans package mongo
 public class Search {
 
 	public static void searchbyTag(List<String> tag){
@@ -19,7 +20,7 @@ public class Search {
 		Boolean presentInList = false;
 		for(String tmp:tag){
 
-			s=mf.getMusicByTagInNoSQL(tmp);
+			s=mf.getIdMusicByTagInNoSQL(tmp);
 			split = s.split(";");
 			System.out.println("s = "+s);
 			for(String tmpSplit : split){

@@ -51,26 +51,20 @@ public class MuzikFinderService {
 	
 	//// ====== NOSQL PART ====== ////
 	
-	private boolean containsArtistsInNoSQL(String artist){
-		return nosql.presentArtist(artist);
+	public boolean containsArtistInNoSQL(String artist){
+		return nosql.containsArtist(artist);
 	}
 	
-	public String getMusicByTagInNoSQL(String tag){
-		if(!nosql.presentTag(tag))
-			return null;
-		else
-			return nosql.getMusicsByTag(tag);
+	public String getIdMusicByTagInNoSQL(String tag){
+		return nosql.getIdMusicByTag(tag);
 	}
 	
-	public Set<String> getMusicByIdArtistInNoSQL(String artist){
-		if(!nosql.presentArtist(artist))
-			return null;
-		else
-			return nosql.getMusicsByIdArtist(artist);
+	public Set<String> getIdMusicsByIdArtistInNoSQL(String artist){
+		return nosql.getIdMusicsByIdArtist(artist);
 	}
 	
-	public Set<String> getMusicsByLyricsInNoSQL(String lyrics){
-		return nosql.getMusicsByLyrics(lyrics);
+	public Set<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
+		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
 	
@@ -79,12 +73,6 @@ public class MuzikFinderService {
 	
 	////====== DAEMON PART ====== ////
 	
-	private List<String> extractImportantWords(String lyrics){
-		//TODO: utiliser TextParser du package utils.textMining;
-		return null;
-	}
-	
-
 	public void startFilingDatabaseProcess() {
 		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.COUNTRY_ORDER[0]);
 		System.out.println(musics.size()+" musiques");

@@ -1,5 +1,4 @@
 interfaces\MFLyrics.class
-utils\textMining\ParserTest.class
 api\musixMatch\metier\Lyrics.class
 api\musixMatch\utils\MusixMatchUtils.class
 daemon\DaemonMain.class
@@ -7,16 +6,21 @@ sql\mysql\MySQLService.class
 server\services\MuzikFinderService.class
 api\musixMatch\metier\Music.class
 server\servlets\LoginServlet.class
+utils\textMining\ParserUtils.class
 api\musixMatch\utils\MusixMatchAPIHelper.class
 api\musixMatch\utils\RequestHelper.class
+utils\MathUtils.class
 api\API.class
 api\musixMatch\metier\Album.class
 utils\MuzikFinderConstants.class
 nosql\NoSQLDB.class
+server\dto\MusicDTO.class
+nosql\mongo\MongoCollections.class
 api\musixMatch\MusixMatchService.class
 api\musixMatch\metier\Artist.class
 interfaces\MFMusic.class
 utils\MuzikFinderPreferences.class
+server\services\Search.class
 interfaces\MFAlbum.class
 interfaces\MFArtist.class
 nosql\mongo\MongoService.class

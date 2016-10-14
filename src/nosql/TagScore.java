@@ -28,6 +28,6 @@ public class TagScore implements Comparable<TagScore>{
 
 	@Override
 	public int compareTo(TagScore t2) {
-		return (this.getScore() >= t2.getScore()) ? 1 : (this.getScore() < t2.getScore()) ? -1 : 0;
+		return (this.getScore() > t2.getScore()) ? 1 : (this.getScore() < t2.getScore()) ? -1 : 0;
 	}
 }

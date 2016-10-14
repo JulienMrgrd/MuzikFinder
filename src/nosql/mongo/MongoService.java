@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import opennlp.tools.cmdline.parser.ParserTool;
 import opennlp.tools.parser.*;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -26,7 +30,9 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import opennlp.tools.util.InvalidFormatException;
+import server.musicdto.MusicDTO;
 import server.services.Search;
+import utils.MathUtils;
 import utils.textMining.ParserTest;
 
 public class MongoService {
@@ -34,7 +40,7 @@ public class MongoService {
 	ServerAddress serverAddress;
 	MongoCredential mongoCredential;
 	MongoClient mongoClient;
-	MongoDatabase db;
+	static MongoDatabase db;
 
 	public MongoService() {
 		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
@@ -64,11 +70,11 @@ public class MongoService {
 		collection.updateOne(before, after);
 	}
 
-	public MongoCursor<Document> findAll(MongoCollection<Document> collection){
+	public static MongoCursor<Document> findAll(MongoCollection<Document> collection){
 		return collection.find().iterator();
 	}
 
-	public MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
+	public static MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
 		return collection.find(findQuery).iterator();
 	}
 
@@ -77,7 +83,7 @@ public class MongoService {
 		return collection.find(findQuery).sort(orderBy).iterator();
 	}
 
-	public MongoCollection<Document> getCollection(String collectionName){
+	public static MongoCollection<Document> getCollection(String collectionName){
 		return db.getCollection(collectionName);
 	}
 
@@ -99,13 +105,16 @@ public class MongoService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean insertTagIfNotExists(String tag, String musicId){
 		MongoCollection<Document> collection = getCollection("Tags");
 		Document doc;
 		if(!presentTag(tag)){
 			doc = new Document();
 			doc.put("tag",tag);
-			doc.put("idMusic",musicId);
+			List<String> listId = new ArrayList<String>();
+			listId.add(musicId);
+			doc.put("idMusic", listId);
 			insertOne(collection, doc);
 			return true;
 		}else if(presentIdMusicOnTag(tag,musicId)){
@@ -117,9 +126,9 @@ public class MongoService {
 			while(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				String listeId = doc1.getString("idMusic");
+				List<String> listeId = (List<String>) doc1.get("idMusic");
 				System.out.println(listeId);
-				listeId = listeId.concat(";"+musicId);
+				listeId.add(musicId);
 				doc2 = new Document("$set",new Document("idMusic",listeId));
 				updateOne(collection, doc1,doc2);
 				return true;
@@ -314,21 +323,21 @@ public class MongoService {
 
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception{
-		ArrayList<String> listIdAlbum = (ArrayList<String>) mapAlbumIdWithAlbum.keySet();
+		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
 
-		ArrayList<String> nounPhrases = new ArrayList<String>(); // noms dans la lyric pour les tags
-		ArrayList<String> adjectivesPhrases = new ArrayList<String>(); // adjectifs dans la lyric pour les tags
-		ArrayList<String> verbsPhrases = new ArrayList<String>(); // verbes dans la lyric pour les tags
+		Set<String> nounPhrases = new HashSet<String>(); // noms dans la lyric pour les tags
+		Set<String> adjectivesPhrases = new HashSet<String>(); // adjectifs dans la lyric pour les tags
+		Set<String> verbsPhrases = new HashSet<String>(); // verbes dans la lyric pour les tags
 
 		InputStream is = new FileInputStream("res/en-parser-chunking.bin");
 		ParserModel model = new ParserModel(is);
 		Parser parser = ParserFactory.create(model);
 		// Utiliser pour la création des tags de chaque lyrics
-		
+
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
-			
+
 			for(MFMusic mf : listMusic){
 				// Pour chaque MFMusic présentes dans l'album
 				MFLyrics mfL = mf.getLyrics();
@@ -337,7 +346,7 @@ public class MongoService {
 				insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
 						mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), mf.getTrackSpotifyId()
 						, mf.getTrackSoundcloudId());
-				
+
 				// Début de la création des tags pour chaque lyrics
 
 				Parse topParses[] = ParserTool.parseLine(mfL.getLyricsBody(), parser, 1);
@@ -345,9 +354,9 @@ public class MongoService {
 					ParserTest.getNounPhrases(p);
 				}
 				// On stocke tout les tags par type dans les variables suivantes
-				nounPhrases = (ArrayList<String>) ParserTest.getNounPhrases();
-				adjectivesPhrases = (ArrayList<String>) ParserTest.getAdjectivePhrases();
-				verbsPhrases = (ArrayList<String>) ParserTest.getVerbPhrases();
+				nounPhrases = ParserTest.getNounPhrases();
+				adjectivesPhrases = ParserTest.getAdjectivePhrases();
+				verbsPhrases = ParserTest.getVerbPhrases();
 				// et on les ajoute dans la base mongo Tags sans oublier de retirer les caractères
 				// spéciaux
 				for(String s : nounPhrases){
@@ -365,6 +374,52 @@ public class MongoService {
 			}
 		}
 	}
+
+
+	@SuppressWarnings("unchecked")
+	public static ArrayList<MusicDTO> searchMusicsByTags(ArrayList<String> tags){
+		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
+		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
+		MongoCollection<Document> collection = getCollection("Tags");
+		List<MongoCursor<Document>> listCursor = new ArrayList<MongoCursor<Document>>();
+
+		for(String s : tags)
+			listCursor.add(findBy(collection, new Document("$eq",s)));
+		for(MongoCursor<Document> cursor : listCursor){
+			Document doc1 = cursor.next();
+			List<String> listIdMusic = (List<String>)doc1.get("idMusic");
+			for(String id : listIdMusic){
+				if(mapIdMusicNbOccurTag.get(id).equals(null)){
+					mapIdMusicNbOccurTag.put(id, 1);
+				}
+				else{
+					mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
+				}
+			}
+		}
+
+		Set<String> list = mapIdMusicNbOccurTag.keySet();
+		ArrayList<String> idList = new ArrayList<String>(list);
+		ArrayList<Integer> scoreList = (ArrayList<Integer>) mapIdMusicNbOccurTag.values();
+
+		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
+		collection = getCollection("Musics");
+		MongoCollection<Document> collection1 = getCollection("Artists");
+		MusicDTO msDto;
+		for(int i : newList){
+			String id = idList.get(i);
+			MongoCursor<Document> cursor = findBy(collection,new Document("$eq",id));
+			MongoCursor<Document> cursor1 = findBy(collection1,new Document("$eq",id));
+			Document doc = cursor1.next();
+			String nameArtist = doc.getString("nameArtist");
+			doc = cursor.next();
+			msDto = new MusicDTO(doc.getString("nameMusic"),nameArtist,doc.getString("spotifyId"),
+					doc.getString("soundcloudId"));
+			listMusic.add(msDto);
+		}
+		return listMusic;
+	}
+
 
 	public void close(){
 		mongoClient.close();

@@ -10,13 +10,13 @@ import nosql.TagScore;
 //TODO : renommmer MongoSearchUtils et mettre dans package mongo
 public class Search {
 
-	public static void searchbyTag(List<String> tag){
+	/*public static void searchbyTag(List<String> tag){
 
 		MuzikFinderService mf = new MuzikFinderService();
 
 		TreeSet<TagScore> tagScore = new TreeSet<TagScore>();
 		String s;
-		String[] split;
+		//String[] split;
 		Boolean presentInList = false;
 		for(String tmp:tag){
 
@@ -49,8 +49,8 @@ public class Search {
 		System.out.println(res);
 		System.out.println("1 = "+idMusicCpt.get("1"));
 		System.out.println("2 = "+idMusicCpt.get("2"));
-		System.out.println("3 = "+idMusicCpt.get("3"));*/
-	}
+		System.out.println("3 = "+idMusicCpt.get("3"));
+	}*/
 	
 	public static ArrayList<String> sortedList(HashMap<String,Integer> map){
 		ArrayList<String> keySet = new ArrayList<String>(map.keySet());

@@ -55,8 +55,8 @@ public class MuzikFinderService {
 		return nosql.containsArtist(artist);
 	}
 	
-	public String getIdMusicByTagInNoSQL(String tag){
-		return nosql.getIdMusicByTag(tag);
+	public Set<String> getIdMusicByTagInNoSQL(String tag){
+		return nosql.getIdMusicsByTag(tag);
 	}
 	
 	public Set<String> getIdMusicsByIdArtistInNoSQL(String artist){

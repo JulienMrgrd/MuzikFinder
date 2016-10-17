@@ -65,7 +65,7 @@ public class MongoService {
 
 	@SuppressWarnings("unused")
 	private MongoCursor<Document> findBy(MongoCollection<Document> collection, 
-										Document findQuery, Document orderBy){
+			Document findQuery, Document orderBy){
 		return collection.find(findQuery).sort(orderBy).iterator();
 	}
 
@@ -127,7 +127,7 @@ public class MongoService {
 
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String nameMusic, String langue, String spotifyId, String soundCloudId){
 		if(containsLyrics(musicId)) return false; 
-		
+
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS);
 		Document doc = new Document();
 		doc.put("idMusic",musicId);
@@ -143,7 +143,7 @@ public class MongoService {
 
 	public boolean insertArtistIfNotExist(String artistName, String artistId){
 		if(containsArtist(artistId)) return false;
-		
+
 		MongoCollection<Document> collection = getCollection(MongoCollections.ARTISTS); // récupère la collection mongo qui stocke les artistes
 		Document doc = new Document();
 		doc.put("idArtist", artistId);
@@ -188,16 +188,16 @@ public class MongoService {
 	}
 
 	//TODO : A MODIFIER
+	// FAIT : Moussa Nedjari 17/10/2016 16:45
 	public boolean containsIdMusicOnTag(String tag, String idMusic){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
 
 		Document doc = new Document("tag",new Document("$regex",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = findBy(collection, doc);
 		while(cursor.hasNext()){
-			Document doc1 = cursor.next();
-			String chaine = doc1.getString("idMusic");
-			String[] tab = chaine.split(";");
-			for( String s : tab){
+			Document doc_new = cursor.next();
+			List<String> listIdMusic = (List<String>)doc_new.get("idMusic");
+			for( String s : listIdMusic){
 				if(s.equals(idMusic))
 					return true;
 			}
@@ -215,16 +215,17 @@ public class MongoService {
 	}
 
 	//TODO : A MODIFIER
-	public String getMusicIdByTag(String tag){
+	// FAIT : Moussa Nedjari 17/10/2016 16:41
+	public Set<String> getIdMusicsByTag(String tag){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
-		String idMusic="";
-		while(cursor.hasNext()){
+		Set<String> listIdMusic= new HashSet<String>();
+		if(cursor.hasNext()){
 			Document doc = cursor.next();
-			idMusic+=doc.getString("idMusic");
+			listIdMusic = (Set<String>) doc.get("idMusic");
 		}
-		return idMusic;
+		return listIdMusic;
 	}
 
 	public Set<String> getIdMusicsByIdArtist(String idArtist){
@@ -296,12 +297,19 @@ public class MongoService {
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception{
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
+		String idArtist = "";
+		String nameArtist = "";
 		//TODO: Insérer Artistes !
+		// FAIT : Moussa Nedjari 17/10/2016 17:00
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
-
 			for(MFMusic mf : listMusic){
+				idArtist = mf.getArtistId();
+				nameArtist = mf.getArtistName();
+				// ajout de l'artist dans la base mongo Artists 
+				//( test de présence de l'artiste déjà effectué dans la méthode appellé)
+				insertArtistIfNotExist(nameArtist, idArtist);
 				// Pour chaque MFMusic présentes dans l'album
 				MFLyrics mfL = mf.getLyrics();
 				// on récupère les lyrics
@@ -311,6 +319,8 @@ public class MongoService {
 						mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
 
 				// Début de la création des tags pour chaque lyrics
+				// TODO JULIEN : rajouter mfL.getLyrics_language()
+				// comme deuxième paramètre du parser
 				for( String tag : ParserUtils.parserProcess(mfL.getLyricsBody()) ) {
 					tag = tag.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
 					insertTagIfNotExists(tag, mf.getTrackId());
@@ -320,19 +330,24 @@ public class MongoService {
 	}
 
 	//TODO : Modifier les noms d'attributs (collection, collection1, etc...), nettoyer le code
+	// FAIT : Moussa Nedjari 17/10/2106 16:53 (ajout du test du cursor = null si jamais mot de l'user
+	// non présent dans la base mongo des tags
 	@SuppressWarnings("unchecked")
-	public ArrayList<MusicDTO> searchMusicsByTags(ArrayList<String> tags){
+	public ArrayList<MusicDTO> searchMusicsByTagsInTags(ArrayList<String> tags){
 		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS);
-		List<MongoCursor<Document>> listCursor = new ArrayList<MongoCursor<Document>>();
+		MongoCollection<Document> collection_Tags = getCollection(MongoCollections.TAGS);
+		List<MongoCursor<Document>> listCursor_Tags = new ArrayList<MongoCursor<Document>>();
 
 		for(String s : tags){
-			listCursor.add(findBy(collection, new Document("$eq",s)));
+			MongoCursor<Document> cursor_tags = findBy(collection_Tags, new Document("$eq",s));
+			if(cursor_tags != null)
+				listCursor_Tags.add(cursor_tags);
 		}
-		for(MongoCursor<Document> cursor : listCursor){
-			Document doc1 = cursor.next();
-			List<String> listIdMusic = (List<String>)doc1.get("idMusic");
+
+		for(MongoCursor<Document> cursor : listCursor_Tags){
+			Document doc_tags = cursor.next();
+			List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
 			for(String id : listIdMusic){
 				if(mapIdMusicNbOccurTag.get(id).equals(null)){
 					mapIdMusicNbOccurTag.put(id, 1);
@@ -348,18 +363,18 @@ public class MongoService {
 		ArrayList<Integer> scoreList = (ArrayList<Integer>) mapIdMusicNbOccurTag.values();
 
 		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
-		collection = getCollection(MongoCollections.MUSICS);
-		MongoCollection<Document> collection1 = getCollection(MongoCollections.ARTISTS);
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
 		MusicDTO msDto;
 		for(int i : newList){
 			String id = idList.get(i);
-			MongoCursor<Document> cursor = findBy(collection,new Document("$eq",id));
-			MongoCursor<Document> cursor1 = findBy(collection1,new Document("$eq",id));
-			Document doc = cursor1.next();
-			String nameArtist = doc.getString("nameArtist");
-			doc = cursor.next();
-			msDto = new MusicDTO(doc.getString("nameMusic"),nameArtist,doc.getString("spotifyId"),
-					doc.getString("soundcloudId"));
+			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,new Document("$eq",id));
+			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,new Document("$eq",id));
+			Document doc_Artists = cursor_Artists.next();
+			String nameArtist = doc_Artists.getString("nameArtist");
+			Document doc_Musics = cursor_Musics.next();
+			msDto = new MusicDTO(doc_Musics.getString("nameMusic"),nameArtist,doc_Musics.getString("spotifyId"),
+					doc_Musics.getString("soundcloudId"));
 			listMusic.add(msDto);
 		}
 		return listMusic;

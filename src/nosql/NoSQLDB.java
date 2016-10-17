@@ -53,8 +53,8 @@ public class NoSQLDB {
 		return mongo.getIdMusicsByIdArtist(idArtist);
 	}
 	
-	public String getIdMusicByTag(String tag) {
-		return mongo.getMusicIdByTag(tag);
+	public Set<String> getIdMusicsByTag(String tag) {
+		return mongo.getIdMusicsByTag(tag);
 	}
 	
 	public String getIdArtist(String nameArtiste){

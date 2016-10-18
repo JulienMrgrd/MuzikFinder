@@ -330,7 +330,7 @@ public class MongoService {
 	}
 
 	//TODO : Modifier les noms d'attributs (collection, collection1, etc...), nettoyer le code
-	// FAIT : Moussa Nedjari 17/10/2106 16:53 (ajout du test du cursor = null si jamais mot de l'user
+	// FAIT : Moussa Nedjari 17/10/2106 16:53 (ajout du test du cursor = null si jamais mot entrée par l'user
 	// non présent dans la base mongo des tags
 	@SuppressWarnings("unchecked")
 	public ArrayList<MusicDTO> searchMusicsByTagsInTags(ArrayList<String> tags){
@@ -377,6 +377,46 @@ public class MongoService {
 					doc_Musics.getString("soundcloudId"));
 			listMusic.add(msDto);
 		}
+		return listMusic;
+	}
+
+	// Cette méthode permet de chercher les musics correspondantes au tags entré par
+	// l'utilisateur en traitant les tags comme une phrase complète
+	public  ArrayList<String> matchMusicWithTags(ArrayList<String> tags){
+		ArrayList<String> result = new ArrayList<String>();
+		String words = tags.toString();
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCursor<Document> cursor_Music = findBy(collection_Musics, new Document());
+		while(cursor_Music.hasNext()){
+			Document doc_lyrics = cursor_Music.next();
+			String lyrics = (String)doc_lyrics.get("lyrics");
+			if(lyrics.contains(words))
+				result.add(doc_lyrics.getString("nameMusic"));
+		}
+		return result;
+	}
+
+	public ArrayList<MusicDTO> searchMusicsByTagsInLyrics(ArrayList<String> tags){
+		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
+		ArrayList<String> list_NameMusic = matchMusicWithTags(tags);
+		MusicDTO mDto;
+
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+		MongoCursor<Document> cursor_Music; 
+		MongoCursor<Document> cursor_Artist; 
+
+		for(String nameMusic : list_NameMusic){
+			cursor_Music = findBy(collection_Musics,new Document("$eq",nameMusic));
+			Document doc_Music = cursor_Music.next();
+			String idArtist = doc_Music.getString("idArtist");
+			cursor_Artist = findBy(collection_Artists,new Document("$eq",idArtist));
+			Document doc_Artist = cursor_Artist.next();
+			mDto = new MusicDTO(nameMusic,doc_Artist.getString("nameArtist"),doc_Music.getString("spotifyId"),
+					doc_Music.getString("soundcloudId"));
+			listMusic.add(mDto);
+		}
+
 		return listMusic;
 	}
 

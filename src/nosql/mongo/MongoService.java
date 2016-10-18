@@ -19,6 +19,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
+import api.musixMatch.metier.Lyrics;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import server.dto.MusicDTO;
@@ -373,8 +374,10 @@ public class MongoService {
 			Document doc_Artists = cursor_Artists.next();
 			String nameArtist = doc_Artists.getString("nameArtist");
 			Document doc_Musics = cursor_Musics.next();
-			msDto = new MusicDTO(doc_Musics.getString("nameMusic"),nameArtist,doc_Musics.getString("spotifyId"),
-					doc_Musics.getString("soundcloudId"));
+			msDto = new MusicDTO(doc_Musics.getString("idMusic"), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist")
+					, nameArtist,
+					"", //albumId
+					doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
 			listMusic.add(msDto);
 		}
 		return listMusic;
@@ -412,8 +415,12 @@ public class MongoService {
 			String idArtist = doc_Music.getString("idArtist");
 			cursor_Artist = findBy(collection_Artists,new Document("$eq",idArtist));
 			Document doc_Artist = cursor_Artist.next();
-			mDto = new MusicDTO(nameMusic,doc_Artist.getString("nameArtist"),doc_Music.getString("spotifyId"),
-					doc_Music.getString("soundcloudId"));
+			/*mDto = new MusicDTO(nameMusic,doc_Artist.getString("nameArtist"),doc_Music.getString("spotifyId"),
+					doc_Music.getString("soundcloudId"));*/
+			mDto = new MusicDTO(doc_Music.getString("idMusic"), nameMusic, idArtist, doc_Artist.getString("nameArtist"),
+					"", //albumId
+					doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
+			
 			listMusic.add(mDto);
 		}
 

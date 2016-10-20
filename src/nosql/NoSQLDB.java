@@ -4,7 +4,6 @@ package nosql;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import interfaces.MFMusic;
 import nosql.mongo.MongoService;
@@ -20,7 +19,7 @@ public class NoSQLDB {
 	// éventuellement private DynamoDBService dynamo;
 
 	public NoSQLDB() {
-		mongo = new MongoService();
+		mongo = new MongoService(false);
 		// éventuellement cassandra = new CassandraService() ;
 		// éventuellement dynamo = new DynamoDBService();
 	}
@@ -85,6 +84,24 @@ public class NoSQLDB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Refer to MuzikFinderPreferences COUNTRY_ORDER array.
+	 * @param pos
+	 * @return
+	 */
+	public int getLastCountryPref() {
+		return mongo.getLastCountryPref();
+	}
+	
+	/**
+	 * Refer to MuzikFinderPreferences COUNTRY_ORDER array.
+	 * @param pos
+	 * @return
+	 */
+	public void setLastCountryPref(int pos) {
+		mongo.setLastCountryPref(pos);
 	}
 
 }

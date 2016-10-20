@@ -9,10 +9,12 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MuzikFinderPr
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MathUtils.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\TagScore.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Artist.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\ArtistDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFLyrics.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\MusixMatchService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\services\MuzikFinderService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\utils\RequestHelper.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\LyricsDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Lyrics.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\services\Search.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Music.java
@@ -23,6 +25,7 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\daemon\DaemonMain.j
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\SQLDB.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFMusic.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\API.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\AlbumDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFArtist.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\mysql\MySQLService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\textMining\ParserUtils.java

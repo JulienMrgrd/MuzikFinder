@@ -19,7 +19,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
-import api.musixMatch.metier.Lyrics;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import server.dto.MusicDTO;
@@ -33,9 +32,10 @@ public class MongoService {
 	MongoClient mongoClient;
 	MongoDatabase db;
 
-	public MongoService() {
-		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
-		mongoLogger.setLevel(Level.WARNING); // e.g. or Log.WARNING, etc.
+	public MongoService(boolean activeAllLogs) {
+		if(activeAllLogs){
+			Logger.getLogger( "org.mongodb.driver" ).setLevel(Level.WARNING); // e.g. or Log.WARNING, etc.
+		}
 
 		// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 		serverAddress = new ServerAddress("ds049456.mlab.com", 49456);
@@ -58,6 +58,10 @@ public class MongoService {
 
 	private MongoCursor<Document> findAll(MongoCollection<Document> collection){
 		return collection.find().iterator();
+	}
+	
+	private Document findFirst(MongoCollection<Document> collection, Document findQuery){
+		return collection.findOneAndDelete(findQuery);
 	}
 
 	private MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
@@ -188,7 +192,6 @@ public class MongoService {
 		return false;
 	}
 
-	// FAIT : Moussa Nedjari 17/10/2016 16:45
 	@SuppressWarnings("unchecked")
 	public boolean containsIdMusicOnTag(String tag, String idMusic){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
@@ -215,7 +218,6 @@ public class MongoService {
 		else return false;
 	}
 
-	// FAIT : Moussa Nedjari 17/10/2016 16:41
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getIdMusicsByTag(String tag){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
@@ -298,39 +300,33 @@ public class MongoService {
 
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception{
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
-		String idArtist = "";
-		String nameArtist = "";
-		// FAIT : Moussa Nedjari 17/10/2016 17:00
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
+			
 			// ajout de l'artist dans la base mongo Artists 
 			//( test de présence de l'artiste déjà effectué dans la méthode appellé)
-			if(listMusic.size()==0)return;
-			insertArtistIfNotExist(listMusic.get(0).getArtistId(),listMusic.get(0).getArtistName());
-			for(MFMusic mf : listMusic){
-				// Pour chaque MFMusic présentes dans l'album
-				MFLyrics mfL = mf.getLyrics();
-				// on récupère les lyrics
-				// et on insère dans la base mongo Lyrics
-				insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
-						mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), 
-						mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
-
-				// Début de la création des tags pour chaque lyrics
-				// TODO JULIEN : rajouter mfL.getLyrics_language()
-				// comme deuxième paramètre du parser
-				for( String tag : ParserUtils.parserProcess(mfL.getLyricsBody()) ) {
-					tag = tag.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
-					insertTagIfNotExists(tag, mf.getTrackId());
+			if(!listMusic.isEmpty()){
+				insertArtistIfNotExist(listMusic.get(0).getArtistId(),listMusic.get(0).getArtistName());
+				
+				for(MFMusic mf : listMusic){
+					// Pour chaque MFMusic présentes dans l'album
+					MFLyrics mfL = mf.getLyrics();
+					// on récupère les lyrics et on insère dans la base mongo Lyrics
+					insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
+							mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), 
+							mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
+	
+					// Début de la création des tags pour chaque lyrics
+					for( String tag : ParserUtils.parserProcess(mfL.getLyricsBody(), mfL.getLyrics_language()) ) {
+						tag = tag.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+						insertTagIfNotExists(tag, mf.getTrackId());
+					}
 				}
 			}
 		}
 	}
 
-	//TODO : Modifier les noms d'attributs (collection, collection1, etc...), nettoyer le code
-	// FAIT : Moussa Nedjari 17/10/2106 16:53 (ajout du test du cursor = null si jamais mot entrée par l'user
-	// non présent dans la base mongo des tags
 	@SuppressWarnings("unchecked")
 	public ArrayList<MusicDTO> searchMusicsByTagsInTags(ArrayList<String> tags){
 		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
@@ -431,7 +427,7 @@ public class MongoService {
 
 	public ArrayList<MusicDTO> searchMusicsByTagsWithLyrics(ArrayList<String> tags){
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-
+		//TODO:
 
 		return listMusic;
 	}
@@ -440,4 +436,16 @@ public class MongoService {
 		mongoClient.close();
 	}
 
+	public void setLastCountryPref(int pos) {
+		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
+		Document doc = new Document("posCountry", pos);
+		insertOne(collection, doc);
+	}
+
+	public int getLastCountryPref() {
+		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
+		Document findQuery = new Document("$eq", "posCountry");
+		Document doc = findFirst(collection, findQuery);
+		return doc.getInteger("posCountry", 0);
+	}
 }

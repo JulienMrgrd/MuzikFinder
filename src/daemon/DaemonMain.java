@@ -40,23 +40,4 @@ public class DaemonMain {
 		}).start();
 	}
 	
-	/*	Exemple de récupération de toutes les musiques d'un artiste
-	 	int pos = service.getLastPositionInNoSQL();
-		
-		System.out.println("Récupération des "+NB_ARTISTS_TO_GET+" top artiste(s)...");
-		List<Artist> artists = service.getTopArtistsFromAPI(pos, DaemonMain.NB_ARTISTS_TO_GET, COUNTRY_ORDER[0]);
-
-		System.out.println("\nRécupération des albums de "+artists.get(0).getArtistName()+"...");
-		List<String> albumIds = new ArrayList<>();
-		artists.forEach(art -> albumIds.addAll(service.getAllAlbumIdsFromAPI(art.getArtistId())) );
-		System.out.println(albumIds.size()+" albums récupérées.\n");
-		
-		Map<String, List<Track>> lyrics = new HashMap<>(albumIds.size());
-		for(String id : albumIds){
-			System.out.println("Récupération des musiques de l'album "+id+"...");
-			lyrics.put(id, service.getAllTracksFromAPI(id));
-			System.out.println(lyrics.get(id).size()+" musiques récupérées.");
-		}
-		
-	 */
 }

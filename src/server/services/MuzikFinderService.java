@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import api.API;
 import interfaces.MFArtist;
@@ -56,7 +55,7 @@ public class MuzikFinderService {
 		return nosql.containsArtist(artist);
 	}
 	
-	public ArrayList<String> getIdMusicByTagInNoSQL(String tag){
+	public ArrayList<String> getIdMusicsByTagInNoSQL(String tag){
 		return nosql.getIdMusicsByTag(tag);
 	}
 	
@@ -75,7 +74,8 @@ public class MuzikFinderService {
 	////====== DAEMON PART ====== ////
 	
 	public void startFilingDatabaseProcess() {
-		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.COUNTRY_ORDER[0]);
+		int lastCountry = nosql.getLastCountryPref();
+		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.getCountry(lastCountry));
 		System.out.println(musics.size()+" musiques");
 		List<MFMusic> musicsNotInNoSQL = nosql.filterByExistingMusics(musics);
 		
@@ -86,14 +86,12 @@ public class MuzikFinderService {
 				mapAlbumIdWithAlbum.put( music.getAlbumId(), getAllMusicsFromAPI(music.getAlbumId()) );
 			}
 			
-			
 			System.out.println("Album "+music.getAlbumId()+" = "+mapAlbumIdWithAlbum.get(music.getAlbumId()).size()+" musics...");
 			cpt+=mapAlbumIdWithAlbum.get(music.getAlbumId()).size();
 		}
 		System.out.println("\nNombre de musiques récupérées au final : "+cpt);
-		
 		nosql.insertNewMusics(mapAlbumIdWithAlbum);
+		nosql.setLastCountryPref( MuzikFinderPreferences.getNextPosition(lastCountry) );
 	}
-
 
 }

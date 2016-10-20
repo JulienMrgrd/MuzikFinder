@@ -35,8 +35,17 @@ public class ParserUtils {
 	 * @param text texte à parser
 	 * @throws IOException 
 	 */
-	public static Set<String> parserProcess(String text) throws Exception {
-		InputStream is = new FileInputStream("res/en-parser-chunking.bin");
+	public static Set<String> parserProcess(String text, String language) throws Exception {
+		InputStream is = null;
+		switch (language) {
+		case "en":
+			is = new FileInputStream("res/en-parser-chunking.bin");
+			break;
+
+		default:
+			return null;
+		}
+		
 		ParserModel model = new ParserModel(is);
 		Parser parser = ParserFactory.create(model);
 

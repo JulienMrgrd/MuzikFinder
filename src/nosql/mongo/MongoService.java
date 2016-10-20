@@ -340,7 +340,8 @@ public class MongoService {
 		List<MongoCursor<Document>> listCursor_Tags = new ArrayList<MongoCursor<Document>>();
 
 		for(String s : tags){
-			MongoCursor<Document> cursor_tags = findBy(collection_Tags, new Document("$eq",s));
+			Document findQuery = new Document("tag", new Document("$eq",s));
+			MongoCursor<Document> cursor_tags = findBy(collection_Tags, findQuery);
 			if(cursor_tags != null)
 				listCursor_Tags.add(cursor_tags);
 		}
@@ -368,8 +369,10 @@ public class MongoService {
 		MusicDTO msDto;
 		for(int i : newList){
 			String id = idList.get(i);
-			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,new Document("$eq",id));
-			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,new Document("$eq",id));
+			Document findQuery_Musics = new Document("idArtist", new Document("$eq",id));
+			Document findQuery_Artists = new Document("idArtist", new Document("$eq",id));
+			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_Musics);
+			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
 			Document doc_Artists = cursor_Artists.next();
 			String nameArtist = doc_Artists.getString("nameArtist");
 			Document doc_Musics = cursor_Musics.next();
@@ -407,10 +410,12 @@ public class MongoService {
 		MongoCursor<Document> cursor_Artist; 
 
 		for(String nameMusic : list_NameMusic){
-			cursor_Music = findBy(collection_Musics,new Document("$eq",nameMusic));
+			Document findQuery_Musics = new Document("nameMusic", new Document("$eq",nameMusic));			
+			cursor_Music = findBy(collection_Musics,findQuery_Musics);
 			Document doc_Music = cursor_Music.next();
 			String idArtist = doc_Music.getString("idArtist");
-			cursor_Artist = findBy(collection_Artists,new Document("$eq",idArtist));
+			Document findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
+			cursor_Artist = findBy(collection_Artists,findQuery_Artists);
 			Document doc_Artist = cursor_Artist.next();
 			mDto = new MusicDTO(nameMusic,doc_Artist.getString("nameArtist"),doc_Music.getString("spotifyId"),
 					doc_Music.getString("soundcloudId"));
@@ -421,6 +426,13 @@ public class MongoService {
 	}
 
 
+	public ArrayList<MusicDTO> searchMusicsByTagsWithLyrics(ArrayList<String> tags){
+		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
+		
+		
+		return listMusic;
+	}
+	
 	public void close(){
 		mongoClient.close();
 	}

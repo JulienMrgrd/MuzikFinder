@@ -74,7 +74,12 @@ public class MuzikFinderService {
 	////====== DAEMON PART ====== ////
 	
 	public void startFilingDatabaseProcess() {
-		int lastCountry = nosql.getLastCountryPref();
+		int lastCountry;
+		try{	
+			lastCountry = nosql.getLastCountryPref();
+		} catch (Exception e){
+			lastCountry = 0;
+		}
 		System.out.println("Pays visé : "+MuzikFinderPreferences.getCountry(lastCountry));
 		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.getCountry(lastCountry));
 		System.out.println(musics.size()+" musiques");

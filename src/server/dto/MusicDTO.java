@@ -5,28 +5,54 @@ import interfaces.MFMusic;
 
 public class MusicDTO implements MFMusic{
 
+	private String trackId;
 	private String trackName;
+	private String idArtist;
 	private String artistName;
+	private String albumId;
 	private String spotifyId;
 	private String soundCloudId;
+	private String hasLyrics;
+	private MFLyrics lyrics;
 	
-	public MusicDTO(String trackName, String artistName, String spotifyId, String soundCloudId){
+	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
+				  String albumId, String spotifyId, String soundCloudId, String hasLyrics,
+				  MFLyrics lyrics){
+		this.trackId=trackId;
 		this.trackName=trackName;
+		this.idArtist=idArtist;
 		this.artistName=artistName;
+		this.albumId=albumId;
 		this.spotifyId=spotifyId;
 		this.soundCloudId=soundCloudId;
+		this.hasLyrics=hasLyrics;
+		this.lyrics=lyrics;
 	}
+	
+	/**
+	 * Utiliser surtout dans la récupération des musique correspond aux critéres par conséquent
+	 * on a pas bessoin de savoir si une musique a des lyrics (si on la trouvé c'est qu'elle a forcément 
+	 * des paroles, on a pas bessoin de savoir les paroles de la musique non plus
+	 */
+	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
+			  String albumId, String spotifyId, String soundCloudId){ 
+	this.trackId=trackId;
+	this.trackName=trackName;
+	this.idArtist=idArtist;
+	this.artistName=artistName;
+	this.albumId=albumId;
+	this.spotifyId=spotifyId;
+	this.soundCloudId=soundCloudId;
+}
 
 	@Override
 	public String getTrackId() {
-		// TODO Auto-generated method stub
-		return null;
+		return trackId;
 	}
 
 	@Override
 	public void setTrackId(String trackId) {
-		// TODO Auto-generated method stub
-		
+		this.trackId=trackId;
 	}
 
 	@Override
@@ -36,17 +62,17 @@ public class MusicDTO implements MFMusic{
 
 	@Override
 	public void setTrackName(String trackName) {
-		
+		this.trackName=trackName;
 	}
 
 	@Override
 	public String getArtistId() {
-		return null;
+		return idArtist;
 	}
 
 	@Override
 	public void setArtistId(String artistId) {
-		
+		this.idArtist=artistId;
 	}
 
 	@Override
@@ -56,20 +82,17 @@ public class MusicDTO implements MFMusic{
 
 	@Override
 	public void setArtistName(String artistName) {
-		// TODO Auto-generated method stub
-		
+		this.artistName=artistName;
 	}
 
 	@Override
 	public String getAlbumId() {
-		// TODO Auto-generated method stub
-		return null;
+		return albumId;
 	}
 
 	@Override
 	public void setAlbumId(String albumId) {
-		// TODO Auto-generated method stub
-		
+		this.albumId=albumId;
 	}
 
 	@Override
@@ -79,8 +102,7 @@ public class MusicDTO implements MFMusic{
 
 	@Override
 	public void setTrackSpotifyId(String trackSpotifyId) {
-		// TODO Auto-generated method stub
-		
+		this.spotifyId=trackSpotifyId;
 	}
 
 	@Override
@@ -90,32 +112,27 @@ public class MusicDTO implements MFMusic{
 
 	@Override
 	public void setTrackSoundcloudId(String trackSoundcloudId) {
-		// TODO Auto-generated method stub
-		
+		this.soundCloudId=trackSoundcloudId;
 	}
 
 	@Override
 	public String getHasLyrics() {
-		// TODO Auto-generated method stub
-		return null;
+		return hasLyrics;
 	}
 
 	@Override
 	public void setHasLyrics(String hasLyrics) {
-		// TODO Auto-generated method stub
-		
+		this.hasLyrics=hasLyrics;
 	}
 
 	@Override
 	public MFLyrics getLyrics() {
-		// TODO Auto-generated method stub
-		return null;
+		return lyrics;
 	}
 
 	@Override
 	public void setLyrics(MFLyrics lyrics) {
-		// TODO Auto-generated method stub
-		
+		this.lyrics=lyrics;
 	}
 
 }

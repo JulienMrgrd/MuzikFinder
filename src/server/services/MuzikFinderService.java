@@ -75,6 +75,7 @@ public class MuzikFinderService {
 	
 	public void startFilingDatabaseProcess() {
 		int lastCountry = nosql.getLastCountryPref();
+		System.out.println("Pays visé : "+MuzikFinderPreferences.getCountry(lastCountry));
 		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.getCountry(lastCountry));
 		System.out.println(musics.size()+" musiques");
 		List<MFMusic> musicsNotInNoSQL = nosql.filterByExistingMusics(musics);

@@ -424,10 +424,39 @@ public class MongoService {
 		return listMusic;
 	}
 
-
 	public ArrayList<MusicDTO> searchMusicsByTagsWithLyrics(ArrayList<String> tags){
+		int cptMotInLyrics = 0;
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-		//TODO:
+		
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+		
+		Document findQuery_Musics = new Document("lyrics",new Document());
+		Document findQuery_Artists;
+		
+		MongoCursor<Document> cursor_Music = findBy(collection_Musics,findQuery_Musics);
+		MongoCursor<Document> cursor_Artist;
+		
+		MusicDTO mDto;
+		while(cursor_Music.hasNext()){
+			cptMotInLyrics = 0;
+			Document doc_Music = cursor_Music.next();
+			String lyrics = doc_Music.getString("lyrics");
+			for(String s : tags){
+				if(lyrics.contains(s))
+					cptMotInLyrics++;
+			}
+			if(cptMotInLyrics>(tags.size()/2)){
+				String idArtist = doc_Music.getString("idArtist");
+				findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
+				cursor_Artist = findBy(collection_Artists,findQuery_Artists);
+				Document doc_Artist = cursor_Artist.next();
+				mDto = new MusicDTO(doc_Music.getString("idMusic"), doc_Music.getString("nameMusic"), idArtist, doc_Artist.getString("nameArtist"),
+						"", //albumId
+						doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
+				listMusic.add(mDto);
+			}
+		}
 
 		return listMusic;
 	}

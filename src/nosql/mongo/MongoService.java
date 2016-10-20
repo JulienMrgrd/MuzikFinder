@@ -188,8 +188,8 @@ public class MongoService {
 		return false;
 	}
 
-	//TODO : A MODIFIER
 	// FAIT : Moussa Nedjari 17/10/2016 16:45
+	@SuppressWarnings("unchecked")
 	public boolean containsIdMusicOnTag(String tag, String idMusic){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
 
@@ -215,26 +215,26 @@ public class MongoService {
 		else return false;
 	}
 
-	//TODO : A MODIFIER
 	// FAIT : Moussa Nedjari 17/10/2016 16:41
-	public Set<String> getIdMusicsByTag(String tag){
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getIdMusicsByTag(String tag){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
-		Set<String> listIdMusic= new HashSet<String>();
+		ArrayList<String> listIdMusic= new ArrayList<String>();
 		if(cursor.hasNext()){
 			Document doc = cursor.next();
-			listIdMusic = (Set<String>) doc.get("idMusic");
+			listIdMusic = (ArrayList<String>) doc.get("idMusic");
 		}
 		return listIdMusic;
 	}
 
-	public Set<String> getIdMusicsByIdArtist(String idArtist){
+	public ArrayList<String> getIdMusicsByIdArtist(String idArtist){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("idArtist", new Document("$eq",idArtist));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
-		Set<String> listeId = new HashSet<String>();
+		ArrayList<String> listeId = new ArrayList<String>();
 		while(cursor.hasNext()){
 			Document doc = cursor.next();
 			listeId.add(doc.getString("idMusic"));
@@ -255,13 +255,13 @@ public class MongoService {
 	}
 
 
-	public Set<String> getIdMusicsByChainWords(String chainWords){
+	public ArrayList<String> getIdMusicsByChainWords(String chainWords){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("lyrics", new Document("$regex",chainWords));
 		System.out.println(findQuery);
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
-		Set<String> listeId = new HashSet<String>();
+		ArrayList<String> listeId = new ArrayList<String>();
 		while(cursor.hasNext()){
 			listeId.add(cursor.next().getString("idMusic"));
 		}
@@ -300,17 +300,15 @@ public class MongoService {
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
 		String idArtist = "";
 		String nameArtist = "";
-		//TODO: Insérer Artistes !
 		// FAIT : Moussa Nedjari 17/10/2016 17:00
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
+			// ajout de l'artist dans la base mongo Artists 
+			//( test de présence de l'artiste déjà effectué dans la méthode appellé)
+			if(listMusic.size()==0)return;
+			insertArtistIfNotExist(listMusic.get(0).getArtistId(),listMusic.get(0).getArtistName());
 			for(MFMusic mf : listMusic){
-				idArtist = mf.getArtistId();
-				nameArtist = mf.getArtistName();
-				// ajout de l'artist dans la base mongo Artists 
-				//( test de présence de l'artiste déjà effectué dans la méthode appellé)
-				insertArtistIfNotExist(nameArtist, idArtist);
 				// Pour chaque MFMusic présentes dans l'album
 				MFLyrics mfL = mf.getLyrics();
 				// on récupère les lyrics
@@ -362,7 +360,7 @@ public class MongoService {
 
 		Set<String> list = mapIdMusicNbOccurTag.keySet();
 		ArrayList<String> idList = new ArrayList<String>(list);
-		ArrayList<Integer> scoreList = (ArrayList<Integer>) mapIdMusicNbOccurTag.values();
+		ArrayList<Integer> scoreList = new ArrayList<Integer>((HashSet<Integer>)mapIdMusicNbOccurTag.values());
 
 		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
@@ -420,12 +418,10 @@ public class MongoService {
 			Document findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
 			cursor_Artist = findBy(collection_Artists,findQuery_Artists);
 			Document doc_Artist = cursor_Artist.next();
-			/*mDto = new MusicDTO(nameMusic,doc_Artist.getString("nameArtist"),doc_Music.getString("spotifyId"),
-					doc_Music.getString("soundcloudId"));*/
 			mDto = new MusicDTO(doc_Music.getString("idMusic"), nameMusic, idArtist, doc_Artist.getString("nameArtist"),
 					"", //albumId
 					doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
-			
+
 			listMusic.add(mDto);
 		}
 
@@ -435,11 +431,11 @@ public class MongoService {
 
 	public ArrayList<MusicDTO> searchMusicsByTagsWithLyrics(ArrayList<String> tags){
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-		
-		
+
+
 		return listMusic;
 	}
-	
+
 	public void close(){
 		mongoClient.close();
 	}

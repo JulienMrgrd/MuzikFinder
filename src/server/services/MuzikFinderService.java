@@ -1,5 +1,6 @@
 package server.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,15 +56,15 @@ public class MuzikFinderService {
 		return nosql.containsArtist(artist);
 	}
 	
-	public Set<String> getIdMusicByTagInNoSQL(String tag){
+	public ArrayList<String> getIdMusicByTagInNoSQL(String tag){
 		return nosql.getIdMusicsByTag(tag);
 	}
 	
-	public Set<String> getIdMusicsByIdArtistInNoSQL(String artist){
+	public ArrayList<String> getIdMusicsByIdArtistInNoSQL(String artist){
 		return nosql.getIdMusicsByIdArtist(artist);
 	}
 	
-	public Set<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
+	public ArrayList<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	

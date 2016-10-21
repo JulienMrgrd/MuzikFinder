@@ -2,7 +2,9 @@ package utils.textMining;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import opennlp.tools.cmdline.parser.ParserTool;
@@ -59,6 +61,23 @@ public class ParserTest {
 		System.out.println("Size = "+nounPhrases.size()+" List of Noun Parse : "+nounPhrases);
 		System.out.println("Size = "+adjectivePhrases.size()+" List of Adjective Parse : "+adjectivePhrases);
 		System.out.println("Size = "+verbPhrases.size()+" List of Verb Parse : "+verbPhrases);
+		ArrayList<String> parserTest = new ArrayList<>();
+		parserTest.addAll(nounPhrases);
+		parserTest.addAll(adjectivePhrases);
+		parserTest.addAll(verbPhrases);
+		for(int i=0; i<parserTest.size(); i++){
+			parserTest.set(i, parserTest.get(i).toLowerCase().replaceAll("[^a-z0-9 ]", ""));
+		}
+		List<String> list = ParserMaison.toto();
+		List<String> listCopy = new ArrayList<>();
+		listCopy.addAll(list);
+		for(String s : list){
+			if(parserTest.contains(s)){
+				listCopy.remove(s);
+			}
+		}
+		System.out.println(listCopy);
+		
 	}
 
 }

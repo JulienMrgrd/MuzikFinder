@@ -23,7 +23,7 @@ import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import server.dto.MusicDTO;
 import utils.MathUtils;
-import utils.textMining.ParserUtils;
+import utils.textMining.ParserMaison;
 
 public class MongoService {
 
@@ -119,10 +119,12 @@ public class MongoService {
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
+				System.out.println(doc1);
 				List<String> listeId = (List<String>) doc1.get("idMusic");
-				System.out.println(listeId);
-				listeId.add(musicId);
-				doc2 = new Document("$set",new Document("idMusic",listeId));
+				List<String> newListeId = new ArrayList<String>();
+				newListeId.addAll(listeId);
+				newListeId.add(musicId);
+				doc2 = new Document(new Document("$set",new Document("idMusic",newListeId)));
 				updateOne(collection, doc1,doc2);
 			}
 			return true;
@@ -318,8 +320,7 @@ public class MongoService {
 							mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
 	
 					// Début de la création des tags pour chaque lyrics
-					for( String tag : ParserUtils.parserProcess(mfL.getLyricsBody(), mfL.getLyrics_language()) ) {
-						tag = tag.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+					for( String tag : ParserMaison.parserProcess(mfL.getLyricsBody(), mfL.getLyrics_language()) ) {
 						insertTagIfNotExists(tag, mf.getTrackId());
 					}
 				}
@@ -342,14 +343,16 @@ public class MongoService {
 		}
 
 		for(MongoCursor<Document> cursor : listCursor_Tags){
-			Document doc_tags = cursor.next();
-			List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
-			for(String id : listIdMusic){
-				if(mapIdMusicNbOccurTag.get(id).equals(null)){
-					mapIdMusicNbOccurTag.put(id, 1);
-				}
-				else{
-					mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
+			if(cursor.hasNext()){
+				Document doc_tags = cursor.next();
+				List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
+				for(String id : listIdMusic){
+					if(mapIdMusicNbOccurTag.get(id)==null){
+						mapIdMusicNbOccurTag.put(id, 1);
+					}
+					else{
+						mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
+					}
 				}
 			}
 		}

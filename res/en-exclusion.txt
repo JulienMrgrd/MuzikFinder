@@ -23,11 +23,7 @@ theirs
 them
 mine
 hers
-ourselves
-myself
-himself
 who
-whose
 whose
 which
 what
@@ -37,3 +33,7 @@ these
 those
 of
 to
+and
+or
+thus
+is

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nosql.mongo.MongoService;
+import server.dto.MusicDTO;
 
 public class ParserMaison {
 	
@@ -104,10 +105,14 @@ public class ParserMaison {
 		}*/
 		
 		MongoService m = new MongoService(false);
-		ArrayList<String> listTag = new ArrayList<>(4);
+		ArrayList<String> listTag = new ArrayList<>(3);
 		listTag.add("look");
 		listTag.add("i'm");
 		listTag.add("cool");
+		List<MusicDTO> l = m.searchMusicsByTagsInTags(listTag);
+		for(MusicDTO mDTO : l){
+			System.out.println(mDTO.getTrackName()+" "+mDTO.getTrackId());
+		}
 		/*System.out.println(m.searchMusicsByTagsInTags(listTag).size());
 		for(MusicDTO s : m.searchMusicsByTagsInTags(listTag)){
 			System.out.println(s);

@@ -2,6 +2,7 @@ package nosql.mongo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
+import nosql.IdMusicScore;
 import server.dto.MusicDTO;
 import utils.MathUtils;
 import utils.textMining.ParserMaison;
@@ -327,9 +329,69 @@ public class MongoService {
 			}
 		}
 	}
+	
+	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags){
+		ArrayList<IdMusicScore> idMusicScore = new ArrayList<IdMusicScore>();
+		
+		List<String> listIdMusic = new ArrayList<String>();
+		boolean presentInList = false;
+		for(String tmp : tags){
+			listIdMusic = this.getIdMusicsByTag(tmp);
+			for(String idMusic : listIdMusic){
+				for(IdMusicScore musicScore : idMusicScore){
+					//System.out.println(musicScore.getIdMusic());
+					if(musicScore.getIdMusic().equals(idMusic)){
+						musicScore.setScore(musicScore.getScore()+1);
+						presentInList=true;
+						break;
+					}
+				}
+				if(!presentInList){
+					IdMusicScore ms= new IdMusicScore(idMusic, new Integer(1));
+					idMusicScore.add(ms);
+				}
+			}
+		}
+		Collections.sort(idMusicScore);
+		int i=0;
+		for(IdMusicScore ms: idMusicScore){
+			System.out.println("i = "+i+" ms.id = "+ms.getIdMusic()+" ms.score = "+ms.getScore());
+			i++;
+		}
+		
+		MusicDTO msDto;
+		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
 
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+		
+		for(IdMusicScore ms : idMusicScore){
+			Document findQuery_MusicsByIdMusic = new Document("idMusic", new Document("$eq",ms.getIdMusic()));
+			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_MusicsByIdMusic);
+			if(cursor_Musics.hasNext()){					// On récupere l'ensemble du document dans Musics faisant 
+				Document doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
+				
+				//On recupere l'identifiant de l'artiste ayant fait la musique
+				Document findQuery_Artists = new Document("idArtist", new Document("$eq",doc_Musics.getString("idArtist")));
+				MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
+				String nameArtist = "";
+				
+				if(cursor_Artists.hasNext()){
+					Document doc_Artists = cursor_Artists.next();
+					nameArtist=doc_Artists.getString("nameArtist");
+				}
+				msDto = new MusicDTO(ms.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
+						nameArtist, "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+				listMusic.add(msDto);
+				
+			}
+		}
+		
+		return listMusic;
+	}
+ 
 	@SuppressWarnings("unchecked")
-	public ArrayList<MusicDTO> searchMusicsByTagsInTags(ArrayList<String> tags){
+	public ArrayList<MusicDTO> searchMusicsByTagsInTagsOld(List<String> tags){
 		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
 		MongoCollection<Document> collection_Tags = getCollection(MongoCollections.TAGS);

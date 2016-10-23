@@ -20,6 +20,8 @@ public class ParserMaison {
 		List<String> excludeWords;
 		try {
 			excludeWords = (ArrayList<String>) getExcludedWords(langage);
+			if(excludeWords==null || excludeWords.isEmpty()) return null;
+			
 			lyrics = lyrics.substring(0, lyrics.length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
 			lyrics = lyrics.toLowerCase().replaceAll(THE_REGEX, " ");
 			tags = new ArrayList<String>();

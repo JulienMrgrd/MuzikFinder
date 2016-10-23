@@ -5,7 +5,7 @@ public final class MuzikFinderPreferences {
 	// Preferences
 	public static final Integer MAX_TOP_TRACKS = 100;
 	public static final int PAGE_MAX = 100;
-	public static final String[] COUNTRY_ORDER = {"us", "gb", "fr", "it", "es", "aus", "br"};
+	public static final String[] COUNTRY_ORDER = {"us", "gb", "aus"};
 	
 	private MuzikFinderPreferences(){ }
 

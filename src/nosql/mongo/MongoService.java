@@ -305,6 +305,8 @@ public class MongoService {
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
 		ArrayList<MFMusic> listMusic;
 		
+		int cpt = 0;
+		System.out.println("Début de l'insertion des albums (et tout ce qui s'y rattache) en base");
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
 			listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
@@ -333,6 +335,9 @@ public class MongoService {
 					}
 				}
 			}
+			
+			cpt++;
+			System.out.println("Insertion "+cpt+"/"+listIdAlbum.size()+" OK.");
 		}
 	}
 	

@@ -5,7 +5,7 @@ public class MuzikFinderConstants {
 	public static final String API_KEY_NAME = "apikey";
 	public static final String API_KEY_1 = "f29172a320a83fa2eae8802fa44cbb01";
 	public static final String API_KEY_2 = "3f74bd630e548103cf652fdc2bef1d5f";
-	public static final String[] API_KEYS = {API_KEY_2, API_KEY_1};
+	public static final String[] API_KEYS = {API_KEY_1, API_KEY_2};
 	public static final String API_KEY_REGXP = "API_KEY_TO_REPLACE";
 	
     public static final String API_URL = "http://api.musixmatch.com/ws/1.1/";

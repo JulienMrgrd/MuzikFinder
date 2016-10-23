@@ -59,10 +59,14 @@ public class MongoService {
 		return collection.find().iterator();
 	}
 	
-	private Document findFirst(MongoCollection<Document> collection, Document findQuery){
-		return collection.findOneAndDelete(findQuery);
+	private Document findFirst(MongoCollection<Document> collection){
+		try {
+			return collection.find().limit(1).first();
+		} catch (Exception e){
+			return null;
+		}
 	}
-
+	
 	private MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
 		return collection.find(findQuery).iterator();
 	}
@@ -536,18 +540,19 @@ public class MongoService {
 
 	public void setLastCountryPref(int pos) {
 		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
-		Document doc = new Document("posCountry", pos);
-		insertOne(collection, doc);
+		Document oldPref = findFirst(collection);
+		Document newPref = new Document("$set",new Document("posCountry",pos));
+		updateOne(collection, oldPref, newPref);
 	}
 
 	public int getLastCountryPref() {
 		try {
 			MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
-			Document findQuery = new Document("$eq", "posCountry");
-			Document doc = findFirst(collection, findQuery);
+			Document doc = findFirst(collection);
 			return doc.getInteger("posCountry", 0);
 		} catch (Exception e){
 			return 0;
 		}
 	}
+
 }

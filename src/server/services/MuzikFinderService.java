@@ -1,6 +1,5 @@
 package server.services;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,15 +54,15 @@ public class MuzikFinderService {
 		return nosql.containsArtist(artist);
 	}
 	
-	public ArrayList<String> getIdMusicsByTagInNoSQL(String tag){
+	public List<String> getIdMusicsByTagInNoSQL(String tag){
 		return nosql.getIdMusicsByTag(tag);
 	}
 	
-	public ArrayList<String> getIdMusicsByIdArtistInNoSQL(String artist){
+	public List<String> getIdMusicsByIdArtistInNoSQL(String artist){
 		return nosql.getIdMusicsByIdArtist(artist);
 	}
 	
-	public ArrayList<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
+	public List<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
@@ -74,13 +73,8 @@ public class MuzikFinderService {
 	////====== DAEMON PART ====== ////
 	
 	public void startFilingDatabaseProcess() {
-		int lastCountry;
-		try{	
-			lastCountry = nosql.getLastCountryPref();
-		} catch (Exception e){
-			lastCountry = 0;
-		}
-		System.out.println("Pays visé : "+MuzikFinderPreferences.getCountry(lastCountry));
+		int lastCountry = nosql.getLastCountryPref();
+		System.out.println("Pays visé : "+MuzikFinderPreferences.getCountry(lastCountry).toUpperCase());
 		List<MFMusic> musics = getTopMusicsFromAPI(0, MuzikFinderPreferences.MAX_TOP_TRACKS, MuzikFinderPreferences.getCountry(lastCountry));
 		System.out.println(musics.size()+" musiques");
 		List<MFMusic> musicsNotInNoSQL = nosql.filterByExistingMusics(musics);

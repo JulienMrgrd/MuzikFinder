@@ -1,7 +1,5 @@
 package nosql;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,11 +47,11 @@ public class NoSQLDB {
 	}
 	
 	
-	public ArrayList<String> getIdMusicsByIdArtist(String idArtist){
+	public List<String> getIdMusicsByIdArtist(String idArtist){
 		return mongo.getIdMusicsByIdArtist(idArtist);
 	}
 	
-	public ArrayList<String> getIdMusicsByTag(String tag) {
+	public List<String> getIdMusicsByTag(String tag) {
 		return mongo.getIdMusicsByTag(tag);
 	}
 	
@@ -61,7 +59,7 @@ public class NoSQLDB {
 		return mongo.getIdArtist(nameArtiste);
 	}
 	
-	public ArrayList<String> getIdMusicsByChainWords(String chainWords){
+	public List<String> getIdMusicsByChainWords(String chainWords){
 		return mongo.getIdMusicsByChainWords(chainWords);
 	}
 

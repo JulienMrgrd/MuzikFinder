@@ -3,8 +3,6 @@ package nosql.mongo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,9 +20,8 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
-import nosql.IdMusicScore;
 import server.dto.MusicDTO;
-import utils.MathUtils;
+import utils.IdMusicScore;
 import utils.textMining.ParserMaison;
 
 public class MongoService {
@@ -112,7 +109,7 @@ public class MongoService {
 			doc.put("idMusic", listId);
 			insertOne(collection, doc);
 			return true;
-		} else if(containsIdMusicOnTag(tag,musicId)){
+		} else if(containsIdMusicInTag(tag,musicId)){
 			System.out.println("IdMusic already corresponding in the Tag Collection\n");
 			return false;
 		} else {
@@ -134,7 +131,8 @@ public class MongoService {
 	}
 
 
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String nameMusic, String langue, String spotifyId, String soundCloudId){
+	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
+			String nameMusic, String langue, String spotifyId, String soundCloudId){
 		if(containsLyrics(musicId)) return false; 
 
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS);
@@ -175,16 +173,14 @@ public class MongoService {
 		MongoCollection<Document> collection = getCollection(MongoCollections.ARTISTS); // récupère la collection mongo qui stocke les artistes
 		Document doc = new Document("nameArtist", new Document("$eq",artistId)); // crée le document retournant les informations pr�sentes dans la collection Artists correspondantes
 		MongoCursor<Document> cursor = findBy(collection, doc);
-		if(cursor.hasNext()) return true;
-		else return false;
+		return cursor.hasNext();
 	}
 
 	public boolean containsLyrics(String musicId){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = findBy(collection, doc);
-		if(cursor.hasNext()) return true;
-		return false;
+		return cursor.hasNext();
 	}
 
 	public boolean containsTag(String tag){
@@ -192,22 +188,24 @@ public class MongoService {
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		System.out.println(findQuery);
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
-		if(cursor.hasNext()) return true;
-		return false;
+		return cursor.hasNext();
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean containsIdMusicOnTag(String tag, String idMusic){
-		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
+	public boolean containsIdMusicInTag(String tag, String idMusic){
+		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les tags
 
 		Document doc = new Document("tag",new Document("$regex",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = findBy(collection, doc);
+		
+		Document doc_new;
+		List<String> listIdMusic;
+		
 		while(cursor.hasNext()){
-			Document doc_new = cursor.next();
-			List<String> listIdMusic = (List<String>)doc_new.get("idMusic");
-			for( String s : listIdMusic){
-				if(s.equals(idMusic))
-					return true;
+			doc_new = cursor.next();
+			listIdMusic = (List<String>) doc_new.get("idMusic");
+			for( String s : listIdMusic ){
+				return s.equals(idMusic);
 			}
 		}
 		return false;
@@ -218,31 +216,31 @@ public class MongoService {
 		Document doc = new Document("idAlbum",new Document("$eq",idAlbum));
 		MongoCursor<Document> cursor = findBy(collection, doc);
 
-		if(cursor.hasNext()) return true;
-		else return false;
+		return cursor.hasNext();
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getIdMusicsByTag(String tag){
+	public List<String> getIdMusicsByTag(String tag){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
-		ArrayList<String> listIdMusic= new ArrayList<String>();
+		
+		List<String> listIdMusic = null;
 		if(cursor.hasNext()){
-			Document doc = cursor.next();
-			listIdMusic = (ArrayList<String>) doc.get("idMusic");
+			listIdMusic = (ArrayList<String>) cursor.next().get("idMusic");
 		}
 		return listIdMusic;
 	}
 
-	public ArrayList<String> getIdMusicsByIdArtist(String idArtist){
+	public List<String> getIdMusicsByIdArtist(String idArtist){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("idArtist", new Document("$eq",idArtist));
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
-		ArrayList<String> listeId = new ArrayList<String>();
+		List<String> listeId = new ArrayList<String>();
+		Document doc;
 		while(cursor.hasNext()){
-			Document doc = cursor.next();
+			doc = cursor.next();
 			listeId.add(doc.getString("idMusic"));
 		}
 		return listeId;
@@ -261,7 +259,7 @@ public class MongoService {
 	}
 
 
-	public ArrayList<String> getIdMusicsByChainWords(String chainWords){
+	public List<String> getIdMusicsByChainWords(String chainWords){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("lyrics", new Document("$regex",chainWords));
 		System.out.println(findQuery);
@@ -302,16 +300,18 @@ public class MongoService {
 	}
 
 
-	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception{
+	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception {
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
+		ArrayList<MFMusic> listMusic;
+		
 		for(String idAlbum : listIdAlbum){
 			insertIdAlbumIfNotExist(idAlbum); // On insère l'id dans l'album dans la collection Albums
-			ArrayList<MFMusic> listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
+			listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
 			
 			// ajout de l'artist dans la base mongo Artists 
-			//( test de présence de l'artiste déjà effectué dans la méthode appellé)
+			//(test de présence de l'artiste déjà effectué dans la méthode appelée)
 			if(!listMusic.isEmpty()){
-				insertArtistIfNotExist(listMusic.get(0).getArtistId(),listMusic.get(0).getArtistName());
+				insertArtistIfNotExist(listMusic.get(0).getArtistId(), listMusic.get(0).getArtistName());
 				
 				for(MFMusic mf : listMusic){
 					// Pour chaque MFMusic présentes dans l'album
@@ -331,27 +331,22 @@ public class MongoService {
 	}
 	
 	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags){
-		ArrayList<IdMusicScore> idMusicScore = new ArrayList<IdMusicScore>();
-		
-		List<String> listIdMusic = new ArrayList<String>();
-		boolean presentInList = false;
-		for(String tmp : tags){
-			listIdMusic = this.getIdMusicsByTag(tmp);
-			for(String idMusic : listIdMusic){
+		List<IdMusicScore> idMusicScore = new ArrayList<>();
+		List<String> listIdMusics = new ArrayList<>();
+
+		for(String tag : tags){
+			listIdMusics = this.getIdMusicsByTag(tag);
+			for(String idMusic : listIdMusics){
 				for(IdMusicScore musicScore : idMusicScore){
-					//System.out.println(musicScore.getIdMusic());
 					if(musicScore.getIdMusic().equals(idMusic)){
-						musicScore.setScore(musicScore.getScore()+1);
-						presentInList=true;
-						break;
+						musicScore.incrementScore();
+					} else {
+						idMusicScore.add(new IdMusicScore(idMusic, 1));
 					}
-				}
-				if(!presentInList){
-					IdMusicScore ms= new IdMusicScore(idMusic, new Integer(1));
-					idMusicScore.add(ms);
 				}
 			}
 		}
+		
 		Collections.sort(idMusicScore);
 		int i=0;
 		for(IdMusicScore ms: idMusicScore){
@@ -365,19 +360,24 @@ public class MongoService {
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
 		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
 		
+		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
+		MongoCursor<Document> cursor_Musics, cursor_Artists;
+		Document doc_Musics, doc_Artists, findQuery_Artists, findQuery_MusicByIdMusic;
+		
 		for(IdMusicScore ms : idMusicScore){
-			Document findQuery_MusicsByIdMusic = new Document("idMusic", new Document("$eq",ms.getIdMusic()));
-			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_MusicsByIdMusic);
-			if(cursor_Musics.hasNext()){					// On récupere l'ensemble du document dans Musics faisant 
-				Document doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
+			findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ms.getIdMusic()));
+			cursor_Musics = findBy(collection_Musics, findQuery_MusicByIdMusic);
+			
+			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
+				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
 				
 				//On recupere l'identifiant de l'artiste ayant fait la musique
-				Document findQuery_Artists = new Document("idArtist", new Document("$eq",doc_Musics.getString("idArtist")));
-				MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
+				findQuery_Artists = new Document("idArtist", new Document("$eq",doc_Musics.getString("idArtist")));
+				cursor_Artists = findBy(collection_Artists,findQuery_Artists);
 				String nameArtist = "";
 				
 				if(cursor_Artists.hasNext()){
-					Document doc_Artists = cursor_Artists.next();
+					doc_Artists = cursor_Artists.next();
 					nameArtist=doc_Artists.getString("nameArtist");
 				}
 				msDto = new MusicDTO(ms.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
@@ -389,108 +389,122 @@ public class MongoService {
 		
 		return listMusic;
 	}
- 
-	@SuppressWarnings("unchecked")
-	public ArrayList<MusicDTO> searchMusicsByTagsInTagsOld(List<String> tags){
-		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
-		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-		MongoCollection<Document> collection_Tags = getCollection(MongoCollections.TAGS);
-		List<MongoCursor<Document>> listCursor_Tags = new ArrayList<MongoCursor<Document>>();
+	
+	//TODO : A supprimer non ?
+//	@SuppressWarnings("unchecked")
+//	public List<MusicDTO> searchMusicsByTagsInTagsOld(List<String> tags){
+//		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
+//		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
+//		MongoCollection<Document> collection_Tags = getCollection(MongoCollections.TAGS);
+//		List<MongoCursor<Document>> listCursor_Tags = new ArrayList<MongoCursor<Document>>();
+//
+//		for(String s : tags){
+//			Document findQuery = new Document("tag", new Document("$eq",s));
+//			MongoCursor<Document> cursor_tags = findBy(collection_Tags, findQuery);
+//			if(cursor_tags != null)
+//				listCursor_Tags.add(cursor_tags);
+//		}
+//
+//		for(MongoCursor<Document> cursor : listCursor_Tags){
+//			if(cursor.hasNext()){
+//				Document doc_tags = cursor.next();
+//				List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
+//				for(String id : listIdMusic){
+//					if(mapIdMusicNbOccurTag.get(id)==null){
+//						mapIdMusicNbOccurTag.put(id, 1);
+//					}
+//					else{
+//						mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
+//					}
+//				}
+//			}
+//		}
+//
+//		Set<String> list = mapIdMusicNbOccurTag.keySet();
+//		ArrayList<String> idList = new ArrayList<String>(list);
+//		ArrayList<Integer> scoreList = new ArrayList<Integer>((HashSet<Integer>)mapIdMusicNbOccurTag.values());
+//
+//		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
+//		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+//		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+//		MusicDTO msDto;
+//		for(int i : newList){
+//			String id = idList.get(i);
+//			Document findQuery_Musics = new Document("idArtist", new Document("$eq",id));
+//			Document findQuery_Artists = new Document("idArtist", new Document("$eq",id));
+//			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_Musics);
+//			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
+//			Document doc_Artists = cursor_Artists.next();
+//			String nameArtist = doc_Artists.getString("nameArtist");
+//			Document doc_Musics = cursor_Musics.next();
+//			msDto = new MusicDTO(doc_Musics.getString("idMusic"), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist")
+//					, nameArtist,
+//					"", //albumId
+//					doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+//			listMusic.add(msDto);
+//		}
+//		return listMusic;
+//	}
 
-		for(String s : tags){
-			Document findQuery = new Document("tag", new Document("$eq",s));
-			MongoCursor<Document> cursor_tags = findBy(collection_Tags, findQuery);
-			if(cursor_tags != null)
-				listCursor_Tags.add(cursor_tags);
-		}
-
-		for(MongoCursor<Document> cursor : listCursor_Tags){
-			if(cursor.hasNext()){
-				Document doc_tags = cursor.next();
-				List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
-				for(String id : listIdMusic){
-					if(mapIdMusicNbOccurTag.get(id)==null){
-						mapIdMusicNbOccurTag.put(id, 1);
-					}
-					else{
-						mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
-					}
-				}
-			}
-		}
-
-		Set<String> list = mapIdMusicNbOccurTag.keySet();
-		ArrayList<String> idList = new ArrayList<String>(list);
-		ArrayList<Integer> scoreList = new ArrayList<Integer>((HashSet<Integer>)mapIdMusicNbOccurTag.values());
-
-		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
-		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
-		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
-		MusicDTO msDto;
-		for(int i : newList){
-			String id = idList.get(i);
-			Document findQuery_Musics = new Document("idArtist", new Document("$eq",id));
-			Document findQuery_Artists = new Document("idArtist", new Document("$eq",id));
-			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_Musics);
-			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
-			Document doc_Artists = cursor_Artists.next();
-			String nameArtist = doc_Artists.getString("nameArtist");
-			Document doc_Musics = cursor_Musics.next();
-			msDto = new MusicDTO(doc_Musics.getString("idMusic"), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist")
-					, nameArtist,
-					"", //albumId
-					doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
-			listMusic.add(msDto);
-		}
-		return listMusic;
-	}
-
-	// Cette méthode permet de chercher les musics correspondantes au tags entré par
-	// l'utilisateur en traitant les tags comme une phrase complète
-	public  ArrayList<String> matchMusicWithTags(ArrayList<String> tags){
+	/**
+	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par
+	 * l'utilisateur en traitant les tags comme une phrase complète
+	 * @param tags
+	 * @return
+	 */
+	public List<String> matchMusicsWithTags(List<String> tags){
 		ArrayList<String> result = new ArrayList<String>();
 		String words = tags.toString();
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
 		MongoCursor<Document> cursor_Music = findBy(collection_Musics, new Document());
+		
+		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
+		Document doc_lyrics;
+		String lyrics;
 		while(cursor_Music.hasNext()){
-			Document doc_lyrics = cursor_Music.next();
-			String lyrics = (String)doc_lyrics.get("lyrics");
-			if(lyrics.contains(words))
-				result.add(doc_lyrics.getString("nameMusic"));
+			doc_lyrics = cursor_Music.next();
+			lyrics = doc_lyrics.getString("lyrics");
+			if(lyrics.contains(words)) result.add(doc_lyrics.getString("nameMusic"));
 		}
 		return result;
 	}
 
-	public ArrayList<MusicDTO> searchMusicsByTagsInLyrics(ArrayList<String> tags){
-		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-		ArrayList<String> list_NameMusic = matchMusicWithTags(tags);
+	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags){
+		List<MusicDTO> listMusics = new ArrayList<MusicDTO>();
+		List<String> list_NameMusics = matchMusicsWithTags(tags);
 		MusicDTO mDto;
 
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
 		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
 		MongoCursor<Document> cursor_Music; 
 		MongoCursor<Document> cursor_Artist; 
+		
+		Document findQuery_Musics;
+		Document doc_Music;
+		String idArtist;
+		Document findQuery_Artists;
+		Document doc_Artist;
 
-		for(String nameMusic : list_NameMusic){
-			Document findQuery_Musics = new Document("nameMusic", new Document("$eq",nameMusic));			
+		for(String nameMusic : list_NameMusics){
+			findQuery_Musics = new Document("nameMusic", new Document("$eq",nameMusic));			
 			cursor_Music = findBy(collection_Musics,findQuery_Musics);
-			Document doc_Music = cursor_Music.next();
-			String idArtist = doc_Music.getString("idArtist");
-			Document findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
+			doc_Music = cursor_Music.next();
+			idArtist = doc_Music.getString("idArtist");
+			findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
 			cursor_Artist = findBy(collection_Artists,findQuery_Artists);
-			Document doc_Artist = cursor_Artist.next();
+			doc_Artist = cursor_Artist.next();
 			mDto = new MusicDTO(doc_Music.getString("idMusic"), nameMusic, idArtist, doc_Artist.getString("nameArtist"),
 					"", //albumId
 					doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
 
-			listMusic.add(mDto);
+			listMusics.add(mDto);
 		}
 
-		return listMusic;
+		return listMusics;
 	}
 
-	public ArrayList<MusicDTO> searchMusicsByTagsWithLyrics(ArrayList<String> tags){
-		int cptMotInLyrics = 0;
+	public List<MusicDTO> searchMusicsByTagsWithLyrics(List<String> tags){
+		int cptWordsInLyrics = 0;
 		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
 		
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
@@ -504,14 +518,13 @@ public class MongoService {
 		
 		MusicDTO mDto;
 		while(cursor_Music.hasNext()){
-			cptMotInLyrics = 0;
+			cptWordsInLyrics = 0;
 			Document doc_Music = cursor_Music.next();
 			String lyrics = doc_Music.getString("lyrics");
 			for(String s : tags){
-				if(lyrics.contains(s))
-					cptMotInLyrics++;
+				if(lyrics.contains(s)) cptWordsInLyrics++;
 			}
-			if(cptMotInLyrics>(tags.size()/2)){
+			if(cptWordsInLyrics > (tags.size()/2)){
 				String idArtist = doc_Music.getString("idArtist");
 				findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
 				cursor_Artist = findBy(collection_Artists,findQuery_Artists);
@@ -537,9 +550,13 @@ public class MongoService {
 	}
 
 	public int getLastCountryPref() {
-		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
-		Document findQuery = new Document("$eq", "posCountry");
-		Document doc = findFirst(collection, findQuery);
-		return doc.getInteger("posCountry", 0);
+		try {
+			MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
+			Document findQuery = new Document("$eq", "posCountry");
+			Document doc = findFirst(collection, findQuery);
+			return doc.getInteger("posCountry", 0);
+		} catch (Exception e){
+			return 0;
+		}
 	}
 }

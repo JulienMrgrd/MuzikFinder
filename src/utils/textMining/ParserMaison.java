@@ -7,58 +7,51 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nosql.mongo.MongoService;
-import server.dto.MusicDTO;
+import api.musixMatch.utils.MusixMatchUtils;
 
 public class ParserMaison {
 	
-	private static String textTest = "The Moon  is  a barren, rocky world without air and water. It has dark lava plain on its surface. " +
-			"The Moon is filled wit craters. It has no light of its own. It gets its light from the Sun. The Moo keeps changing its " +
-			"shape as it moves round the Earth. It spins on its axis in 27.3 days stars were named after the Edwin Aldrin were the " +
-			"first ones to set their foot on the Moon on 21 July 1969 They reached the Moon in their space craft named Apollo II he's" +
-			"\n...\n\n******* This Lyrics is NOT for Commercial use *******\n(1409613097569)";
+	// http://stackoverflow.com/questions/40180378/how-to-remove-all-non-alphanumeric-except-dot-or-comma-between-2-digits
+	private static final String THE_REGEX = "[^a-zA-Z0-9 .,']|(?<!\\d)[.,]|[.,](?!\\d)"; 
 	
-	public static ArrayList<String> parserProcess(String lyric, String langage){
-		ArrayList<String> tags = new ArrayList<String>();
-		ArrayList<String> motExclure;
+	public static List<String> parserProcess(String lyrics, String langage){
+		List<String> tags = null;
+		List<String> excludeWords;
 		try {
-			motExclure = getMotAExlure(langage);
-			lyric = lyric.toLowerCase().substring(0, lyric.length()-75).replaceAll("[^a-zA-Z0-9 .,']|(?<!\\d)[.,]|[.,](?!\\d)", " ");
-			for(String s : lyric.split(" ")){
-				if(s != null && s.length()>=2 ){
-					if(!motExclure.contains(s)){
-						if(!tags.contains(s)){
-							tags.add(s);
-						}
-					}
+			excludeWords = (ArrayList<String>) getExcludedWords(langage);
+			lyrics = lyrics.substring(0, lyrics.length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
+			lyrics = lyrics.toLowerCase().replaceAll(THE_REGEX, " ");
+			tags = new ArrayList<String>();
+			for(String s : lyrics.split(" ")){
+				if(s != null && s.length()>=2 && !excludeWords.contains(s) && !tags.contains(s)){
+					tags.add(s);
 				}
 			}
 		
-		} catch (IOException e) {
-			return tags;
-		}
-		
+		} catch (IOException e) {}
 		
 		return tags;
-		
 	}
 	
-	public static ArrayList<String> getMotAExlure(String langue) throws IOException{
+	private static List<String> getExcludedWords(String langue) throws IOException{
 		BufferedReader br = null;
-		ArrayList<String> motsAExclure = new ArrayList<String>();
+		List<String> motsAExclure;
 		try{
 			br = new BufferedReader(new FileReader("./res/"+langue+"-exclusion.txt"));
-		} catch(FileNotFoundException exc) { throw new FileNotFoundException("File not found" );  }
 		
-		String line = null; 
-		try {
-			while ((line = br.readLine()) != null)
-			{
+			String line = null;
+			motsAExclure = new ArrayList<String>();
+			while ((line = br.readLine()) != null){
 				motsAExclure.add(line);
 			}
-		} catch(IOException ioe) { throw new IOException("Erreur IO" ); }
+		} catch(FileNotFoundException exc) { 
+			throw new FileNotFoundException("File not found" );  
 		
-		close(br);
+		} catch(IOException ioe) { 
+			throw new IOException("Erreur IO" ); 
+		} finally {
+			close(br);
+		}
 		return motsAExclure;
 	}
 
@@ -70,53 +63,6 @@ public class ParserMaison {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	
-	public static List<String> toto(){
-		String withOutWordExclude = new String();
-		ArrayList<String> list = new ArrayList<>();
-		try {
-			ArrayList<String> a = getMotAExlure("en");
-			textTest = textTest.toLowerCase().replaceAll("[^a-z0-9 ]", "");
-			for(String s : textTest.split(" ")){
-				if(s.length()>=2){
-					if(!a.contains(s)){
-						if(!withOutWordExclude.contains(s)){
-							withOutWordExclude+=s+" ";
-							list.add(s);
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println((withOutWordExclude));
-		System.out.println(withOutWordExclude.split(" ").length);
-		return list;
-	}
-	
-	public static void main(String[] args){
-		/*List<String> la = parserProcess(textTest, "en");
-		
-		for(String s : la){
-			System.out.println(s);
-		}*/
-		
-		MongoService m = new MongoService(false);
-		ArrayList<String> listTag = new ArrayList<>(3);
-		listTag.add("look");
-		listTag.add("i'm");
-		listTag.add("cool");
-		List<MusicDTO> l = m.searchMusicsByTagsInTags(listTag);
-		for(MusicDTO mDTO : l){
-			System.out.println(mDTO.getTrackName()+" "+mDTO.getTrackId());
-		}
-		/*System.out.println(m.searchMusicsByTagsInTags(listTag).size());
-		for(MusicDTO s : m.searchMusicsByTagsInTags(listTag)){
-			System.out.println(s);
-		} Ne pas lancer pour l'instant lance une exception*/
 	}
 	
 }

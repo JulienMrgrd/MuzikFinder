@@ -314,7 +314,7 @@ public class MongoService {
 			// ajout de l'artist dans la base mongo Artists 
 			//(test de présence de l'artiste déjà effectué dans la méthode appelée)
 			if(!listMusic.isEmpty()){
-				insertArtistIfNotExist(listMusic.get(0).getArtistId(), listMusic.get(0).getArtistName());
+				insertArtistIfNotExist(listMusic.get(0).getArtistName(), listMusic.get(0).getArtistId());
 				
 				for(MFMusic mf : listMusic){
 					// Pour chaque MFMusic présentes dans l'album
@@ -497,12 +497,14 @@ public class MongoService {
 			idArtist = doc_Music.getString("idArtist");
 			findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
 			cursor_Artist = findBy(collection_Artists,findQuery_Artists);
-			doc_Artist = cursor_Artist.next();
-			mDto = new MusicDTO(doc_Music.getString("idMusic"), nameMusic, idArtist, doc_Artist.getString("nameArtist"),
-					"", //albumId
-					doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
-
-			listMusics.add(mDto);
+			//if(cursor_Artist.hasNext()){
+				doc_Artist = cursor_Artist.next();
+				mDto = new MusicDTO(doc_Music.getString("idMusic"), nameMusic, idArtist, doc_Artist.getString("nameArtist"),
+						"", //albumId
+						doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
+	
+				listMusics.add(mDto);
+			//}
 		}
 
 		return listMusics;
@@ -514,11 +516,10 @@ public class MongoService {
 		
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
 		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
-		
-		Document findQuery_Musics = new Document("lyrics",new Document());
+
 		Document findQuery_Artists;
-		
-		MongoCursor<Document> cursor_Music = findBy(collection_Musics,findQuery_Musics);
+
+		MongoCursor<Document> cursor_Music = findAll(collection_Musics);
 		MongoCursor<Document> cursor_Artist;
 		
 		MusicDTO mDto;
@@ -533,11 +534,13 @@ public class MongoService {
 				String idArtist = doc_Music.getString("idArtist");
 				findQuery_Artists = new Document("idArtist", new Document("$eq",idArtist));
 				cursor_Artist = findBy(collection_Artists,findQuery_Artists);
-				Document doc_Artist = cursor_Artist.next();
-				mDto = new MusicDTO(doc_Music.getString("idMusic"), doc_Music.getString("nameMusic"), idArtist, doc_Artist.getString("nameArtist"),
-						"", //albumId
-						doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
-				listMusic.add(mDto);
+				if(cursor_Artist.hasNext()){
+					Document doc_Artist = cursor_Artist.next();
+					mDto = new MusicDTO(doc_Music.getString("idMusic"), doc_Music.getString("nameMusic"), idArtist, doc_Artist.getString("nameArtist"),
+							"", //albumId
+							doc_Music.getString("spotifyId"), doc_Music.getString("soundcloudId"));
+					listMusic.add(mDto);
+				}
 			}
 		}
 

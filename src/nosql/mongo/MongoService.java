@@ -118,7 +118,6 @@ public class MongoService {
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				System.out.println(doc1);
 				List<String> listeId = (List<String>) doc1.get("idMusic");
 				List<String> newListeId = new ArrayList<String>();
 				newListeId.addAll(listeId);
@@ -186,7 +185,6 @@ public class MongoService {
 	public boolean containsTag(String tag){
 		MongoCollection<Document> collection = getCollection(MongoCollections.TAGS);
 		Document findQuery = new Document("tag", new Document("$eq",tag));
-		System.out.println(findQuery);
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 		return cursor.hasNext();
 	}
@@ -262,7 +260,6 @@ public class MongoService {
 	public List<String> getIdMusicsByChainWords(String chainWords){
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("lyrics", new Document("$regex",chainWords));
-		System.out.println(findQuery);
 		MongoCursor<Document> cursor = findBy(collection, findQuery);
 
 		ArrayList<String> listeId = new ArrayList<String>();
@@ -348,12 +345,6 @@ public class MongoService {
 		}
 		
 		Collections.sort(idMusicScore);
-		int i=0;
-		for(IdMusicScore ms: idMusicScore){
-			System.out.println("i = "+i+" ms.id = "+ms.getIdMusic()+" ms.score = "+ms.getScore());
-			i++;
-		}
-		
 		MusicDTO msDto;
 		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
 

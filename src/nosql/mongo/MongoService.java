@@ -541,8 +541,13 @@ public class MongoService {
 	public void setLastCountryPref(int pos) {
 		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
 		Document oldPref = findFirst(collection);
-		Document newPref = new Document("$set",new Document("posCountry",pos));
-		updateOne(collection, oldPref, newPref);
+		if(oldPref != null) {
+			Document newPref = new Document("$set",new Document("posCountry",pos));
+			updateOne(collection, oldPref, newPref);
+		} else {
+			Document newPref = new Document("posCountry",pos);
+			insertOne(collection, newPref);
+		}
 	}
 
 	public int getLastCountryPref() {
@@ -554,5 +559,5 @@ public class MongoService {
 			return 0;
 		}
 	}
-
+	
 }

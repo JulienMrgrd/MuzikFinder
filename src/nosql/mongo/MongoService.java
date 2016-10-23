@@ -114,7 +114,7 @@ public class MongoService {
 			insertOne(collection, doc);
 			return true;
 		} else if(containsIdMusicInTag(tag,musicId)){
-			System.out.println("IdMusic already corresponding in the Tag Collection\n");
+			//System.out.println("IdMusic already corresponding in the Tag Collection\n");
 			return false;
 		} else {
 			doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
@@ -140,13 +140,13 @@ public class MongoService {
 
 		MongoCollection<Document> collection = getCollection(MongoCollections.MUSICS);
 		Document doc = new Document();
-		doc.put("idMusic",musicId);
-		doc.put("lyrics",words);
-		doc.put("idArtist",artistId);
-		doc.put("nameMusic", nameMusic);
-		doc.put("langue", langue);
-		doc.put("spotifyId", spotifyId);
-		doc.put("soundCloudId",soundCloudId);
+		if(musicId!=null) doc.put("idMusic",musicId);
+		if(words!=null) doc.put("lyrics",words);
+		if(artistId!=null) doc.put("idArtist",artistId);
+		if(nameMusic!=null) doc.put("nameMusic", nameMusic);
+		if(langue!=null) doc.put("langue", langue);
+		if(spotifyId!=null) doc.put("spotifyId", spotifyId);
+		if(soundCloudId!=null) doc.put("soundCloudId",soundCloudId);
 		insertOne(collection, doc);
 		return true;
 	}
@@ -317,14 +317,19 @@ public class MongoService {
 				for(MFMusic mf : listMusic){
 					// Pour chaque MFMusic présentes dans l'album
 					MFLyrics mfL = mf.getLyrics();
-					// on récupère les lyrics et on insère dans la base mongo Lyrics
-					insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
-							mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), 
-							mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
-	
-					// Début de la création des tags pour chaque lyrics
-					for( String tag : ParserMaison.parserProcess(mfL.getLyricsBody(), mfL.getLyrics_language()) ) {
-						insertTagIfNotExists(tag, mf.getTrackId());
+					if(mfL != null){
+						// on récupère les lyrics et on insère dans la base mongo Lyrics
+						insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
+								mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), 
+								mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
+						
+						// Début de la création des tags pour chaque lyrics
+						List<String> tags = ParserMaison.parserProcess(mfL.getLyricsBody(), mfL.getLyrics_language());
+						if(tags != null && !tags.isEmpty()){
+							for( String tag : tags ) {
+								insertTagIfNotExists(tag, mf.getTrackId());
+							}
+						}
 					}
 				}
 			}

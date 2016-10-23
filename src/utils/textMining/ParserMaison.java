@@ -15,7 +15,7 @@ public class ParserMaison {
 	private static final String THE_REGEX = "[^a-zA-Z0-9 .,']|(?<!\\d)[.,]|[.,](?!\\d)"; 
 	
 	public static List<String> parserProcess(String lyrics, String langage){
-		if(lyrics==null || langage==null) return null;
+		if(lyrics==null || lyrics.isEmpty() || langage==null || langage.isEmpty()) return null;
 		List<String> tags = null;
 		List<String> excludeWords;
 		try {

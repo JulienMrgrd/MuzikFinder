@@ -344,6 +344,7 @@ public class MongoService {
 	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
 		List<String> listIdMusics = new ArrayList<>();
+		boolean presentInList = false;
 
 		for(String tag : tags){
 			listIdMusics = this.getIdMusicsByTag(tag);
@@ -351,9 +352,15 @@ public class MongoService {
 				for(IdMusicScore musicScore : idMusicScore){
 					if(musicScore.getIdMusic().equals(idMusic)){
 						musicScore.incrementScore();
-					} else {
-						idMusicScore.add(new IdMusicScore(idMusic, 1));
-					}
+						presentInList=true;
+						break;
+					} 
+				}
+				if(!presentInList){
+					IdMusicScore ms = new IdMusicScore(idMusic, 1);
+					idMusicScore.add(ms);
+				}else{
+					presentInList=false;
 				}
 			}
 		}
@@ -362,6 +369,8 @@ public class MongoService {
 		MusicDTO msDto;
 		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
 
+		System.out.println(listMusic.size());
+		
 		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
 		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
 		

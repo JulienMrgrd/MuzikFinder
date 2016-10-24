@@ -1,10 +1,10 @@
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFAlbum.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Album.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\utils\MusixMatchAPIHelper.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MuzikFinderConstants.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\IdMusicScore.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\NoSQLDB.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\textMining\OpenNlpParserTest.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\utils\MusixMatchConstants.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\MusicDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\LoginServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MuzikFinderPreferences.java

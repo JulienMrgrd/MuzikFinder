@@ -16,7 +16,6 @@ import api.musixMatch.metier.Music;
 import interfaces.MFArtist;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
-import utils.MuzikFinderConstants;
 
 public final class MusixMatchAPIHelper {
 
@@ -33,7 +32,7 @@ public final class MusixMatchAPIHelper {
 	public static List<MFArtist> getArtistsList(String json){
 		JSONObject root = new JSONObject(json);
 		try{
-			root.getJSONObject(MuzikFinderConstants.ARTIST_LIST); // Can throw Exception if key not exists
+			root.getJSONObject(MusixMatchConstants.ARTIST_LIST); // Can throw Exception if key not exists
 		} catch (JSONException e){
 			root = getBody(json);
 		}
@@ -42,11 +41,11 @@ public final class MusixMatchAPIHelper {
 		try {
 			
 			Gson gson = new Gson();
-			JSONArray jsonList = root.getJSONArray(MuzikFinderConstants.ARTIST_LIST);
+			JSONArray jsonList = root.getJSONArray(MusixMatchConstants.ARTIST_LIST);
 			artists = new ArrayList<>(jsonList.length());
 			JSONObject tmpObj;
 			for(int i=0; i<jsonList.length(); i++){
-				tmpObj = jsonList.getJSONObject(i).getJSONObject(MuzikFinderConstants.ARTIST);
+				tmpObj = jsonList.getJSONObject(i).getJSONObject(MusixMatchConstants.ARTIST);
 				artists.add( gson.fromJson( tmpObj.toString() , Artist.class) );
 			}
 			
@@ -60,7 +59,7 @@ public final class MusixMatchAPIHelper {
 	public static List<Album> getAlbumList(String json) {
 		JSONObject root = new JSONObject(json);
 		try{
-			root.getJSONObject(MuzikFinderConstants.ALBUM_LIST); // Can throw Exception if key not exists
+			root.getJSONObject(MusixMatchConstants.ALBUM_LIST); // Can throw Exception if key not exists
 		} catch (JSONException e){
 			root = getBody(json);
 		}
@@ -69,11 +68,11 @@ public final class MusixMatchAPIHelper {
 		try {
 			
 			Gson gson = new Gson();
-			JSONArray jsonList = root.getJSONArray(MuzikFinderConstants.ALBUM_LIST);
+			JSONArray jsonList = root.getJSONArray(MusixMatchConstants.ALBUM_LIST);
 			albums = new ArrayList<>(jsonList.length());
 			JSONObject tmpObj;
 			for(int i=0; i<jsonList.length(); i++){
-				tmpObj = jsonList.getJSONObject(i).getJSONObject(MuzikFinderConstants.ALBUM);
+				tmpObj = jsonList.getJSONObject(i).getJSONObject(MusixMatchConstants.ALBUM);
 				albums.add( gson.fromJson( tmpObj.toString() , Album.class) );
 			}
 			
@@ -87,7 +86,7 @@ public final class MusixMatchAPIHelper {
 	public static List<MFMusic> getMusicsList(String json) {
 		JSONObject root = new JSONObject(json);
 		try{
-			root.getJSONObject(MuzikFinderConstants.TRACK_LIST); // Can throw Exception if key not exists
+			root.getJSONObject(MusixMatchConstants.TRACK_LIST); // Can throw Exception if key not exists
 		} catch (JSONException e){
 			root = getBody(json);
 		}
@@ -96,11 +95,11 @@ public final class MusixMatchAPIHelper {
 		try {
 			
 			Gson gson = new Gson();
-			JSONArray jsonList = root.getJSONArray(MuzikFinderConstants.TRACK_LIST);
+			JSONArray jsonList = root.getJSONArray(MusixMatchConstants.TRACK_LIST);
 			musics = new ArrayList<>(jsonList.length());
 			JSONObject tmpObj;
 			for(int i=0; i<jsonList.length(); i++){
-				tmpObj = jsonList.getJSONObject(i).getJSONObject(MuzikFinderConstants.TRACK);
+				tmpObj = jsonList.getJSONObject(i).getJSONObject(MusixMatchConstants.TRACK);
 				musics.add( gson.fromJson( tmpObj.toString() , Music.class) );
 			}
 			
@@ -114,7 +113,7 @@ public final class MusixMatchAPIHelper {
 	public static MFLyrics getLyrics(String json) {
 		JSONObject root = new JSONObject(json);
 		try{
-			root.getJSONObject(MuzikFinderConstants.LYRICS); // Can throw Exception if key not exists
+			root.getJSONObject(MusixMatchConstants.LYRICS); // Can throw Exception if key not exists
 		} catch (JSONException e){
 			root = getBody(json);
 		}
@@ -122,7 +121,7 @@ public final class MusixMatchAPIHelper {
 		try {
 			
 			Gson gson = new Gson();
-			JSONObject jsonLyrics = root.getJSONObject(MuzikFinderConstants.LYRICS);
+			JSONObject jsonLyrics = root.getJSONObject(MusixMatchConstants.LYRICS);
 			return gson.fromJson( jsonLyrics.toString() , Lyrics.class);
 
 		} catch (JSONException e){

@@ -40,6 +40,8 @@ public class ParserMaison {
 		BufferedReader br = null;
 		List<String> motsAExclure;
 		try{
+			if(langue != null && !langue.isEmpty()) langue = langue.toLowerCase();
+			else return null;
 			br = new BufferedReader(new FileReader("./res/"+langue+"-exclusion.txt"));
 		
 			String line = null;

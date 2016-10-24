@@ -15,7 +15,6 @@ api\musixMatch\utils\RequestHelper.class
 utils\MathUtils.class
 api\API.class
 api\musixMatch\metier\Album.class
-utils\MuzikFinderConstants.class
 nosql\NoSQLDB.class
 server\dto\MusicDTO.class
 nosql\mongo\MongoCollections.class
@@ -27,6 +26,7 @@ interfaces\MFAlbum.class
 interfaces\MFArtist.class
 nosql\mongo\MongoService.class
 sql\SQLDB.class
+api\musixMatch\utils\MusixMatchConstants.class
 daemon\DaemonMain$1.class
 utils\IdMusicScore.class
 utils\textMining\OpenNlpParserTest.class

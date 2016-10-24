@@ -551,25 +551,25 @@ public class MongoService {
 		mongoClient.close();
 	}
 
-	public void setLastCountryPref(int pos) {
+	public void setPref(String prefName, String param) {
 		MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
 		Document oldPref = findFirst(collection);
 		if(oldPref != null) {
-			Document newPref = new Document("$set",new Document("posCountry",pos));
+			Document newPref = new Document("$set",new Document(prefName, param));
 			updateOne(collection, oldPref, newPref);
 		} else {
-			Document newPref = new Document("posCountry",pos);
+			Document newPref = new Document(prefName, param);
 			insertOne(collection, newPref);
 		}
 	}
 
-	public int getLastCountryPref() {
+	public String getPref(String prefName) {
 		try {
 			MongoCollection<Document> collection = getCollection(MongoCollections.PREFS);
 			Document doc = findFirst(collection);
-			return doc.getInteger("posCountry", 0);
+			return doc.getString(prefName);
 		} catch (Exception e){
-			return 0;
+			return null;
 		}
 	}
 	

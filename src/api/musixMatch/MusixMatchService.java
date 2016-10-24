@@ -7,11 +7,11 @@ import java.util.Map;
 
 import api.musixMatch.metier.Album;
 import api.musixMatch.utils.MusixMatchAPIHelper;
+import api.musixMatch.utils.MusixMatchConstants;
 import api.musixMatch.utils.MusixMatchUtils;
 import api.musixMatch.utils.RequestHelper;
 import interfaces.MFArtist;
 import interfaces.MFMusic;
-import utils.MuzikFinderConstants;
 
 public class MusixMatchService {
 
@@ -27,11 +27,11 @@ public class MusixMatchService {
 		List<Album> albumsFromAPI = null;
 		
 		do {
-			params.put(MuzikFinderConstants.ARTIST_ID, artistId);
-			params.put(MuzikFinderConstants.PAGE, Integer.toString(page));
-			params.put(MuzikFinderConstants.PAGE_SIZE, Integer.toString(MuzikFinderConstants.MAX_PAGE) );
-			params.put(MuzikFinderConstants.RELEASE_DATE, MuzikFinderConstants.RELEASE_DATE_DESC);
-			String request = RequestHelper.createRequest(MuzikFinderConstants.ARTIST_ALBUMS_GET, params);
+			params.put(MusixMatchConstants.ARTIST_ID, artistId);
+			params.put(MusixMatchConstants.PAGE, Integer.toString(page));
+			params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(MusixMatchConstants.MAX_PAGE) );
+			params.put(MusixMatchConstants.RELEASE_DATE, MusixMatchConstants.RELEASE_DATE_DESC);
+			String request = RequestHelper.createRequest(MusixMatchConstants.ARTIST_ALBUMS_GET, params);
 			
 //			System.out.println("Requête in MusixMatch : "+request);
 
@@ -43,7 +43,7 @@ public class MusixMatchService {
 					acceptedAlbums.add(alb);
 				}
 			}
-		} while ( albumsFromAPI.size()>MuzikFinderConstants.MAX_PAGE );
+		} while ( albumsFromAPI.size()>MusixMatchConstants.MAX_PAGE );
 		
 		acceptedAlbums.forEach(alb -> allIds.add(alb.getAlbumId()));
 		return allIds;
@@ -58,9 +58,9 @@ public class MusixMatchService {
 	public List<MFMusic> getMusicsInAlbum(String albumId) {
 		Map<String, String> params = new HashMap<>();
 
-		params.put(MuzikFinderConstants.PAGE_SIZE, Integer.toString(MuzikFinderConstants.MAX_PAGE) );
-		params.put(MuzikFinderConstants.ALBUM_ID, albumId);
-		String request = RequestHelper.createRequest(MuzikFinderConstants.ALBUM_TRACKS_GET, params);
+		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(MusixMatchConstants.MAX_PAGE) );
+		params.put(MusixMatchConstants.ALBUM_ID, albumId);
+		String request = RequestHelper.createRequest(MusixMatchConstants.ALBUM_TRACKS_GET, params);
 		
 //		System.out.println("Requête in MusixMatch : "+request);
 
@@ -73,11 +73,11 @@ public class MusixMatchService {
 	}
 
 	private void addLyricsToMusic(MFMusic music) {
-		if( !music.getHasLyrics().equals(MuzikFinderConstants.NO_LYRICS) ){
+		if( !music.getHasLyrics().equals(MusixMatchConstants.NO_LYRICS) ){
 			Map<String, String> params = new HashMap<>();
 
-			params.put(MuzikFinderConstants.TRACK_ID, music.getTrackId());
-			String request = RequestHelper.createRequest(MuzikFinderConstants.TRACK_LYRICS_GET, params);
+			params.put(MusixMatchConstants.TRACK_ID, music.getTrackId());
+			String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_LYRICS_GET, params);
 			
 //			System.out.println("Requête in MusixMatch : "+request);
 
@@ -89,10 +89,10 @@ public class MusixMatchService {
 
 	public List<MFMusic> getTopMusics(int from, int to, String country) {
 		Map<String, String> params = new HashMap<>();
-		params.put(MuzikFinderConstants.PAGE_SIZE, Integer.toString(to));
-		params.put(MuzikFinderConstants.PAGE, Integer.toString(from));
-		params.put(MuzikFinderConstants.COUNTRY, country);
-		String request = RequestHelper.createRequest(MuzikFinderConstants.TRACK_CHART_GET, params);
+		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(to));
+		params.put(MusixMatchConstants.PAGE, Integer.toString(from));
+		params.put(MusixMatchConstants.COUNTRY, country);
+		String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_CHART_GET, params);
 //		System.out.println("Requête in MusixMatch : "+request);
 
 		String response = RequestHelper.sendRequest(request);
@@ -102,10 +102,10 @@ public class MusixMatchService {
 	public List<MFArtist> getTopArtists(int pos, int nbArtistsToGet, String country) {
 		Map<String, String> params = new HashMap<>();
 
-		params.put(MuzikFinderConstants.PAGE_SIZE, Integer.toString(nbArtistsToGet));
-		params.put(MuzikFinderConstants.PAGE, Integer.toString(pos));
-		params.put(MuzikFinderConstants.COUNTRY, country);
-		String request = RequestHelper.createRequest(MuzikFinderConstants.ARTIST_CHART_GET, params);
+		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(nbArtistsToGet));
+		params.put(MusixMatchConstants.PAGE, Integer.toString(pos));
+		params.put(MusixMatchConstants.COUNTRY, country);
+		String request = RequestHelper.createRequest(MusixMatchConstants.ARTIST_CHART_GET, params);
 		
 //		System.out.println("Requête in MusixMatch : "+request);
 

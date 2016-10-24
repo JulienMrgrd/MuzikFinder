@@ -1,11 +1,11 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MathUtils {
 
-
-	public static ArrayList<Integer> getNbIdMaxOfList(ArrayList<Integer> list, int nb){
+	public static List<Integer> getNbIdMaxOfList(List<Integer> list, int nb){
 		int id = 0;
 		ArrayList<Integer> listId = new ArrayList<Integer>();
 		Integer max = 0;

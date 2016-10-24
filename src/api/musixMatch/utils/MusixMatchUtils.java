@@ -3,7 +3,6 @@ package api.musixMatch.utils;
 import java.util.List;
 
 import api.musixMatch.metier.Album;
-import utils.MuzikFinderConstants;
 
 public final class MusixMatchUtils {
 
@@ -41,7 +40,7 @@ public final class MusixMatchUtils {
 	 * @return
 	 */
 	public static boolean isAnAlbum(Album alb) {
-		return alb.getAlbumReleaseType().equalsIgnoreCase(MuzikFinderConstants.ALBUM);
+		return alb.getAlbumReleaseType().equalsIgnoreCase(MusixMatchConstants.ALBUM);
 	}
 
 }

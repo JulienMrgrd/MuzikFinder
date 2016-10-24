@@ -84,22 +84,21 @@ public class NoSQLDB {
 		}
 	}
 
-	/**
-	 * Refer to MuzikFinderPreferences COUNTRY_ORDER array.
-	 * @param pos
+	/** Get a pref in nosql database by name
+	 * @param param
 	 * @return
 	 */
-	public int getLastCountryPref() {
-		return mongo.getLastCountryPref();
+	public String getPref(String prefName) {
+		return mongo.getPref(prefName);
 	}
 	
 	/**
-	 * Refer to MuzikFinderPreferences COUNTRY_ORDER array.
-	 * @param pos
-	 * @return
+	 * Set a pref in nosql database by name
+	 * @param prefName
+	 * @param param
 	 */
-	public void setLastCountryPref(int pos) {
-		mongo.setLastCountryPref(pos);
+	public void setPref(String prefName, String param) {
+		mongo.setPref(prefName, param);
 	}
 
 }

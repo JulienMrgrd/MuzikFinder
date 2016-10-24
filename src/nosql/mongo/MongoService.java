@@ -207,7 +207,7 @@ public class MongoService {
 			doc_new = cursor.next();
 			listIdMusic = (List<String>) doc_new.get("idMusic");
 			for( String s : listIdMusic ){
-				return s.equals(idMusic);
+				if(s.equals(idMusic)) return true;
 			}
 		}
 		return false;

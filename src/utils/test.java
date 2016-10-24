@@ -1,21 +1,26 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 
-import nosql.mongo.MongoService;
+import sql.mysql.MySQLService;
 
 public class test {
 	
 	public static void main(String[] args){
 		
-		MongoService ms = new MongoService(false);
-		
-		List<String> listTag = new ArrayList<>();
-		listTag.add("flo");
-		listTag.add("rida");
-		
-		System.out.println(ms.searchMusicsByTagsInTags(listTag) );
+		try {
+			MySQLService ms = new MySQLService();
+			ms.insertNewUser("feligo", "password", "fff@yopmail");
+			ms.insertNewUser("felix", "password2", "email");
+			ms.insertNewUser("feligo", "password2", "newMail");
+			System.out.println(ms.verifyConnexion("feligo", "password"));
+			System.out.println(ms.verifyConnexion("feligo", "password2"));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 

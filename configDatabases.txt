@@ -1,0 +1,6 @@
+=== muzikfinder Config Vars
+CLEARDB_DATABASE_URL: mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net/heroku_1a48668fb87a67e?reconnect=true
+DATABASE_URL:         mysql://bd54e4b71469bc:231e3b61@us-cdbr-iron-east-04.cleardb.net/heroku_e819ab8bca89a87?reconnect=true
+MONGODB_URI:          mongodb://heroku_1dpqh3kq:gv7mru79jbtgn52lrl5mg301qh@ds049456.mlab.com:49456/heroku_1dpqh3kq
+PAPERTRAIL_API_TOKEN: WBsXnglLZsLfT8sHgyKN
+TZ:                   Europe/Paris

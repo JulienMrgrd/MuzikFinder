@@ -95,7 +95,7 @@ public class MySQLService {
 			
 			Statement stmt = connection.createStatement();
 		
-			java.sql.Date sqlDate = new Date(year, month, day);	
+			java.sql.Date sqlDate = new Date(year, month-1, day);	
 			
 			String sqlRequest = "INSERT INTO "+USER_DB_NAME+"(pseudo,password,email,date) VALUES('"
 					+ pseudo+"','"+password+"','"+email+"','"+sqlDate+"');";

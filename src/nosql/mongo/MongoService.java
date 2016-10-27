@@ -21,7 +21,10 @@ import com.mongodb.client.MongoDatabase;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import server.dto.MusicDTO;
+import sql.User;
 import utils.IdMusicScore;
+import utils.MathUtils;
+import utils.TimeInMilliSeconds;
 import utils.textMining.ParserMaison;
 
 public class MongoService {
@@ -404,61 +407,6 @@ public class MongoService {
 		return listMusic;
 	}
 	
-	//TODO : A supprimer non ?
-//	@SuppressWarnings("unchecked")
-//	public List<MusicDTO> searchMusicsByTagsInTagsOld(List<String> tags){
-//		HashMap<String,Integer> mapIdMusicNbOccurTag = new HashMap<String,Integer>();
-//		ArrayList<MusicDTO> listMusic = new ArrayList<MusicDTO>();
-//		MongoCollection<Document> collection_Tags = getCollection(MongoCollections.TAGS);
-//		List<MongoCursor<Document>> listCursor_Tags = new ArrayList<MongoCursor<Document>>();
-//
-//		for(String s : tags){
-//			Document findQuery = new Document("tag", new Document("$eq",s));
-//			MongoCursor<Document> cursor_tags = findBy(collection_Tags, findQuery);
-//			if(cursor_tags != null)
-//				listCursor_Tags.add(cursor_tags);
-//		}
-//
-//		for(MongoCursor<Document> cursor : listCursor_Tags){
-//			if(cursor.hasNext()){
-//				Document doc_tags = cursor.next();
-//				List<String> listIdMusic = (List<String>)doc_tags.get("idMusic");
-//				for(String id : listIdMusic){
-//					if(mapIdMusicNbOccurTag.get(id)==null){
-//						mapIdMusicNbOccurTag.put(id, 1);
-//					}
-//					else{
-//						mapIdMusicNbOccurTag.replace(id, mapIdMusicNbOccurTag.get(id)+1);
-//					}
-//				}
-//			}
-//		}
-//
-//		Set<String> list = mapIdMusicNbOccurTag.keySet();
-//		ArrayList<String> idList = new ArrayList<String>(list);
-//		ArrayList<Integer> scoreList = new ArrayList<Integer>((HashSet<Integer>)mapIdMusicNbOccurTag.values());
-//
-//		ArrayList<Integer> newList = MathUtils.getNbIdMaxOfList(scoreList, scoreList.size());
-//		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
-//		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
-//		MusicDTO msDto;
-//		for(int i : newList){
-//			String id = idList.get(i);
-//			Document findQuery_Musics = new Document("idArtist", new Document("$eq",id));
-//			Document findQuery_Artists = new Document("idArtist", new Document("$eq",id));
-//			MongoCursor<Document> cursor_Musics = findBy(collection_Musics,findQuery_Musics);
-//			MongoCursor<Document> cursor_Artists = findBy(collection_Artists,findQuery_Artists);
-//			Document doc_Artists = cursor_Artists.next();
-//			String nameArtist = doc_Artists.getString("nameArtist");
-//			Document doc_Musics = cursor_Musics.next();
-//			msDto = new MusicDTO(doc_Musics.getString("idMusic"), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist")
-//					, nameArtist,
-//					"", //albumId
-//					doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
-//			listMusic.add(msDto);
-//		}
-//		return listMusic;
-//	}
 
 	/**
 	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par
@@ -580,6 +528,158 @@ public class MongoService {
 		} catch (Exception e){
 			return null;
 		}
+	}
+	
+	
+	////////////////////////////////////////SEARCH USER/////////////////////////
+	public void addNewSearch(String idMusic, User user){
+		java.util.Date utilDate = new java.util.Date();
+		
+	    int age = MathUtils.calculAge(user.getDateBirth());
+
+		MongoCollection<Document> collection = getCollection(MongoCollections.SEARCH); 
+		Document doc = new Document();
+		doc.put("idMusic", idMusic);
+		doc.put("ageUser",age);
+		doc.put("dateSearch", utilDate.getTime());
+		insertOne(collection, doc);
+		
+	}
+	
+	public List<MusicDTO> getTopMusicSearchThisWeek(){
+		List<IdMusicScore> idMusicScore = new ArrayList<>();
+		MongoCollection<Document> collection = getCollection(MongoCollections.SEARCH);
+		MongoCursor<Document> cursor = findAll(collection);
+
+		boolean presentInList=false;
+		String idMusic="";
+		long timeOfSearch;
+
+		java.util.Date utilDate = new java.util.Date();
+		
+		while(cursor.hasNext()){
+			idMusic=cursor.next().getString("idMusic");
+			timeOfSearch=cursor.next().getLong("dateSearch");
+			if(!((utilDate.getTime()-timeOfSearch)>TimeInMilliSeconds.WEEK)){
+				for(IdMusicScore musicScore : idMusicScore){
+					if(musicScore.getIdMusic().equals(idMusic)){
+						musicScore.incrementScore();
+						presentInList=true;
+						break;
+					} 
+				}
+				if(!presentInList){
+					idMusicScore.add(new IdMusicScore(idMusic, 1));
+				}
+			}
+		}
+		
+		Collections.sort(idMusicScore);
+
+		MusicDTO msDto;
+		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
+
+		System.out.println(listMusic.size());
+		
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+		
+		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
+		MongoCursor<Document> cursor_Musics, cursor_Artists;
+		Document doc_Musics, doc_Artists, findQuery_Artists, findQuery_MusicByIdMusic;
+		
+		for(IdMusicScore ms : idMusicScore){
+			findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ms.getIdMusic()));
+			cursor_Musics = findBy(collection_Musics, findQuery_MusicByIdMusic);
+			
+			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
+				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
+				
+				//On recupere l'identifiant de l'artiste ayant fait la musique
+				findQuery_Artists = new Document("idArtist", new Document("$eq",doc_Musics.getString("idArtist")));
+				cursor_Artists = findBy(collection_Artists,findQuery_Artists);
+				String nameArtist = "";
+				
+				if(cursor_Artists.hasNext()){
+					doc_Artists = cursor_Artists.next();
+					nameArtist=doc_Artists.getString("nameArtist");
+				}
+				msDto = new MusicDTO(ms.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
+						nameArtist, "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+				listMusic.add(msDto);
+				
+			}
+		}
+		
+		return listMusic;
+	}
+	
+	public List<MusicDTO> getTopMusicSearchThisMonth(){
+		List<IdMusicScore> idMusicScore = new ArrayList<>();
+		MongoCollection<Document> collection = getCollection(MongoCollections.SEARCH);
+		MongoCursor<Document> cursor = findAll(collection);
+
+		boolean presentInList=false;
+		String idMusic="";
+		long timeOfSearch;
+
+		java.util.Date utilDate = new java.util.Date();
+		
+		while(cursor.hasNext()){
+			idMusic=cursor.next().getString("idMusic");
+			timeOfSearch=cursor.next().getLong("dateSearch");
+			if(!((utilDate.getTime()-timeOfSearch)>TimeInMilliSeconds.MONTH)){
+				for(IdMusicScore musicScore : idMusicScore){
+					if(musicScore.getIdMusic().equals(idMusic)){
+						musicScore.incrementScore();
+						presentInList=true;
+						break;
+					} 
+				}
+				if(!presentInList){
+					idMusicScore.add(new IdMusicScore(idMusic, 1));
+				}
+			}
+		}
+		
+		Collections.sort(idMusicScore);
+
+		MusicDTO msDto;
+		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
+
+		System.out.println(listMusic.size());
+		
+		MongoCollection<Document> collection_Musics = getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection_Artists = getCollection(MongoCollections.ARTISTS);
+		
+		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
+		MongoCursor<Document> cursor_Musics, cursor_Artists;
+		Document doc_Musics, doc_Artists, findQuery_Artists, findQuery_MusicByIdMusic;
+		
+		for(IdMusicScore ms : idMusicScore){
+			findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ms.getIdMusic()));
+			cursor_Musics = findBy(collection_Musics, findQuery_MusicByIdMusic);
+			
+			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
+				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
+				
+				//On recupere l'identifiant de l'artiste ayant fait la musique
+				findQuery_Artists = new Document("idArtist", new Document("$eq",doc_Musics.getString("idArtist")));
+				cursor_Artists = findBy(collection_Artists,findQuery_Artists);
+				String nameArtist = "";
+				
+				if(cursor_Artists.hasNext()){
+					doc_Artists = cursor_Artists.next();
+					nameArtist=doc_Artists.getString("nameArtist");
+				}
+				msDto = new MusicDTO(ms.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
+						nameArtist, "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+				listMusic.add(msDto);
+				
+			}
+		}
+		
+		return listMusic;
 	}
 	
 }

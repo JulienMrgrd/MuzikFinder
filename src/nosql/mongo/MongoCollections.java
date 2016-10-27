@@ -9,5 +9,6 @@ public final class MongoCollections {
 	public static final String ALBUMS = "Albums";
 	public static final String ARTISTS = "Artists";
 	public static final String PREFS = "Preferences";
-
+	public static final String SEARCH = "Search";
+	
 }

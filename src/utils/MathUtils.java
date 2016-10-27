@@ -27,7 +27,10 @@ public class MathUtils {
 		return listId;
 	}
 
-	public static int calculAge(Date dateBirth, Date dateNow){
+	public static int calculAge(Date dateBirth){
+		
+		java.util.Date utilDate = new java.util.Date();
+	    java.sql.Date dateNow = new java.sql.Date(utilDate.getTime());	
 		
 		Calendar calBirth = Calendar.getInstance();
 		calBirth.setTime(dateBirth);

@@ -1,12 +1,12 @@
-package utils;
+package tests;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 
-import sql.User;
 import sql.mysql.MySQLService;
+import utils.TimeInMilliSeconds;
 
-public class test {
+public class Test {
 	static MySQLService ms;
 	
 	public static void generate10User() throws SQLException, URISyntaxException{

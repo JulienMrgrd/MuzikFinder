@@ -11,7 +11,7 @@
       _visible = true,
       _hideOffset,
       defaults = {
-        disableAutohide: false,
+        disableAutohide: true,
         showOnUpscroll: true,
         showOnBottom: true,
         hideOffset: 'auto', // "auto" means the navbar height

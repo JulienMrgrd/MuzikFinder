@@ -1,26 +1,42 @@
 <style>
 .dropdown:hover .dropdown-menu {
-    display: block;
- }
+	display: block;
+}
 
-.navbar {
+.navbar-inverse {
 	margin: 0 auto;
 	padding-right: 10%;
 	padding-left: 10%;
+	opacity: 0.9;
+	color: #99979c;
 }
 
+.navbar-form .form-control{
+	background-color: #99979c;
+	border-color: #222222;
+}
+.navbar-form .form-control::-moz-placeholder{
+	color: #eee;
+}
+.navbar-brand img{
+	max-width: 120px; 
+	margin-top: -7px;
+}
 
+.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
+	color: #eee;
+}
 </style>
 
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#myNavbar">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="">MuzikFinder</a>
+			<a class="navbar-brand" href="#"><img src="images/MuzikFinder.png"></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
@@ -32,23 +48,25 @@
 						<li><a href="#">Top albums</a></li>
 					</ul></li>
 			</ul>
-		    <form class="navbar-form navbar-left">
-		        <input type="text" class="form-control search-query" placeholder="Search by lyrics" />
-		    </form>
-    
+			<form class="navbar-form navbar-left">
+				<input type="text" class="form-control search-query"
+					placeholder="Search by lyrics" />
+			</form>
+
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="sign.jsp?SignInOrUp=up"><span
-						class="glyphicon"></span>Sign up</a></li>
-				<li><a href="sign.jsp?SignInOrUp=in"><span
-						class="glyphicon"></span>Login</a></li>
+				<li><a id="modal-1" href="#modal-container-2" role="button" class="btn" data-toggle="modal">Log in</a></li>
+				<li><a id="modal-2" href="#modal-container-1" role="button" class="btn" data-toggle="modal">Sign up</a></li>
 			</ul>
 
 		</div>
 	</div>
 </nav>
-<br/><br/><br/>
+
+
+<div id="modal"></div>
+<script> (function() { $("#modal").load("htmls/modal.html"); })(); </script>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.bootstrap-autohidingnavbar.js"></script>
-<script> (function() { $("nav.navbar-fixed-top").autoHidingNavbar(); })();</script>
+<!-- <script src="js/jquery.bootstrap-autohidingnavbar.js"></script> -->
+<!-- <script> (function() { $("nav.navbar-fixed-top").autoHidingNavbar(); })();</script> -->

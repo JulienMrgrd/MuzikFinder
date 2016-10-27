@@ -8,9 +8,13 @@ public final class MuzikFinderPreferences {
 	
 	public static final String POS_COUNTRY_PREF = "posCountry";
 	public static final String[] COUNTRY_ORDER = {"us", "gb", "au", "fr", "ca", "be"};
-	
+	public static final int[] PREF_NB_MUSIC_FILTER= {50,20};
 	public static final String MUSIXMATCH_KEY_PREF = "musixmatch_pos";
 	
+	public static int[] getPrefNbMusicFilter() {
+		return PREF_NB_MUSIC_FILTER;
+	}
+
 	private MuzikFinderPreferences(){ }
 
 	public static String getCountry(int pos) {

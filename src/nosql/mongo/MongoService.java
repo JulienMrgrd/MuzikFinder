@@ -24,6 +24,7 @@ import server.dto.MusicDTO;
 import sql.User;
 import utils.IdMusicScore;
 import utils.MathUtils;
+import utils.MuzikFinderPreferences;
 import utils.TimeInMilliSeconds;
 import utils.textMining.ParserMaison;
 
@@ -342,6 +343,38 @@ public class MongoService {
 			cpt++;
 			System.out.println("Insertion "+cpt+"/"+listIdAlbum.size()+" OK.");
 		}
+	}
+	
+	public List<MusicDTO> searchMusics(List<String> tags){
+		List<MusicDTO> result = new ArrayList<MusicDTO>();
+		List<MusicDTO> result_tmp = new ArrayList<MusicDTO>();
+		List<MusicDTO> resultInTagsByTags_tmp = searchMusicsByTagsInTags(tags);
+		List<MusicDTO> resultInLyricsByTags_tmp;
+		List<MusicDTO> resultInLyricsByTagsLikeLyrics_tmp;
+
+		System.out.println(resultInTagsByTags_tmp.size());
+
+		if(resultInTagsByTags_tmp.size()>MuzikFinderPreferences.getPrefNbMusicFilter()[0]){
+			//result_tmp.addAll(resultInTagsByTags_tmp);
+			resultInLyricsByTags_tmp = searchMusicsByTagsInLyrics(tags);
+			for(MusicDTO res : resultInTagsByTags_tmp)
+				if(resultInLyricsByTags_tmp.contains(res))
+					result_tmp.add(res);
+	
+			resultInLyricsByTagsLikeLyrics_tmp = searchMusicsByTagsWithLyrics(tags);
+			if(resultInLyricsByTagsLikeLyrics_tmp.size()>MuzikFinderPreferences.getPrefNbMusicFilter()[1]){
+				for(MusicDTO res : resultInLyricsByTagsLikeLyrics_tmp)
+					if(result_tmp.contains(res))
+						result.add(res);
+			}
+			else{
+				result.addAll(result_tmp);
+			}
+		}else{
+			result.addAll(resultInTagsByTags_tmp);
+		}
+		//result.addAll(result_tmp);
+		return result;
 	}
 	
 	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags){

@@ -22,6 +22,9 @@ public class SQLDB {
 		}
 	}
 	
+	public void addSearch(User user, String recherche){
+		//mySqlService.addSearch(user, recherche);
+	}
 	
 
 }

@@ -2,7 +2,10 @@ package tests;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import nosql.mongo.MongoService;
 import sql.mysql.MySQLService;
 import utils.TimeInMilliSeconds;
 
@@ -27,8 +30,14 @@ public class Test {
 	}
 	
 	public static void main(String[] args){
+		
+		List<String> tags= new ArrayList<>();
+		tags.add("everybody");
+		tags.add("green");
+		MongoService ms =new MongoService(false);
+		ms.searchMusics(tags);
 		//YYYY-MM-DD
-		String dateBirth = "1994-12-05";
+		/*String dateBirth = "1994-12-05";
 		java.sql.Date datBirth = java.sql.Date.valueOf(dateBirth);
 		String dateMoin1Semain = "2016-09-27";
 		java.sql.Date datNowMoin1Semaine = java.sql.Date.valueOf(dateMoin1Semain);
@@ -40,7 +49,7 @@ public class Test {
 	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 	    long mmm=utilDate.getTime()-datNowMoin1Semaine.getTime();
 		System.out.println(TimeInMilliSeconds.MONTH);
-		System.out.println("mmmm = "+mmm);
+		System.out.println("mmmm = "+mmm);*/
 		/*
 			
 		

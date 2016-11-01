@@ -35,7 +35,7 @@ public class MySQLService {
 		createTableSearch();
 	}
 	
-	private void createTableUser() throws SQLException {
+	private void createTableUser() {
 	    String sqlCreate = "CREATE TABLE IF NOT EXISTS " + USER_DB_NAME
 	    		+ " ( id_user INTEGER PRIMARY KEY AUTO_INCREMENT ,"
 	            + "   pseudo           VARCHAR(10),"
@@ -43,20 +43,28 @@ public class MySQLService {
 	            + "   date             DATE,"
 	            + "   email	           VARCHAR(30))";
 
-	    Statement stmt = connection.createStatement();
-	    stmt.execute(sqlCreate);
-		stmt.close();
+	    try {
+	    	Statement stmt = connection.createStatement();
+			stmt.execute(sqlCreate);
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("Erreur MySQL lors de la création de TABLUE_USER");
+		}
 	}
 	
-	private void createTableSearch() throws SQLException {
+	private void createTableSearch() {
 	    String sqlCreate = "CREATE TABLE IF NOT EXISTS " + SEARCH_DB_NAME
 	    		+ " ( id_user          INTEGER ,"
 	            + "   recherche        VARCHAR(50),"
 	            + "   date             DATE)";
-
-	    Statement stmt = connection.createStatement();
-	    stmt.execute(sqlCreate);
-		stmt.close();
+	    
+	    try {
+	    	Statement stmt = connection.createStatement();
+			stmt.execute(sqlCreate);
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("Erreur MySQL lors de la création de TABLUE_SEARCH");
+		}
 	}
 	
 	private User getUserByLogin(String pseudo) throws SQLException{
@@ -179,7 +187,95 @@ public class MySQLService {
 			user.setEmail(newEmail);
 		}
 	}
+
+	public void deleteSearchByDateAndUser(User user, Date date) throws SQLException{
+		
+		if(user!=null){
+			Statement stmt = connection.createStatement();
 	
+			String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
+					+ "WHERE id_user='"+user.getId()+"' and "
+					+ "date='"+date+"';";
+	
+			stmt.execute(sqlRequest);
+			stmt.close();
+		}
+	}
+	
+	public String getSearchByDateAndUser(User user, Date date) throws SQLException{
+		
+		if(user!=null){
+			System.out.println("Search pour l'user = "+user.getLogin()+" a la date du "+date);
+			Statement stmt = connection.createStatement();
+	
+			String sqlRequest = "Select * from "+SEARCH_DB_NAME+" "
+					+ "WHERE id_user='"+user.getId()+"' and "
+					+ "date='"+date+"';";
+	
+			boolean results = stmt.execute(sqlRequest);
+			
+			
+			while (results) {
+				ResultSet rs = stmt.getResultSet();
+				try {
+					while (rs.next()) {
+						System.out.println(rs.getString("recherche"));
+						//si on entre dans cette boucle c'est que le pseudo et le password match bien
+						//On retourne alors l'utilisateur
+					}
+				} finally {
+					try { rs.close(); } catch (Throwable ignore) {}
+				}
+
+				// Parcourir les autres resultat de la requête si il y en a
+				results = stmt.getMoreResults();
+			}
+		}
+		return "";
+	}
+
+	public User deleteAccountUser(User user) {
+		if(user!=null){
+			Statement stmt;
+			try {
+				stmt = connection.createStatement();
+				
+				String sqlRequest = "DELETE  from "+USER_DB_NAME+" "
+						+ "WHERE id_user='"+user.getId()+"';";
+		
+				stmt.execute(sqlRequest);
+				stmt.close();
+				
+				this.deleteSearchUser(user);
+				return null;
+			} catch (SQLException e) {
+				System.out.println("deleteAccountUser à rencontré un probléme");
+				return null;
+			}
+		}
+		return null;
+	}
+		
+	public void deleteSearchUser(User user){
+		if(user!=null){
+			Statement stmt;
+			try {
+				stmt = connection.createStatement();
+
+				String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
+						+ "WHERE id_user='"+user.getId()+"';";
+		
+				stmt.execute(sqlRequest);
+				stmt.close();
+			} catch (SQLException e) {
+				System.out.println("Probléme de connection avec sql lors du deleteSearchUser");
+			}
+	
+		}
+	}
+	
+	//TODO: A supprimer
+	////////////////METHODE UTILES JUSTE PENDANT LA PERIODE DE DEV/////////////////////
 	public void seeAllDBUser() throws SQLException{
 		
 		Statement stmt = connection.createStatement();
@@ -234,78 +330,4 @@ public class MySQLService {
 		}
 		stmt.close();
 	}
-	
-	public void deleteSearchByDateAndUser(User user, Date date) throws SQLException{
-		
-		if(user!=null){
-			Statement stmt = connection.createStatement();
-	
-			String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
-					+ "WHERE id_user='"+user.getId()+"' and "
-					+ "date='"+date+"';";
-	
-			stmt.execute(sqlRequest);
-			stmt.close();
-		}
-	}
-	
-	public String getSearchByDateAndUser(User user, Date date) throws SQLException{
-		
-		if(user!=null){
-			System.out.println("Search pour l'user = "+user.getLogin()+" a la date du "+date);
-			Statement stmt = connection.createStatement();
-	
-			String sqlRequest = "Select * from "+SEARCH_DB_NAME+" "
-					+ "WHERE id_user='"+user.getId()+"' and "
-					+ "date='"+date+"';";
-	
-			boolean results = stmt.execute(sqlRequest);
-			
-			
-			while (results) {
-				ResultSet rs = stmt.getResultSet();
-				try {
-					while (rs.next()) {
-						System.out.println(rs.getString("recherche"));
-						//si on entre dans cette boucle c'est que le pseudo et le password match bien
-						//On retourne alors l'utilisateur
-					}
-				} finally {
-					try { rs.close(); } catch (Throwable ignore) {}
-				}
-
-				// Parcourir les autres resultat de la requête si il y en a
-				results = stmt.getMoreResults();
-			}
-		}
-		return "";
-	}
-
-	public User deleteAccountUser(User user) throws SQLException{
-		if(user!=null){
-			Statement stmt = connection.createStatement();
-	
-			String sqlRequest = "DELETE  from "+USER_DB_NAME+" "
-					+ "WHERE id_user='"+user.getId()+"';";
-	
-			stmt.execute(sqlRequest);
-			stmt.close();
-			this.deleteSearchUser(user);
-			return null;
-		}
-		return null;
-	}
-		
-	public void deleteSearchUser(User user)throws SQLException{
-		if(user!=null){
-			Statement stmt = connection.createStatement();
-	
-			String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
-					+ "WHERE id_user='"+user.getId()+"';";
-	
-			stmt.execute(sqlRequest);
-			stmt.close();
-		}
-}
-	
 }

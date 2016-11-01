@@ -5,6 +5,8 @@ public final class MuzikFinderPreferences {
 	// Preferences
 	public static final Integer MAX_TOP_TRACKS = 100;
 	public static final int PAGE_MAX = 100;
+	public static final int MIN_SIZE_OF_USERNAME = 5;
+	public static final int MIN_SIZE_OF_PASSWORD = 5;
 	
 	public static final String POS_COUNTRY_PREF = "posCountry";
 	public static final String[] COUNTRY_ORDER = {"us", "gb", "au", "fr", "ca", "be"};

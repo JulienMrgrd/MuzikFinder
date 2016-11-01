@@ -54,8 +54,8 @@
 			</form>
 
 			<ul class="nav navbar-nav navbar-right">
-				<li><a id="modal-1" href="#modal-container-2" role="button" class="btn" data-toggle="modal">Log in</a></li>
-				<li><a id="modal-2" href="#modal-container-1" role="button" class="btn" data-toggle="modal">Sign up</a></li>
+				<li><a id="modal-1" href="#modal-container-login" role="button" class="btn" data-toggle="modal">Log in</a></li>
+				<li><a id="modal-2" href="#modal-container-signup" role="button" class="btn" data-toggle="modal">Sign up</a></li>
 			</ul>
 
 		</div>
@@ -63,10 +63,10 @@
 </nav>
 
 
-<div id="modal"></div>
-<script> (function() { $("#modal").load("htmls/modal.html"); })(); </script>
+<div id="modalLogin"></div>
+<div id="modalSignUp"></div>
+<script> (function() { $("#modalLogin").load("htmls/LoginModal.html"); })(); </script>
+<script> (function() { $("#modalSignUp").load("htmls/SignUpModal.html"); })(); </script>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<!-- <script src="js/jquery.bootstrap-autohidingnavbar.js"></script> -->
-<!-- <script> (function() { $("nav.navbar-fixed-top").autoHidingNavbar(); })();</script> -->

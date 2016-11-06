@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import api.musixMatch.utils.MusixMatchUtils;
-
 public class ParserMaison {
 	
 	// http://stackoverflow.com/questions/40180378/how-to-remove-all-non-alphanumeric-except-dot-or-comma-between-2-digits
@@ -22,7 +20,6 @@ public class ParserMaison {
 			excludeWords = (ArrayList<String>) getExcludedWords(langage);
 			if(excludeWords==null || excludeWords.isEmpty()) return null;
 			
-			lyrics = lyrics.substring(0, lyrics.length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
 			lyrics = lyrics.toLowerCase().replaceAll(THE_REGEX, " ");
 			tags = new ArrayList<String>();
 			for(String s : lyrics.split(" ")){

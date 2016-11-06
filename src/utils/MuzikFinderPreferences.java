@@ -12,6 +12,7 @@ public final class MuzikFinderPreferences {
 	public static final String[] COUNTRY_ORDER = {"us", "gb", "au", "fr", "ca", "be"};
 	public static final int[] PREF_NB_MUSIC_FILTER= {50,20};
 	public static final String MUSIXMATCH_KEY_PREF = "musixmatch_pos";
+	public static final int LIMITACCEPTABLETEMPS = 15;
 	
 	public static int[] getPrefNbMusicFilter() {
 		return PREF_NB_MUSIC_FILTER;

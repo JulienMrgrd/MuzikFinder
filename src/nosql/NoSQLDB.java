@@ -5,6 +5,8 @@ import java.util.Map;
 
 import interfaces.MFMusic;
 import nosql.mongo.MongoService;
+import server.dto.MusicDTO;
+import sql.User;
 
 /**
  * Appel les fonctions de la BD choisies (MongoDB, DynamoDB, etc ...)
@@ -21,16 +23,16 @@ public class NoSQLDB {
 		// éventuellement cassandra = new CassandraService() ;
 		// éventuellement dynamo = new DynamoDBService();
 	}
-	
+
+	//////////////PARTIE INSERT///////////////
+	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
+			String nameMusic, String langue, String spotifyId, String soundCloudId){
+		return mongo.insertLyricsIfNotExists(words, musicId, artistId, nameMusic, langue, 
+				spotifyId, soundCloudId);
+	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
 		return mongo.insertTagIfNotExists(tag, musicId);
-	}
-	
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
-										String nameMusic, String langue, String spotifyId, String soundCloudId){
-		return mongo.insertLyricsIfNotExists(words, musicId, artistId, nameMusic, langue, 
-											spotifyId, soundCloudId);
 	}
 
 	public boolean insertArtistIfNotExist(String artistName, String artistId){
@@ -40,25 +42,57 @@ public class NoSQLDB {
 	public boolean insertIdAlbumIfNotExist(String idAlbum){
 		return mongo.insertIdAlbumIfNotExist(idAlbum);
 	}
+
+	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
+		try {
+			mongo.insertNewMusics(mapAlbumIdWithAlbum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
-	
+	public void insertCacheSearchUser(List<String> idMusics, String idRecherche){
+		mongo.insertCacheSearchUser(idMusics, idRecherche);
+	}
+
+	///////////////PARTIE CONTAINS//////////////////
 	public boolean containsArtist(String artistId) {
 		return mongo.containsArtist(artistId);
 	}
-	
-	
-	public List<String> getIdMusicsByIdArtist(String idArtist){
-		return mongo.getIdMusicsByIdArtist(idArtist);
+
+	public boolean containsLyrics(String musicId){
+		return mongo.containsLyrics(musicId);
 	}
 	
+	public boolean containsTag(String tag) {
+		return mongo.containsTag(tag);
+	}
+
+	public boolean containsIdMusicInTag(String tag, String idMusic){
+		return mongo.containsIdMusicInTag(tag, idMusic);
+	}
+	
+	public boolean containsIdAlbum(String idAlbum) {
+		return mongo.containsIdAlbum(idAlbum);
+	}
+
+	public boolean containsIdRecherche(String idRecherche){
+		return mongo.containsIdRecherche(idRecherche);
+	}
+
+	//////////////PARTIE GETTER///////////////////////
 	public List<String> getIdMusicsByTag(String tag) {
 		return mongo.getIdMusicsByTag(tag);
 	}
-	
+
+	public List<String> getIdMusicsByIdArtist(String idArtist){
+		return mongo.getIdMusicsByIdArtist(idArtist);
+	}
+
 	public String getIdArtist(String nameArtiste){
 		return mongo.getIdArtist(nameArtiste);
 	}
-	
+
 	public List<String> getIdMusicsByChainWords(String chainWords){
 		return mongo.getIdMusicsByChainWords(chainWords);
 	}
@@ -66,7 +100,8 @@ public class NoSQLDB {
 	public List<String> getAllAlbumIds(){
 		return mongo.getAllAlbumIds();
 	}
-	
+
+	//////////////PARTIE SEARCH///////////////////////
 	/**
 	 * Reduced the given list in parameter if one of these musics exists in Mongo 
 	 * @param musics
@@ -76,14 +111,42 @@ public class NoSQLDB {
 		return mongo.filterByExistingMusics(musics);
 	}
 
-	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
-		try {
-			mongo.insertNewMusics(mapAlbumIdWithAlbum);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche){
+		return mongo.searchMusics(tags, idRecherche);
+	}
+	
+	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
+		return mongo.searchMusicsByTagsInTags(tags, idRecherche);
 	}
 
+	/**
+	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par
+	 * l'utilisateur en traitant les tags comme une phrase complète
+	 * @param tags
+	 * @return
+	 */
+	public List<String> matchMusicsWithTags(List<String> tags){
+		return mongo.matchMusicsWithTags(tags);
+	}
+
+	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
+		return mongo.searchMusicsByTagsInLyrics(tags, idRecherche);
+	}
+
+	///////////////PARTIE SEARCH USER/////////////////////////
+	public void addNewSearch(String idMusic, User user){
+		mongo.addNewSearch(idMusic, user);
+	}
+	
+	public List<MusicDTO> getTopMusicSearchThisWeek(){
+		return mongo.getTopMusicSearchThisWeek();
+	}
+	
+	public List<MusicDTO> getTopMusicSearchThisMonth(){
+		return mongo.getTopMusicSearchThisMonth();
+	}
+
+	//////////////PARTIE PREFERENCE//////////////////////////
 	/** Get a pref in nosql database by name
 	 * @param param
 	 * @return
@@ -91,7 +154,7 @@ public class NoSQLDB {
 	public String getPref(String prefName) {
 		return mongo.getPref(prefName);
 	}
-	
+
 	/**
 	 * Set a pref in nosql database by name
 	 * @param prefName

@@ -57,4 +57,10 @@ public class MongoServiceContains {
 		return cursor.hasNext();
 	}
 
+	public static boolean containsIdRecherche(String idRecherche, MongoService ms){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE);
+		Document findQuery = new Document("idRecherche", new Document("$eq",idRecherche));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		return cursor.hasNext();
+	}
 }

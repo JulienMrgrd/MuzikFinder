@@ -95,16 +95,15 @@ public class MongoService {
 		}
 	}
 
-	public boolean insertTagIfNotExists(String tag, String musicId){
-		return MongoServiceInsert.insertTagIfNotExists(tag, musicId, this);
-	}
-
-
 	//////////////PARTIE INSERT///////////////
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
 			String nameMusic, String langue, String spotifyId, String soundCloudId){
 		return MongoServiceInsert.insertLyricsIfNotExists(words, musicId, artistId, 
 				nameMusic, langue, spotifyId, soundCloudId, this);
+	}
+
+	public boolean insertTagIfNotExists(String tag, String musicId){
+		return MongoServiceInsert.insertTagIfNotExists(tag, musicId, this);
 	}
 
 	public boolean insertArtistIfNotExist(String artistName, String artistId){
@@ -115,11 +114,15 @@ public class MongoService {
 		return MongoServiceInsert.insertIdAlbumIfNotExist(idAlbum,this);
 	}
 	
-	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) throws Exception {
+	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum){
 		MongoServiceInsert.insertNewMusics(mapAlbumIdWithAlbum, this);
 	}
+	
+	public void insertCacheSearchUser(List<String> idMusics, String idRecherche){
+		MongoServiceInsert.insertCacheSearchUser(idMusics, this, idRecherche);
+	}
 
-	///////////////PARTIE CONTAINS//////////////////////
+	///////////////PARTIE CONTAINS//////////////////
 	public boolean containsArtist(String artistId){
 		return MongoServiceContains.containsArtist(artistId, this);
 	}
@@ -138,6 +141,10 @@ public class MongoService {
 
 	public boolean containsIdAlbum(String idAlbum){
 		return MongoServiceContains.containsIdAlbum(idAlbum, this);
+	}
+	
+	public boolean containsIdRecherche(String idRecherche){
+		return MongoServiceContains.containsIdRecherche(idRecherche, this);
 	}
 
 	//////////////PARTIE GETTER///////////////////////
@@ -167,14 +174,13 @@ public class MongoService {
 		return MongoServiceSearchMusic.filterByExistingMusics(musics, this);
 	}
 
-	public List<MusicDTO> searchMusics(List<String> tags){
-		return MongoServiceSearchMusic.searchMusics(tags, this);
+	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche){
+		return MongoServiceSearchMusic.searchMusics(tags, this, idRecherche);
 	}
 	
-	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags){
-		return MongoServiceSearchMusic.searchMusicsByTagsInTags(tags, this);
+	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
+		return MongoServiceSearchMusic.searchMusicsByTagsInTags(tags, this, idRecherche);
 	}
-	
 
 	/**
 	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par
@@ -186,8 +192,8 @@ public class MongoService {
 		return MongoServiceSearchMusic.matchMusicsWithTags(tags, this);
 	}
 
-	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags){
-		return MongoServiceSearchMusic.searchMusicsByTagsInLyrics(tags, this);
+	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
+		return MongoServiceSearchMusic.searchMusicsByTagsInLyrics(tags, this, idRecherche);
 	}
 
 	///////////////PARTIE SEARCH USER/////////////////////////

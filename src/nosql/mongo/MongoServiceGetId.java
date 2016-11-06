@@ -16,7 +16,7 @@ public class MongoServiceGetId {
 		Document findQuery = new Document("tag", new Document("$eq",tag));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		
-		List<String> listIdMusic = null;
+		List<String> listIdMusic = new ArrayList<String>();
 		if(cursor.hasNext()){
 			listIdMusic = (ArrayList<String>) cursor.next().get("idMusic");
 		}

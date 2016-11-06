@@ -86,7 +86,7 @@ public class MongoServiceInsert {
 		return true;
 	}
 
-	public static void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum, MongoService ms) throws Exception {
+	public static void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum, MongoService ms){
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
 		ArrayList<MFMusic> listMusic;
 		
@@ -124,5 +124,26 @@ public class MongoServiceInsert {
 			cpt++;
 			System.out.println("Insertion "+cpt+"/"+listIdAlbum.size()+" OK.");
 		}
+	}
+
+	public static void insertCacheSearchUser(List<String> idMusics, MongoService ms, String idRecherche){
+		Document doc;
+		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE);
+		if(ms.containsIdRecherche(idRecherche)){
+			doc = new Document("idRecherche", new Document("$eq",idRecherche));
+			MongoCursor<Document> cursor = ms.findBy(collection, doc);
+			if(cursor.hasNext()){
+				Document doc1 = cursor.next();
+				Document doc2;
+				doc2 = new Document(new Document("$set",new Document("idMusics",idMusics)));
+				ms.updateOne(collection, doc1,doc2);
+			}
+		}else{
+			doc = new Document();
+			doc.put("idRecherche",idRecherche);
+			doc.put("idMusics", idMusics);
+			ms.insertOne(collection, doc);
+		}
+		System.out.println("nombre de musique ajouté dans la collection cache = "+idMusics.size());
 	}
 }

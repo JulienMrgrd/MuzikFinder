@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
-import api.musixMatch.metier.Album;
 import api.musixMatch.metier.Artist;
 import api.musixMatch.metier.Lyrics;
 import api.musixMatch.metier.Music;
@@ -54,33 +53,6 @@ public final class MusixMatchAPIHelper {
 		}
 		
 		return artists;
-	}
-
-	public static List<Album> getAlbumList(String json) {
-		JSONObject root = new JSONObject(json);
-		try{
-			root.getJSONObject(MusixMatchConstants.ALBUM_LIST); // Can throw Exception if key not exists
-		} catch (JSONException e){
-			root = getBody(json);
-		}
-		
-		List<Album> albums = null;
-		try {
-			
-			Gson gson = new Gson();
-			JSONArray jsonList = root.getJSONArray(MusixMatchConstants.ALBUM_LIST);
-			albums = new ArrayList<>(jsonList.length());
-			JSONObject tmpObj;
-			for(int i=0; i<jsonList.length(); i++){
-				tmpObj = jsonList.getJSONObject(i).getJSONObject(MusixMatchConstants.ALBUM);
-				albums.add( gson.fromJson( tmpObj.toString() , Album.class) );
-			}
-			
-		} catch (JSONException e){
-			e.printStackTrace();
-		}
-		
-		return albums;
 	}
 
 	public static List<MFMusic> getMusicsList(String json) {

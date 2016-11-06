@@ -25,15 +25,10 @@ public class MuzikFinderService {
 	
 	
 	////====== API PART ====== ////
-	
 	public List<MFArtist> getTopArtistsFromAPI(int pos, int nbArtistsToGet, String country) {
 		return api.getTopArtists(pos, nbArtistsToGet, country);
 	}
 	
-	public List<String> getAllAlbumIdsFromAPI(String artistId) {
-		return api.getAllAlbumIds(artistId);
-	}
-
 	public List<MFMusic> getAllMusicsFromAPI(String albumId) {
 		return api.getMusicsInAlbum(albumId);
 	}

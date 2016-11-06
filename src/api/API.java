@@ -18,10 +18,6 @@ public class API {
 		musixMatch = MusixMatchService.getInstance();
 	}
 	
-	public List<String> getAllAlbumIds(String artistId) {
-		return musixMatch.getAllAlbumIds(artistId);
-	}
-
 	public List<MFMusic> getMusicsInAlbum(String albumId) {
 		return musixMatch.getMusicsInAlbum(albumId);
 	}

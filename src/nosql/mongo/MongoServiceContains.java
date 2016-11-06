@@ -8,13 +8,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
 public class MongoServiceContains {
-	public static boolean containsArtist(String artistId, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.ARTISTS); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document("nameArtist", new Document("$eq",artistId)); // crée le document retournant les informations pr�sentes dans la collection Artists correspondantes
-		MongoCursor<Document> cursor = ms.findBy(collection, doc);
-		return cursor.hasNext();
-	}
-
 	public static boolean containsLyrics(String musicId, MongoService ms){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes

@@ -15,8 +15,21 @@ import interfaces.MFMusic;
 
 public class MusixMatchService {
 
-	public MusixMatchService() {
-		// TODO SINGLETON
+	private MusixMatchService() {}
+	
+	/** Instance unique préinitialisée */
+	private static MusixMatchService INSTANCE = new MusixMatchService();
+ 
+	/** Technique du double-cheking */
+	public static MusixMatchService getInstance(){	
+		if (INSTANCE == null){ 	
+			synchronized(MusixMatchService.class){
+				if (INSTANCE == null){
+					INSTANCE = new MusixMatchService();
+				}
+			}
+		}
+		return INSTANCE;
 	}
 
 	public List<String> getAllAlbumIds(String artistId) {

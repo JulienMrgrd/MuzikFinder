@@ -13,6 +13,7 @@ public final class MuzikFinderPreferences {
 	public static final int[] PREF_NB_MUSIC_FILTER= {50,20};
 	public static final String MUSIXMATCH_KEY_PREF = "musixmatch_pos";
 	public static final int LIMITACCEPTABLETEMPS = 15;
+	public static final boolean LOGS = false;
 	
 	public static int[] getPrefNbMusicFilter() {
 		return PREF_NB_MUSIC_FILTER;

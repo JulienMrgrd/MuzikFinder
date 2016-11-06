@@ -37,17 +37,6 @@ public class MongoServiceGetId {
 		return listeId;
 	}
 
-	public static String getIdArtist(String nameArtiste, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.ARTISTS); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("nameArtist", new Document("$eq",nameArtiste));
-		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
-
-		if(cursor.hasNext()){
-			return cursor.next().getString("idArtist");
-		}
-		return null;
-	}
-
 	public static List<String> getIdMusicsByChainWords(String chainWords, MongoService ms){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document findQuery = new Document("lyrics", new Document("$regex",chainWords));

@@ -15,7 +15,7 @@ public class API {
 	MusixMatchService musixMatch;
 
 	public API() {
-		musixMatch = new MusixMatchService();
+		musixMatch = MusixMatchService.getInstance();
 	}
 	
 	public List<String> getAllAlbumIds(String artistId) {

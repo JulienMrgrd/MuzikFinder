@@ -1,6 +1,6 @@
 package utils;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,7 +30,7 @@ public class MathUtils {
 	public static int calculAge(Date dateBirth){
 		
 		java.util.Date utilDate = new java.util.Date();
-	    java.sql.Date dateNow = new java.sql.Date(utilDate.getTime());	
+	    java.util.Date dateNow = new java.util.Date(utilDate.getTime());	
 		
 		Calendar calBirth = Calendar.getInstance();
 		calBirth.setTime(dateBirth);

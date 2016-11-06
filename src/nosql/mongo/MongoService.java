@@ -1,6 +1,7 @@
 package nosql.mongo;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,7 +18,8 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFMusic;
 import server.dto.MusicDTO;
-import sql.User;
+import utils.MuzikFinderPreferences;
+import utils.TimeInMilliSeconds;
 
 public class MongoService {
 
@@ -26,17 +28,32 @@ public class MongoService {
 	MongoClient mongoClient;
 	MongoDatabase db;
 
-	public MongoService(boolean activeAllLogs) {
-		if(activeAllLogs){
+	/** Constructeur privé */
+	private MongoService(){
+		if(MuzikFinderPreferences.LOGS){
 			Logger.getLogger( "org.mongodb.driver" ).setLevel(Level.WARNING); // e.g. or Log.WARNING, etc.
 		}
-
 		// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 		serverAddress = new ServerAddress("ds049456.mlab.com", 49456);
 		mongoCredential = MongoCredential.createCredential("heroku_1dpqh3kq", "heroku_1dpqh3kq",
 				"gv7mru79jbtgn52lrl5mg301qh".toCharArray());
 		mongoClient = new MongoClient(serverAddress, Arrays.asList(mongoCredential));
 		db = mongoClient.getDatabase("heroku_1dpqh3kq");
+	}
+ 
+	/** Instance unique préinitialisée */
+	private static MongoService INSTANCE = new MongoService();
+ 
+	/** Technique du double-cheking */
+	public static MongoService getInstance(){	
+		if (INSTANCE == null){ 	
+			synchronized(MongoService.class){
+				if (INSTANCE == null){
+					INSTANCE = new MongoService();
+				}
+			}
+		}
+		return INSTANCE;
 	}
 
 
@@ -96,18 +113,14 @@ public class MongoService {
 	}
 
 	//////////////PARTIE INSERT///////////////
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
+	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName,
 			String nameMusic, String langue, String spotifyId, String soundCloudId){
-		return MongoServiceInsert.insertLyricsIfNotExists(words, musicId, artistId, 
+		return MongoServiceInsert.insertLyricsIfNotExists(words, musicId, artistId, artistName, 
 				nameMusic, langue, spotifyId, soundCloudId, this);
 	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
 		return MongoServiceInsert.insertTagIfNotExists(tag, musicId, this);
-	}
-
-	public boolean insertArtistIfNotExist(String artistName, String artistId){
-		return MongoServiceInsert.insertArtistIfNotExist(artistName, artistId, this);
 	}
 
 	public boolean insertIdAlbumIfNotExist(String idAlbum){
@@ -123,10 +136,6 @@ public class MongoService {
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
-	public boolean containsArtist(String artistId){
-		return MongoServiceContains.containsArtist(artistId, this);
-	}
-
 	public boolean containsLyrics(String musicId){
 		return MongoServiceContains.containsLyrics(musicId, this);
 	}
@@ -154,10 +163,6 @@ public class MongoService {
 
 	public List<String> getIdMusicsByIdArtist(String idArtist){
 		return MongoServiceGetId.getIdMusicsByIdArtist(idArtist, this);
-	}
-
-	public String getIdArtist(String nameArtiste){
-		return MongoServiceGetId.getIdArtist(nameArtiste, this);
 	}
 
 	public List<String> getIdMusicsByChainWords(String chainWords){
@@ -197,16 +202,16 @@ public class MongoService {
 	}
 
 	///////////////PARTIE SEARCH USER/////////////////////////
-	public void addNewSearch(String idMusic, User user){
-		MongoServiceSearchUser.addNewSearch(idMusic, user, this);
+	public void addNewSearch(String idMusic, Date userBirth){
+		MongoServiceSearchUser.addNewSearch(idMusic, userBirth, this);
 	}
 	
 	public List<MusicDTO> getTopMusicSearchThisWeek(){
-		return MongoServiceSearchUser.getTopMusicSearchThisWeek(this);
+		return MongoServiceSearchUser.getTopMusicSearchByPeriod(this, TimeInMilliSeconds.WEEK);
 	}
 	
 	public List<MusicDTO> getTopMusicSearchThisMonth(){
-		return MongoServiceSearchUser.getTopMusicSearchThisMonth(this);
+		return MongoServiceSearchUser.getTopMusicSearchByPeriod(this, TimeInMilliSeconds.MONTH);
 	}
 
 	//////////////PARTIE PREFERENCE//////////////////////////
@@ -216,22 +221,6 @@ public class MongoService {
 
 	public String getPref(String prefName) {
 		return MongoServicePreference.getPref(prefName, this);
-	}
-	
-	
-	protected Document formRegexForSearch(List<String> listTags){
-		String regex ="[,.\\n ]?[,.\\n ]?";
-		String search="";
-		if(listTags!=null){
-			if(listTags.size()==1){
-				return new Document("lyrics",new Document("$regex",listTags.get(0)).append("$options", "i"));
-			}
-			for(String tag : listTags){
-				search+=tag+regex;
-			}
-			return new Document("lyrics",new Document("$regex",search).append("$options", "i"));
-		}
-		return null;
 	}
 	
 	public void close(){

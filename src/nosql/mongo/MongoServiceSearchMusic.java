@@ -32,6 +32,7 @@ public class MongoServiceSearchMusic {
 		return listReduce;
 	}
 
+	//TODO : retirer les Instant en fin de tests
 	public static List<MusicDTO> searchMusics(List<String> tags, MongoService ms, String idRecherche){
 		
 		Instant start = Instant.now();
@@ -74,9 +75,7 @@ public class MongoServiceSearchMusic {
 			}
 		}
 		listIdMusics.removeAll(listIdMusics);
-		
 		Collections.sort(idMusicScore);
-		
 		for(IdMusicScore iMS: idMusicScore){
 			listIdMusics.add(iMS.getIdMusic());
 		}
@@ -94,7 +93,8 @@ public class MongoServiceSearchMusic {
 	public static List<String> matchMusicsWithTags(List<String> tags, MongoService ms){
 		ArrayList<String> result = new ArrayList<String>();
 		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollections.MUSICS);
-		MongoCursor<Document> cursor_Music = ms.findBy(collection_Musics, ms.formRegexForSearch(tags));
+		MongoCursor<Document> cursor_Music = ms.findBy(collection_Musics, formRegexForSearch(tags));
+		//TODO : on fais quoi si formRegexForSearch return null ??
 		
 		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
 		Document doc_lyrics;
@@ -109,14 +109,14 @@ public class MongoServiceSearchMusic {
 
 	public static List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, MongoService ms, String idRecherche){
 		List<MusicDTO> listMDTO = new ArrayList<MusicDTO>();
-		if(tags.size()<3){	//Si il y a moins de 3 tags on ne fait pas de recherche by tags in lyrics
+		if(tags.size()<3){	//Si il y a moins de 3 tags on ne fait pas de recherche by tags in lyrics //TODO: dans preferences
 			return listMDTO;
 		}
 		int i=0;
 		int k=0;
 		List<String> tag = new ArrayList<String>();
 		List<String> tmp = new ArrayList<String>();
-		while(tags.size()-i>=3){
+		while(tags.size()-i>=3){ //TODO : 3 dans prefs
 			k=0;
 			while(k<=i){
 				for(int j=k;j<tags.size()-i+k;j++){
@@ -135,6 +135,8 @@ public class MongoServiceSearchMusic {
 		return generateListMusicDTOWithListId(tmp, ms, idRecherche);
 	}
 
+	//TODO : le nom de ta fonction à l'air de dire qu'il va juste transformer des Musics en MusicsDTO, sauf qu'il insère aussi dans cache
+	// donc peut-etre à sortir dans une autre fonction. C'est normalement pas son rôle
 	public static List<MusicDTO> generateListMusicDTOWithListId(List<String> idMusics, MongoService ms, String idRecherche){
 		
 		List<String> copyIdMusics= new ArrayList<String>();
@@ -169,5 +171,20 @@ public class MongoServiceSearchMusic {
 		}
 		
 		return listMDTO;
+	}
+	
+	private static Document formRegexForSearch(List<String> listTags){
+		String regex ="[,.\\n ]?[,.\\n ]?";
+		String search="";
+		if(listTags!=null){
+			if(listTags.size()==1){
+				return new Document("lyrics",new Document("$regex",listTags.get(0)).append("$options", "i"));
+			}
+			for(String tag : listTags){
+				search+=tag+regex;
+			}
+			return new Document("lyrics",new Document("$regex",search).append("$options", "i"));
+		}
+		return null;
 	}
 }

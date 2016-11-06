@@ -1,6 +1,5 @@
 package sql;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -16,10 +15,9 @@ public class SQLDB {
 	
 	public SQLDB() {
 		try {
-			mySqlService = new MySQLService();
-		} catch (URISyntaxException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			mySqlService = MySQLService.getInstance();
+		} catch (ExceptionInInitializerError error) {
+			error.printStackTrace();
 		}
 	}
 	
@@ -27,8 +25,8 @@ public class SQLDB {
 		return mySqlService.createNewUser(pseudo, password, email, year, month, day);
 	}
 	
-	public User verifyConnexion(String pseudo, String password) {
-		return mySqlService.verifyConnexion(pseudo, password);
+	public User checkConnexion(String pseudo, String password) {
+		return mySqlService.checkConnexion(pseudo, password);
 	}
 	
 	public void addSearch(User user, String recherche) {

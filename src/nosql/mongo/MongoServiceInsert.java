@@ -29,7 +29,6 @@ public class MongoServiceInsert {
 			ms.insertOne(collection, doc);
 			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
-			//System.out.println("IdMusic already corresponding in the Tag Collection\n");
 			return false;
 		} else {
 			doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
@@ -48,7 +47,7 @@ public class MongoServiceInsert {
 		}
 	}
 
-	public static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
+	public static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
 			String nameMusic, String langue, String spotifyId, String soundCloudId, MongoService ms){
 		if(ms.containsLyrics(musicId)) return false; 
 
@@ -57,21 +56,11 @@ public class MongoServiceInsert {
 		if(musicId!=null) doc.put("idMusic",musicId);
 		if(words!=null) doc.put("lyrics",words);
 		if(artistId!=null) doc.put("idArtist",artistId);
+		if(artistName!=null) doc.put("artistName",artistName);
 		if(nameMusic!=null) doc.put("nameMusic", nameMusic);
 		if(langue!=null) doc.put("langue", langue);
 		if(spotifyId!=null) doc.put("spotifyId", spotifyId);
 		if(soundCloudId!=null) doc.put("soundCloudId",soundCloudId);
-		ms.insertOne(collection, doc);
-		return true;
-	}
-
-	public static boolean insertArtistIfNotExist(String artistName, String artistId, MongoService ms){
-		if(ms.containsArtist(artistId)) return false;
-
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.ARTISTS); // récupère la collection mongo qui stocke les artistes
-		Document doc = new Document();
-		doc.put("idArtist", artistId);
-		doc.put("nameArtist",artistName);
 		ms.insertOne(collection, doc);
 		return true;
 	}
@@ -99,15 +88,13 @@ public class MongoServiceInsert {
 			// ajout de l'artist dans la base mongo Artists 
 			//(test de présence de l'artiste déjà effectué dans la méthode appelée)
 			if(!listMusic.isEmpty()){
-				ms.insertArtistIfNotExist(listMusic.get(0).getArtistName(), listMusic.get(0).getArtistId());
-				
 				for(MFMusic mf : listMusic){
 					// Pour chaque MFMusic présentes dans l'album
 					MFLyrics mfL = mf.getLyrics();
 					if(mfL != null){
 						// on récupère les lyrics et on insère dans la base mongo Lyrics
 						ms.insertLyricsIfNotExists(mfL.getLyricsBody(), mf.getTrackId(),
-								mf.getArtistId(), mf.getTrackName(),mfL.getLyrics_language(), 
+								mf.getArtistId(), mf.getArtistName(), mf.getTrackName(),mfL.getLyrics_language(), 
 								mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
 						
 						// Début de la création des tags pour chaque lyrics
@@ -144,6 +131,6 @@ public class MongoServiceInsert {
 			doc.put("idMusics", idMusics);
 			ms.insertOne(collection, doc);
 		}
-		System.out.println("nombre de musique ajouté dans la collection cache = "+idMusics.size());
+		System.out.println("Nombre de musiques ajoutées dans la collection Cache = "+idMusics.size());
 	}
 }

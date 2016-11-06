@@ -1,12 +1,12 @@
 package nosql;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import interfaces.MFMusic;
 import nosql.mongo.MongoService;
 import server.dto.MusicDTO;
-import sql.User;
 
 /**
  * Appel les fonctions de la BD choisies (MongoDB, DynamoDB, etc ...)
@@ -19,24 +19,20 @@ public class NoSQLDB {
 	// éventuellement private DynamoDBService dynamo;
 
 	public NoSQLDB() {
-		mongo = new MongoService(false);
+		mongo = MongoService.getInstance();
 		// éventuellement cassandra = new CassandraService() ;
 		// éventuellement dynamo = new DynamoDBService();
 	}
 
 	//////////////PARTIE INSERT///////////////
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, 
+	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName,
 			String nameMusic, String langue, String spotifyId, String soundCloudId){
-		return mongo.insertLyricsIfNotExists(words, musicId, artistId, nameMusic, langue, 
+		return mongo.insertLyricsIfNotExists(words, musicId, artistId, artistName, nameMusic, langue, 
 				spotifyId, soundCloudId);
 	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
 		return mongo.insertTagIfNotExists(tag, musicId);
-	}
-
-	public boolean insertArtistIfNotExist(String artistName, String artistId){
-		return mongo.insertArtistIfNotExist(artistName, artistId);
 	}
 
 	public boolean insertIdAlbumIfNotExist(String idAlbum){
@@ -56,10 +52,6 @@ public class NoSQLDB {
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
-	public boolean containsArtist(String artistId) {
-		return mongo.containsArtist(artistId);
-	}
-
 	public boolean containsLyrics(String musicId){
 		return mongo.containsLyrics(musicId);
 	}
@@ -87,10 +79,6 @@ public class NoSQLDB {
 
 	public List<String> getIdMusicsByIdArtist(String idArtist){
 		return mongo.getIdMusicsByIdArtist(idArtist);
-	}
-
-	public String getIdArtist(String nameArtiste){
-		return mongo.getIdArtist(nameArtiste);
 	}
 
 	public List<String> getIdMusicsByChainWords(String chainWords){
@@ -134,8 +122,8 @@ public class NoSQLDB {
 	}
 
 	///////////////PARTIE SEARCH USER/////////////////////////
-	public void addNewSearch(String idMusic, User user){
-		mongo.addNewSearch(idMusic, user);
+	public void addNewSearch(String idMusic, Date userBirth){
+		mongo.addNewSearch(idMusic, userBirth);
 	}
 	
 	public List<MusicDTO> getTopMusicSearchThisWeek(){

@@ -11,11 +11,6 @@ import nosql.NoSQLDB;
 import sql.SQLDB;
 import utils.MuzikFinderPreferences;
 
-/**
- * Aucun appel direct aux BD ou API ici !!
- * @author JulienM
- *
- */
 public class MuzikFinderService {
 	
 	private NoSQLDB nosql;
@@ -23,8 +18,8 @@ public class MuzikFinderService {
 	private API api;
 	
 	public MuzikFinderService(){
-		 nosql = new NoSQLDB(); // (va instancier ou récupérer le singleton du NoSQL, Mongo ou autre) 
-		 sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL ou autre) 
+		 nosql = new NoSQLDB(); // (va instancier ou récupérer le singleton du NoSQL, MongoDB, Cassandra ou autre) 
+		 sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL, PostgreSQL ou autre) 
 		 api = new API(); // (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
 	}
 	
@@ -49,11 +44,6 @@ public class MuzikFinderService {
 	
 	
 	//// ====== NOSQL PART ====== ////
-	
-	public boolean containsArtistInNoSQL(String artist){
-		return nosql.containsArtist(artist);
-	}
-	
 	public List<String> getIdMusicsByTagInNoSQL(String tag){
 		return nosql.getIdMusicsByTag(tag);
 	}

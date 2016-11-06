@@ -34,7 +34,7 @@ public class Test {
 	
 	public static void main(String[] args){
 
-		MongoService ms =new MongoService(false);
+		MongoService ms = MongoService.getInstance();
 		List<String> tags= new ArrayList<>();
 		tags.add("i");
 		ms.searchMusics(tags, "59563259"); // pour que la connexion a mongo soit bien faite une premiere fois

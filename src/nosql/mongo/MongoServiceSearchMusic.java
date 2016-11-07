@@ -187,8 +187,9 @@ public class MongoServiceSearchMusic {
 		List<String> listIdMusic = new ArrayList<String>();
 		List<String> tags = new ArrayList<String>();
 		if(cursor.hasNext()){
-			listIdMusic = (ArrayList<String>) cursor.next().get("idMusic");
-			tags = (ArrayList<String>) cursor.next().get("tags");
+			Document doc = cursor.next();
+			listIdMusic = (ArrayList<String>) doc.get("idMusic");
+			tags = (ArrayList<String>) doc.get("tags");
 		}
 		if(listIdMusic ==null || listIdMusic.isEmpty()) return ms.searchMusicsByTagsInTags(tags, idRecherche);
 		return generateListMusicDTOWithListId(tags, listIdMusic, ms, idRecherche);

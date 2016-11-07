@@ -1,4 +1,3 @@
-<%@page import="com.google.gson.Gson"%>
 <%@page import="java.util.List"%>
 <%@page import="server.dto.MusicDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
@@ -52,18 +51,15 @@
 							<strong id="strongErrorMessageSearch"><%=request.getAttribute("message")%></strong>
 						</div>
 			<%		} else {  %>
-						<h4>Résultats de votre recherche : </h4>
-						<form method="post" action="DisplayOneMusicServlet">	
-							<div class="list-group">
-			<%				for(MusicDTO music : musics){	%>
-								<input type="hidden" name="idMusic" value="<%=music.getTrackId()%>"/>
-								<button type="submit" class="list-group-item clearfix">
-									<%=music.getArtistName()+" - "+music.getTrackName()%>
-									<span class="badge"><i>Pop</i></span>
-								</button>
-			<%				} 	%>
-							</div>
-						</form>
+						<h4>Résultats de votre recherche : </h4>	
+						<ul class="list-group">
+			<%			for(MusicDTO music : musics){	%>
+							<li class="list-group-item clearfix">
+								<%=music.getArtistName()+" - "+music.getTrackName()%>
+								<span class="badge"><i>Pop</i></span>
+							</li>
+			<%			} %>
+						</ul>
 			<%		}
 				}
 			%>

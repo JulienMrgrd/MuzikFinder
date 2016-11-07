@@ -14,6 +14,7 @@
 .navbar-form .form-control{
 	background-color: #99979c;
 	border-color: #222222;
+	width: 300px;
 }
 .navbar-form .form-control::-moz-placeholder{
 	color: #eee;
@@ -36,7 +37,7 @@
 				<span class="icon-bar"></span> 
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><img src="images/MuzikFinder.png"></a>
+			<a class="navbar-brand" href="./"><img src="images/MuzikFinder.png"></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
@@ -48,9 +49,11 @@
 						<li><a href="#">Top albums</a></li>
 					</ul></li>
 			</ul>
-			<form method=get action="SearchServlet" class="navbar-form navbar-left">
-				<input id="userSearch" type="text" class="form-control search-query"
-					placeholder="Search by lyrics" />
+			<form role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
+				<div class="form-group">
+					<input id="userSearch" name="userSearch" type="text" class="form-control"
+						placeholder="Search by lyrics, artists or musics" />
+				</div>
 			</form>
 
 			<ul class="nav navbar-nav navbar-right">

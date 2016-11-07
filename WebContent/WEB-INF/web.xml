@@ -61,4 +61,15 @@
 		<servlet-name>SearchServlet</servlet-name>
 		<url-pattern>/SearchServlet</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>DisplayOneMusicServlet</display-name>
+		<servlet-name>DisplayOneMusicServlet</servlet-name>
+		<servlet-class>server.servlets.DisplayOneMusicServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DisplayOneMusicServlet</servlet-name>
+		<url-pattern>/DisplayOneMusicServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

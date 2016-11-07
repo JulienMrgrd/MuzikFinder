@@ -12,6 +12,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
 import interfaces.MFMusic;
+import server.dto.LyricsDTO;
 import server.dto.MusicDTO;
 import utils.IdMusicScore;
 import utils.MuzikFinderPreferences;
@@ -143,7 +144,7 @@ public class MongoServiceSearchMusic {
 
 	//TODO : le nom de ta fonction à l'air de dire qu'il va juste transformer des Musics en MusicsDTO, sauf qu'il insère aussi dans cache
 	// donc peut-etre à sortir dans une autre fonction. C'est normalement pas son rôle
-	public static List<MusicDTO> generateListMusicDTOWithListId(List<String> tags, List<String> idMusics, MongoService ms, String idRecherche){
+	private static List<MusicDTO> generateListMusicDTOWithListId(List<String> tags, List<String> idMusics, MongoService ms, String idRecherche){
 		
 		List<String> copyIdMusics= new ArrayList<String>();
 		copyIdMusics.addAll(idMusics);
@@ -159,11 +160,9 @@ public class MongoServiceSearchMusic {
 			cursor_Musics = ms.findBy(collection_Musics, findQuery_MusicByIdMusic);
 			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
 				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
-				String nameArtist = "";
-				String albumId = "";
-			
-				msDTO = new MusicDTO(idMusics.get(i), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
-						nameArtist, albumId, doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+				msDTO = new MusicDTO(idMusics.get(i), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"), 
+						doc_Musics.getString("artistName"), "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"), 
+						"", new LyricsDTO(doc_Musics.getString("lyrics"), doc_Musics.getString("langue")));
 				listMDTO.add(msDTO);
 				
 			}

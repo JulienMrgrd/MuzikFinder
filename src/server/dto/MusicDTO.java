@@ -13,11 +13,11 @@ public class MusicDTO implements MFMusic{
 	private String spotifyId;
 	private String soundCloudId;
 	private String hasLyrics;
-	private MFLyrics lyrics;
+	private LyricsDTO lyrics;
 	
 	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
 				  String albumId, String spotifyId, String soundCloudId, String hasLyrics,
-				  MFLyrics lyrics){
+				  LyricsDTO lyrics){
 		this.trackId=trackId;
 		this.trackName=trackName;
 		this.idArtist=idArtist;
@@ -30,9 +30,9 @@ public class MusicDTO implements MFMusic{
 	}
 	
 	/**
-	 * Utiliser surtout dans la récupération des musique correspond aux critéres par conséquent
-	 * on a pas bessoin de savoir si une musique a des lyrics (si on la trouvé c'est qu'elle a forcément 
-	 * des paroles, on a pas bessoin de savoir les paroles de la musique non plus
+	 * Utilisée surtout dans la récupération des musiques correspondants aux critères. Par conséquent
+	 * on a pas besoin de savoir si une musique a des lyrics (si on la trouvée c'est qu'elle a forcément 
+	 * des paroles).
 	 */
 	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
 			  String albumId, String spotifyId, String soundCloudId){ 
@@ -126,13 +126,13 @@ public class MusicDTO implements MFMusic{
 	}
 
 	@Override
-	public MFLyrics getLyrics() {
+	public LyricsDTO getLyrics() {
 		return lyrics;
 	}
 
 	@Override
 	public void setLyrics(MFLyrics lyrics) {
-		this.lyrics=lyrics;
+		this.lyrics=(LyricsDTO) lyrics;
 	}
 
 }

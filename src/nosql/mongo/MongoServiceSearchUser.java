@@ -1,10 +1,10 @@
 package nosql.mongo;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.bson.Document;
@@ -12,6 +12,7 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
+import server.dto.LyricsDTO;
 import server.dto.MusicDTO;
 import utils.IdMusicScore;
 import utils.MathUtils;
@@ -63,7 +64,8 @@ public class MongoServiceSearchUser {
 				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
 				
 				msDto = new MusicDTO(ims.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
-						doc_Musics.getString("artistName"), "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"));
+						doc_Musics.getString("artistName"), "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"),
+						"", new LyricsDTO(doc_Musics.getString("lyrics"), doc_Musics.getString("langue")));
 				listMusic.add(msDto);
 				
 			}

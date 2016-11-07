@@ -24,8 +24,11 @@ public class SearchServlet extends HttpServlet {
 		System.out.println("SearchServlet doGet");
 		
 		boolean success = true;
-		String userSearch = request.getParameter("userSearch");
-		User user = (User) request.getSession().getAttribute("user");
+		String userSearch = (String) request.getParameter("userSearch");
+		System.out.println(request.getAttribute("userSearch"));
+		System.out.println(request.getParameter("userSearch"));
+		System.out.println(userSearch);
+		User user = (User) request.getSession().getAttribute("acc");
 		
 		if(user == null){
 			success = false;
@@ -56,7 +59,7 @@ public class SearchServlet extends HttpServlet {
 						MuzikFinderUtils.generateRandomIdSearch(user.getLogin())));
 			}
 		}
-		
+
 		RequestDispatcher dispatcher = request.getRequestDispatcher("search.jsp");
 		dispatcher.forward(request, response);
 	}

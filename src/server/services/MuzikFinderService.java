@@ -8,7 +8,9 @@ import api.API;
 import interfaces.MFArtist;
 import interfaces.MFMusic;
 import nosql.NoSQLDB;
+import server.dto.MusicDTO;
 import sql.SQLDB;
+import sql.metier.User;
 import utils.MuzikFinderPreferences;
 
 public class MuzikFinderService {
@@ -51,8 +53,24 @@ public class MuzikFinderService {
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
+	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche) {
+		return nosql.searchMusics(tags, idRecherche);
+	}
+	
 	
 	////====== SQL PART ====== ////
+	
+	public User checkConnection(String username, String password) {
+		return sql.checkConnexion(username, password);
+	}
+	
+	public User createNewUser(String username, String password, String mail, int year, int month, int day) {
+		return sql.createNewUser(username, password, mail, year, month, day);
+	}
+	
+	public boolean checkLogin(String username) {
+		return sql.checkLogin(username);
+	}
 	
 	
 	////====== DAEMON PART ====== ////

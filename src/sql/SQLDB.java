@@ -3,6 +3,7 @@ package sql;
 import java.sql.Date;
 import java.sql.SQLException;
 
+import sql.metier.User;
 import sql.mysql.MySQLService;
 
 /**
@@ -27,6 +28,10 @@ public class SQLDB {
 	
 	public User checkConnexion(String pseudo, String password) {
 		return mySqlService.checkConnexion(pseudo, password);
+	}
+	
+	public boolean checkLogin(String username) {
+		return mySqlService.checkLogin(username);
 	}
 	
 	public void addSearch(User user, String recherche) {
@@ -66,4 +71,5 @@ public class SQLDB {
 	public void seeAllDBSearch() throws SQLException{
 		mySqlService.seeAllDBSearch();
 	}
+
 }

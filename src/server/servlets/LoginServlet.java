@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonObject;
 
+import server.services.MuzikFinderService;
+import sql.metier.User;
 import utils.MuzikFinderPreferences;
 
 public class LoginServlet extends HttpServlet {
@@ -27,8 +29,6 @@ public class LoginServlet extends HttpServlet {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		System.out.println(username + " : "+password);
-		
 		JsonObject myResponse = new JsonObject();
 		
 		if(username==null || username.isEmpty() || username.length()<MuzikFinderPreferences.MIN_SIZE_OF_USERNAME){
@@ -40,12 +40,11 @@ public class LoginServlet extends HttpServlet {
 			myResponse.addProperty("success", false);
 			
 		} else {
-			boolean connectionOK = false;
-			/*TODO :check connection*/
-			//MuzikFinderService service = new MuzikFinderService();
-			if(connectionOK){
+			MuzikFinderService service = new MuzikFinderService();
+			User user = service.checkConnection(username, password);
+			if(user != null){
 				myResponse.addProperty("success", true);
-				request.getSession().setAttribute("acc", /*TODO: get Account ou Cookie ou autre */new Object());
+				request.getSession().setAttribute("acc", /*TODO: get Account ou Cookie ou autre */user);
 			
 			} else {
 				myResponse.addProperty("success", false);

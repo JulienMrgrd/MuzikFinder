@@ -1,4 +1,4 @@
-package sql;
+package sql.metier;
 
 import java.sql.Date;
 

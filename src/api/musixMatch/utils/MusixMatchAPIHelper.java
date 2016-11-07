@@ -91,11 +91,9 @@ public final class MusixMatchAPIHelper {
 		}
 		
 		try {
-			
 			Gson gson = new Gson();
 			JSONObject jsonLyrics = root.getJSONObject(MusixMatchConstants.LYRICS);
 			return gson.fromJson( jsonLyrics.toString() , Lyrics.class);
-
 		} catch (JSONException e){
 			e.printStackTrace();
 		}

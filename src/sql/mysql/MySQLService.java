@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import sql.User;
+import sql.metier.User;
 
 public class MySQLService {
 	
@@ -17,15 +17,13 @@ public class MySQLService {
 	private static final String USER_DB_NAME = "user";
 	private static final String SEARCH_DB_NAME = "search";
 
-	private MySQLService() throws URISyntaxException, SQLException {
+	private MySQLService() throws URISyntaxException, SQLException, ClassNotFoundException {
 		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net/heroku_1a48668fb87a67e?reconnect=true");
 
 	    String username = dbUri.getUserInfo().split(":")[0];
 	    String password = dbUri.getUserInfo().split(":")[1];
 	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
-	    System.out.println(username);
-	    System.out.println(password);
-	    System.out.println(dbUrl);
+	    Class.forName("com.mysql.jdbc.Driver");
 		connection = DriverManager.getConnection(dbUrl, username, password);
 		System.out.println(connection.getClientInfo());
 		createTableUser();
@@ -46,7 +44,7 @@ public class MySQLService {
 				if (INSTANCE == null){
 					try {
 						INSTANCE = new MySQLService();
-					} catch (URISyntaxException | SQLException e) {
+					} catch (URISyntaxException | SQLException | ClassNotFoundException e) {
 						throw new ExceptionInInitializerError(e);
 					}
 				}
@@ -100,7 +98,6 @@ public class MySQLService {
 				try {
 					while (rs.next()) {
 						User user = new User(rs.getString("id_user"),rs.getString("pseudo"),rs.getString("password"),rs.getString("email"), rs.getDate("date"));
-						
 						stmt.close();
 						//On retourne l'utilisateur
 						return user;
@@ -119,31 +116,32 @@ public class MySQLService {
 		//retourne null car on a pas trouvé d'utilisateur correspondant à ce pseudo.
 	}
 	
+
+	public boolean checkLogin(String username) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	public User createNewUser(String pseudo, String password, String email, int year, int month, int day){
 
-		User user = getUserByLogin(pseudo);
-		if(user==null){
-			
-			Statement stmt;
-			try {
-				stmt = connection.createStatement();
-			
-				//TODO : vérifier dans tous le code si sql.Date, util.Date, ou les 2. Et retirer le warning !
-				java.sql.Date sqlDate = new Date(year, month-1, day);	
-				
-				String sqlRequest = "INSERT INTO "+USER_DB_NAME+"(pseudo,password,email,date) VALUES('"
-						+ pseudo+"','"+password+"','"+email+"','"+sqlDate+"');";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
 		
-				stmt.execute(sqlRequest);
-				stmt.close();
-			} catch (SQLException e) {
-				System.out.println("Problème de connection avec sql lors de la création d'un nouveau user");
-				return null;
-			}
+			//TODO : vérifier dans tous le code si sql.Date, util.Date, ou les 2. Et retirer le warning !
+			java.sql.Date sqlDate = new Date(year, month-1, day);	
 			
-			return getUserByLogin(pseudo);
+			String sqlRequest = "INSERT INTO "+USER_DB_NAME+"(pseudo,password,email,date) VALUES('"
+					+ pseudo+"','"+password+"','"+email+"','"+sqlDate+"');";
+	
+			stmt.execute(sqlRequest);
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("Problème de connection avec sql lors de la création d'un nouveau user");
+			return null;
 		}
-		return null;
+		
+		return getUserByLogin(pseudo);
 	}
 	
 	public User checkConnexion(String pseudo, String password) {
@@ -381,4 +379,5 @@ public class MySQLService {
 		}
 		stmt.close();
 	}
+
 }

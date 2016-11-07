@@ -2,8 +2,6 @@ package server.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.JsonObject;
+
+import server.services.MuzikFinderService;
+import sql.metier.User;
 
 public class SignUpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -29,14 +30,11 @@ public class SignUpServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String mail = request.getParameter("mail");
-		System.out.println(username + " : "+password);
-		
-		/*TODO : à vérifier en base*/ List<String> alreadyExistsNames = Arrays.asList(new String[]{"JULIEN", "FELIX", "MOUSSA"});
 		
 		JsonObject myResponse = new JsonObject();
+		MuzikFinderService service = new MuzikFinderService();
 		
 		if(username==null || username.isEmpty() || username.length()<5){
-			//username invalide
 			myResponse.addProperty("message", "Username invalide");
 			myResponse.addProperty("success", false);
 			
@@ -48,17 +46,21 @@ public class SignUpServlet extends HttpServlet {
 			myResponse.addProperty("message", "Email invalide");
 			myResponse.addProperty("success", false);
 			
-		} else if (alreadyExistsNames.contains(username.toUpperCase())){
+		} else if (service.checkLogin(username)){
 			myResponse.addProperty("message", "Username already exists");
 			myResponse.addProperty("success", false);
 			
 		} else {
 			// inscription
-			myResponse.addProperty("success", true);
+			User user = service.createNewUser(username, password, mail, 1994, 02, 16); // TODO: date
+			if(user!=null){
+				request.getSession().setAttribute("acc", user);
+				myResponse.addProperty("success", true);
+			} else {
+				myResponse.addProperty("success", true);
+				myResponse.addProperty("message", "Inscription impossible...");
+			}
 			
-			//MuzikFinderService service = new MuzikFinderService();
-			/*TODO : inscrire en base*/ 
-			request.getSession().setAttribute("acc", new Object());
 		}
 	    response.setCharacterEncoding("UTF-8");
 	    response.setContentType("text/json");

@@ -81,7 +81,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<h2>Quick & easy music search</h2>
-					<h4><p> Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter</p></h4>
+					<h4><p>Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter</p></h4>
 				</div>
 				<div class="col-md-6">
 					<div class="albums">

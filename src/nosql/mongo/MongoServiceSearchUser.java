@@ -1,7 +1,9 @@
 package nosql.mongo;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,18 +18,6 @@ import utils.MathUtils;
 import utils.TimeInMilliSeconds;
 
 public class MongoServiceSearchUser {
-	
-	public static void addNewSearch(String idMusic, Date userBirth, MongoService ms){
-		Date utilDate = new Date();
-	    int age = MathUtils.calculAge(userBirth);
-
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.SEARCH); 
-		Document doc = new Document();
-		doc.put("idMusic", idMusic);
-		doc.put("userAge",age);
-		doc.put("dateSearch", utilDate.getTime());
-		ms.insertOne(collection, doc);
-	}
 	
 	public static List<MusicDTO> getTopMusicSearchByPeriod(MongoService ms, TimeInMilliSeconds timeInMilliSeconds){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
@@ -80,6 +70,98 @@ public class MongoServiceSearchUser {
 		}
 		
 		return listMusic;
+	}
+	
+	public static void addNewSearch(String idMusic, Date userBirth, MongoService ms){
+		System.out.println(userBirth);
+	    int age = MathUtils.calculAge(userBirth);
+	    System.out.println(age);
+	    Document doc;
+	    GregorianCalendar gc = new GregorianCalendar();
+	    String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+		MongoCollection<Document> collection = ms.getCollection(week); 
+		
+		
+		doc = new Document("idMusic", new Document("$eq",idMusic));
+		MongoCursor<Document> cursor = ms.findBy(collection, doc);
+		if(cursor.hasNext()){
+			Document doc1 = cursor.next();
+			int score;
+			String tranche ="";
+			if(age<18){
+				score =  doc1.getInteger("<18");
+				tranche="<18";
+			}else if(age<24){
+				System.out.println("age<24");
+				score =  doc1.getInteger("18<=x<24");
+				tranche="18<=x<24";
+			}else if(age<35){
+				tranche="24<=x<35";
+				score =  doc1.getInteger("24<=x<35");
+			}else if(age<50){
+				tranche="35<=x<50";
+				score =  doc1.getInteger("35<=x<50");
+			}else if(age<65){
+				tranche="50<=x<65";
+				score =  doc1.getInteger("50<=x<65");
+			}else{
+				tranche=">=65";
+				score = doc1.getInteger(">=65");
+			}
+			System.out.println("tranche ="+tranche);
+
+			System.out.println("score ="+score);
+			score =score+1;
+			Document doc2 = new Document(new Document("$set",new Document(tranche,score)));
+			ms.updateOne(collection, doc1,doc2);
+		}else{
+			doc = new Document();
+			doc.put("idMusic", idMusic);
+			if(age<18){
+				doc.put("<18",1);
+				doc.put("18<=x<24", 0);
+				doc.put("24<=x<35", 0);
+				doc.put("35<=x<50", 0);
+				doc.put("50<=x<65", 0);
+				doc.put(">=65", 0);
+			}else if(age<24){
+				doc.put("<18",0);
+				doc.put("18<=x<24", 1);
+				doc.put("24<=x<35", 0);
+				doc.put("35<=x<50", 0);
+				doc.put("50<=x<65", 0);
+				doc.put(">=65", 0);
+			}else if(age<35){
+				doc.put("<18",0);
+				doc.put("18<=x<24", 0);
+				doc.put("24<=x<35", 1);
+				doc.put("35<=x<50", 0);
+				doc.put("50<=x<65", 0);
+				doc.put(">=65", 0);
+			}else if(age<50){
+				doc.put("<18",0);
+				doc.put("18<=x<24", 0);
+				doc.put("24<=x<35", 0);
+				doc.put("35<=x<50", 1);
+				doc.put("50<=x<65", 0);
+				doc.put(">=65", 0);
+			}else if(age<65){
+				doc.put("<18",0);
+				doc.put("18<=x<24", 0);
+				doc.put("24<=x<35", 0);
+				doc.put("35<=x<50", 0);
+				doc.put("50<=x<65", 1);
+				doc.put(">=65", 0);
+			}else{
+				doc.put("<18",0);
+				doc.put("18<=x<24", 0);
+				doc.put("24<=x<35", 0);
+				doc.put("35<=x<50", 0);
+				doc.put("50<=x<65", 0);
+				doc.put(">=65", 1);
+			}
+			ms.insertOne(collection, doc);
+		}
 	}
 	
 }

@@ -112,14 +112,15 @@ public class MongoServiceSearchMusic {
 
 	public static List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, MongoService ms, String idRecherche){
 		List<MusicDTO> listMDTO = new ArrayList<MusicDTO>();
+		System.out.println(tags.size());
 		if(tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){	//Si il y a moins de 3 tags on ne fait pas de recherche by tags in lyrics
+			System.out.println("tags.size<3");
 			return listMDTO;
 		}
 		int i=0;
 		int k=0;
 		List<String> tag = new ArrayList<String>();
 		List<String> tmp = new ArrayList<String>();
-		tmp.add("eeee");
 		while(tags.size()-i >= MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
 			k=0;
 			while(k <= i){
@@ -188,7 +189,7 @@ public class MongoServiceSearchMusic {
 		List<String> tags = new ArrayList<String>();
 		if(cursor.hasNext()){
 			Document doc = cursor.next();
-			listIdMusic = (ArrayList<String>) doc.get("idMusic");
+			listIdMusic = (ArrayList<String>) doc.get("idMusics");
 			tags = (ArrayList<String>) doc.get("tags");
 		}
 		if(listIdMusic ==null || listIdMusic.isEmpty()) return ms.searchMusicsByTagsInTags(tags, idRecherche);

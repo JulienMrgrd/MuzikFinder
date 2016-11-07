@@ -1,6 +1,7 @@
 package nosql.mongo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -127,16 +128,17 @@ public class MongoServiceInsert {
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				doc2 = new Document(new Document("$set",new Document("idMusics",idMusics)));
 				doc2 = new Document(new Document("$set",new Document("tags",tags)));
+				ms.updateOne(collection, doc1,doc2);
+				doc2 = new Document(new Document("$set",new Document("idMusics",idMusics)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 		}else{
 			doc = new Document();
-			System.out.println(tags);
 			doc.put("tags", tags);
 			doc.put("idRecherche",idRecherche);
 			doc.put("idMusics", idMusics);
+			doc.put("time",new Date().getTime());
 			ms.insertOne(collection, doc);
 		}
 		System.out.println("Nombre de musiques ajoutées dans la collection Cache = "+idMusics.size());

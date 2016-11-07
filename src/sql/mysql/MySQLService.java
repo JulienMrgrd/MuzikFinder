@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import sql.metier.User;
 
@@ -116,10 +118,8 @@ public class MySQLService {
 		//retourne null car on a pas trouvé d'utilisateur correspondant à ce pseudo.
 	}
 	
-
 	public boolean checkLogin(String username) {
-		// TODO Auto-generated method stub
-		return false;
+		return getUserByLogin(username) != null;
 	}
 	
 	public User createNewUser(String pseudo, String password, String email, int year, int month, int day){
@@ -128,8 +128,8 @@ public class MySQLService {
 		try {
 			stmt = connection.createStatement();
 		
-			//TODO : vérifier dans tous le code si sql.Date, util.Date, ou les 2. Et retirer le warning !
-			java.sql.Date sqlDate = new Date(year, month-1, day);	
+			String dateNow = year+"-"+month+"-"+day;
+			Date sqlDate = Date.valueOf(dateNow);
 			
 			String sqlRequest = "INSERT INTO "+USER_DB_NAME+"(pseudo,password,email,date) VALUES('"
 					+ pseudo+"','"+password+"','"+email+"','"+sqlDate+"');";
@@ -182,6 +182,9 @@ public class MySQLService {
 			try {
 				stmt = connection.createStatement();
 			
+				GregorianCalendar gc = new GregorianCalendar();
+				gc.get(Calendar.WEEK_OF_YEAR);
+				
 				java.util.Date utilDate = new java.util.Date();
 			    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());		
 			    

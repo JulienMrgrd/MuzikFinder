@@ -116,75 +116,75 @@ public class MongoService {
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName,
 			String nameMusic, String langue, String spotifyId, String soundCloudId){
 		return MongoServiceInsert.insertLyricsIfNotExists(words, musicId, artistId, artistName, 
-				nameMusic, langue, spotifyId, soundCloudId, this);
+				nameMusic, langue, spotifyId, soundCloudId, getInstance());
 	}
 
 	public boolean insertTagIfNotExists(String tag, String musicId){
-		return MongoServiceInsert.insertTagIfNotExists(tag, musicId, this);
+		return MongoServiceInsert.insertTagIfNotExists(tag, musicId, getInstance());
 	}
 
 	public boolean insertIdAlbumIfNotExist(String idAlbum){
-		return MongoServiceInsert.insertIdAlbumIfNotExist(idAlbum,this);
+		return MongoServiceInsert.insertIdAlbumIfNotExist(idAlbum,getInstance());
 	}
 	
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum){
-		MongoServiceInsert.insertNewMusics(mapAlbumIdWithAlbum, this);
+		MongoServiceInsert.insertNewMusics(mapAlbumIdWithAlbum, getInstance());
 	}
 	
-	public void insertCacheSearchUser(List<String> idMusics, String idRecherche){
-		MongoServiceInsert.insertCacheSearchUser(idMusics, this, idRecherche);
+	public void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
+		MongoServiceInsert.insertCacheSearchUser(tags, idMusics, getInstance(), idRecherche);
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
 	public boolean containsLyrics(String musicId){
-		return MongoServiceContains.containsLyrics(musicId, this);
+		return MongoServiceContains.containsLyrics(musicId, getInstance());
 	}
 
 	public boolean containsTag(String tag){
-		return MongoServiceContains.containsTag(tag, this);
+		return MongoServiceContains.containsTag(tag, getInstance());
 	}
 
 	public boolean containsIdMusicInTag(String tag, String idMusic){
-		return MongoServiceContains.containsIdMusicInTag(tag, idMusic, this);
+		return MongoServiceContains.containsIdMusicInTag(tag, idMusic, getInstance());
 	}
 
 	public boolean containsIdAlbum(String idAlbum){
-		return MongoServiceContains.containsIdAlbum(idAlbum, this);
+		return MongoServiceContains.containsIdAlbum(idAlbum, getInstance());
 	}
 	
 	public boolean containsIdRecherche(String idRecherche){
-		return MongoServiceContains.containsIdRecherche(idRecherche, this);
+		return MongoServiceContains.containsIdRecherche(idRecherche, getInstance());
 	}
 
 	//////////////PARTIE GETTER///////////////////////
 	public List<String> getIdMusicsByTag(String tag){
-		return MongoServiceGetId.getIdMusicsByTag(tag, this);
+		return MongoServiceGetId.getIdMusicsByTag(tag, getInstance());
 	}
 
 	public List<String> getIdMusicsByIdArtist(String idArtist){
-		return MongoServiceGetId.getIdMusicsByIdArtist(idArtist, this);
+		return MongoServiceGetId.getIdMusicsByIdArtist(idArtist, getInstance());
 	}
 
 	public List<String> getIdMusicsByChainWords(String chainWords){
-		return MongoServiceGetId.getIdMusicsByChainWords(chainWords, this);
+		return MongoServiceGetId.getIdMusicsByChainWords(chainWords, getInstance());
 	}
 
 	public List<String> getAllAlbumIds(){
-		return MongoServiceGetId.getAllAlbumIds(this);
+		return MongoServiceGetId.getAllAlbumIds(getInstance());
 	}
 
 
 	//////////////PARTIE SEARCH////////////////////////
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
-		return MongoServiceSearchMusic.filterByExistingMusics(musics, this);
+		return MongoServiceSearchMusic.filterByExistingMusics(musics, getInstance());
 	}
 
 	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche){
-		return MongoServiceSearchMusic.searchMusics(tags, this, idRecherche);
+		return MongoServiceSearchMusic.searchMusics(tags, getInstance(), idRecherche);
 	}
 	
 	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
-		return MongoServiceSearchMusic.searchMusicsByTagsInTags(tags, this, idRecherche);
+		return MongoServiceSearchMusic.searchMusicsByTagsInTags(tags, getInstance(), idRecherche);
 	}
 
 	/**
@@ -194,33 +194,38 @@ public class MongoService {
 	 * @return
 	 */
 	public List<String> matchMusicsWithTags(List<String> tags){
-		return MongoServiceSearchMusic.matchMusicsWithTags(tags, this);
+		return MongoServiceSearchMusic.matchMusicsWithTags(tags, getInstance());
 	}
 
 	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
-		return MongoServiceSearchMusic.searchMusicsByTagsInLyrics(tags, this, idRecherche);
+		return MongoServiceSearchMusic.searchMusicsByTagsInLyrics(tags, getInstance(), idRecherche);
 	}
+	
+	public List<MusicDTO> getMoreResults(String idRecherche){
+		return MongoServiceSearchMusic.getMoreResults(idRecherche, getInstance());
+	}
+
 
 	///////////////PARTIE SEARCH USER/////////////////////////
 	public void addNewSearch(String idMusic, Date userBirth){
-		MongoServiceSearchUser.addNewSearch(idMusic, userBirth, this);
+		MongoServiceSearchUser.addNewSearch(idMusic, userBirth, getInstance());
 	}
 	
 	public List<MusicDTO> getTopMusicSearchThisWeek(){
-		return MongoServiceSearchUser.getTopMusicSearchByPeriod(this, TimeInMilliSeconds.WEEK);
+		return MongoServiceSearchUser.getTopMusicSearchByPeriod(getInstance(), TimeInMilliSeconds.WEEK);
 	}
 	
 	public List<MusicDTO> getTopMusicSearchThisMonth(){
-		return MongoServiceSearchUser.getTopMusicSearchByPeriod(this, TimeInMilliSeconds.MONTH);
+		return MongoServiceSearchUser.getTopMusicSearchByPeriod(getInstance(), TimeInMilliSeconds.MONTH);
 	}
 
 	//////////////PARTIE PREFERENCE//////////////////////////
 	public void setPref(String prefName, String param) {
-		MongoServicePreference.setPref(prefName, param, this);
+		MongoServicePreference.setPref(prefName, param, getInstance());
 	}
 
 	public String getPref(String prefName) {
-		return MongoServicePreference.getPref(prefName, this);
+		return MongoServicePreference.getPref(prefName, getInstance());
 	}
 	
 	public void close(){

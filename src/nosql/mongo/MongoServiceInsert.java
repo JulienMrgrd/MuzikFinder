@@ -117,9 +117,10 @@ public class MongoServiceInsert {
 		}
 	}
 
-	public static void insertCacheSearchUser(List<String> idMusics, MongoService ms, String idRecherche){
+	public static void insertCacheSearchUser(List<String> tags, List<String> idMusics, MongoService ms, String idRecherche){
 		Document doc;
 		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE);
+		System.out.println("tags =="+tags);
 		if(ms.containsIdRecherche(idRecherche)){
 			doc = new Document("idRecherche", new Document("$eq",idRecherche));
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
@@ -127,10 +128,13 @@ public class MongoServiceInsert {
 				Document doc1 = cursor.next();
 				Document doc2;
 				doc2 = new Document(new Document("$set",new Document("idMusics",idMusics)));
+				doc2 = new Document(new Document("$set",new Document("tags",tags)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 		}else{
 			doc = new Document();
+			System.out.println(tags);
+			doc.put("tags", tags);
 			doc.put("idRecherche",idRecherche);
 			doc.put("idMusics", idMusics);
 			ms.insertOne(collection, doc);

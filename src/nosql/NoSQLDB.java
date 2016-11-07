@@ -47,8 +47,8 @@ public class NoSQLDB {
 		}
 	}
 	
-	public void insertCacheSearchUser(List<String> idMusics, String idRecherche){
-		mongo.insertCacheSearchUser(idMusics, idRecherche);
+	public void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
+		mongo.insertCacheSearchUser(tags, idMusics, idRecherche);
 	}
 
 	///////////////PARTIE CONTAINS//////////////////

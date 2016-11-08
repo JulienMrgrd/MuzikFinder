@@ -7,6 +7,8 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
+import utils.IdMusicScore;
+
 public class MongoServiceContains {
 	
 	private static MongoService ms = MongoService.getInstance();
@@ -29,17 +31,17 @@ public class MongoServiceContains {
 	static boolean containsIdMusicInTag(String tag, String idMusic){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS); // récupère la collection mongo qui stocke les tags
 
-		Document doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$regex",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+		Document doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		
 		Document doc_new;
-		List<String> listIdMusic;
+		List<IdMusicScore> listIdMusic;
 		
 		while(cursor.hasNext()){
 			doc_new = cursor.next();
-			listIdMusic = (List<String>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-			for( String s : listIdMusic ){
-				if(s.equals(idMusic)) return true;
+			listIdMusic = (List<IdMusicScore>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+			for( IdMusicScore s : listIdMusic ){
+				if(s.getIdMusic().equals(idMusic)) return true;
 			}
 		}
 		return false;

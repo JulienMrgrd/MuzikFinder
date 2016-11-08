@@ -14,6 +14,7 @@ import com.mongodb.client.MongoCursor;
 import api.musixMatch.utils.MusixMatchUtils;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
+import utils.IdMusicScore;
 import utils.textMining.ParserMaison;
 
 public class MongoServiceInsert {
@@ -27,12 +28,36 @@ public class MongoServiceInsert {
 		if(!ms.containsTag(tag)){
 			doc = new Document();
 			doc.put(MongoCollectionsAndKeys.TAG_TAGS,tag);
+			
+			List<IdMusicScore> listIdMusicScore = new ArrayList<IdMusicScore>(1);
+			listIdMusicScore.add(new IdMusicScore(musicId, 1));
+			
 			List<String> listId = new ArrayList<String>(1);
 			listId.add(musicId);
 			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listId);
 			ms.insertOne(collection, doc);
 			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
+			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+			MongoCursor<Document> cursor = ms.findBy(collection, doc);
+			
+			Document doc_new;
+			List<IdMusicScore> listIdMusic;
+			
+			while(cursor.hasNext()){
+				doc_new = cursor.next();
+				listIdMusic = (List<IdMusicScore>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+				List<IdMusicScore> newListIdMusicScore = new ArrayList<IdMusicScore>(1);
+				for( IdMusicScore s : listIdMusic ){
+					if(s.getIdMusic().equals(musicId)){
+						newListIdMusicScore.add(new IdMusicScore(s.getIdMusic(), s.getScore()+1));
+					}else {
+						newListIdMusicScore.add(s);
+					}
+				}
+				Document doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListIdMusicScore)));
+				ms.updateOne(collection, doc,doc2);
+			}
 			return false;
 		} else {
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
@@ -40,10 +65,10 @@ public class MongoServiceInsert {
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				List<String> listId = (List<String>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-				List<String> newListId = new ArrayList<String>();
+				List<IdMusicScore> listId = (List<IdMusicScore>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+				List<IdMusicScore> newListId = new ArrayList<IdMusicScore>();
 				newListId.addAll(listId);
-				newListId.add(musicId);
+				newListId.add(new IdMusicScore(musicId, 1));
 				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListId)));
 				ms.updateOne(collection, doc1,doc2);
 			}

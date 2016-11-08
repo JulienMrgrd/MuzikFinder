@@ -110,6 +110,11 @@ public class MongoService {
 			return false;
 		}
 	}
+	
+	void deleteMany(MongoCollection<Document> collection, 
+			Document findQuery){
+		collection.deleteMany(findQuery);
+	}
 
 	//////////////PARTIE INSERT///////////////
 	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName,
@@ -219,6 +224,10 @@ public class MongoService {
 	
 	public List<MFMusic> getTopMusicSearchThisMonth(){
 		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.MONTH);
+	}
+	
+	public void deleteCacheUserExceedOneHour(){
+		MongoServiceSearchUser.deleteCacheUserExceedOneHour();
 	}
 
 	//////////////PARTIE PREFERENCE//////////////////////////

@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nosql.mongo.MongoService;
+import nosql.mongo.MongoServiceInsert;
+import nosql.mongo.MongoServiceSearchUser;
+import server.services.MuzikFinderService;
+import sql.metier.User;
 import sql.mysql.MySQLService;
 
 public class Test {
@@ -31,51 +35,33 @@ public class Test {
 	}
 	
 	public static void main(String[] args){
+		
+		MuzikFinderService mzf = new MuzikFinderService();
+		
 
-		MongoService ms = MongoService.getInstance();
+		/*MongoService ms = MongoService.getInstance();
 		List<String> tags= new ArrayList<>();
 		tags.add("i");
 		ms.searchMusics(tags, "59563259"); // pour que la connexion a mongo soit bien faite une premiere fois
-		tags.clear();
+		System.out.println("//////////////////////FIN PRECHAUFFE MONGO////////////////");
+		MuzikFinderService mzf = new MuzikFinderService();
+		User us=mzf.checkConnection("feligo", "password");
+		
 		tags= new ArrayList<>();
-		tags.add("am");
-		tags.add("i");
-		/*tags.add("out");
-		tags.add("of");
-		tags.add("my");
-		tags.add("head");*/
+		tags.add("let");
+		tags.add("me");
+		tags.add("love");
+//		for(MusicDTO mdto: mzf.searchMusics(tags, "feligo596326") ){
+//			//ms.addNewSearch("114588667", us.getDateBirth());
+//		}
+//		ms.addNewSearch("83747620", us.getDateBirth());
+		tags.clear();
+		
 		Instant start = Instant.now();
-		ms.searchMusics(tags, "59563259");
+		
 		Instant end = Instant.now();
 		System.out.println("Temps reel de la recherche =="+Duration.between(start, end));
-		
-		/*tags.removeAll(tags);
-		System.out.println(tags.size());
-		tags.add("les");
-		tags.add("vainqueurs");
-		tags.add("l'écrivent");
-		start = Instant.now();
-		ms.searchMusics(tags, "mplpdekeo");
-			//System.out.println(msDTO.getTrackName());
-			//System.out.println(msDTO.getArtistId());
-		
-		end = Instant.now();
-		System.out.println("Duree 2eme recherche =="+Duration.between(start, end));*/
-		//YYYY-MM-DD
-		/*String dateBirth = "1994-12-05";
-		java.sql.Date datBirth = java.sql.Date.valueOf(dateBirth);
-		String dateMoin1Semain = "2016-09-27";
-		java.sql.Date datNowMoin1Semaine = java.sql.Date.valueOf(dateMoin1Semain);
-		String dateNow = "2016-10-27";
-		java.sql.Date datNow = java.sql.Date.valueOf(dateNow);
-		
-		
-		java.util.Date utilDate = new java.util.Date();
-	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-	    long mmm=utilDate.getTime()-datNowMoin1Semaine.getTime();
-		System.out.println(TimeInMilliSeconds.MONTH);
-		System.out.println("mmmm = "+mmm);*/
-		
+	*/
 	}
 
 }

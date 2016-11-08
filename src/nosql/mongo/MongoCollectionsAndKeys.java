@@ -10,6 +10,7 @@ public final class MongoCollectionsAndKeys {
 	public static final String PREFS = "Preferences";
 	public static final String SEARCH = "Search";
 	public static final String CACHE = "Cache";
+	public static final String STAT = "Statistique";
 
 	/// Collection ALBUMS
 	public static final String ALBUMID_ALBUMS = "albumId";

@@ -164,5 +164,107 @@ public class MongoServiceSearchUser {
 			ms.insertOne(collection, doc);
 		}
 	}
+
 	
+	public static void generateAndInsertTopOfThisWeek(){
+	    List<IdMusicScore> listIdMusicScore = new ArrayList<>();
+		GregorianCalendar gc = new GregorianCalendar();
+	    String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+	    MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STAT); 
+	    MongoCursor<Document> cursor = ms.findAll(collection);
+	    Document doc;
+	    IdMusicScore idMusicScore;
+	    int score =0;
+	    while(cursor.hasNext()){
+	    	doc = cursor.next();
+	    	score += doc.getInteger("<18")+doc.getInteger("18<=x<24")+doc.getInteger("24<=x<35")+
+	    			doc.getInteger("35<=x<50")+doc.getInteger("50<=x<65")+doc.getInteger(">=65");
+	    	idMusicScore=new IdMusicScore(doc.getString("idMusic"), score);
+	    	listIdMusicScore.add(idMusicScore);
+	    	score=0;
+	    }
+	    Collections.sort(listIdMusicScore);
+
+	    collection = ms.getCollection("TOP-Week-"+week); 
+	    MongoCursor<Document> cursor_Musics;
+		Document doc_Musics, findQuery_MusicByIdMusic;
+		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+	    for(IdMusicScore ims : listIdMusicScore){
+	    	findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ims.getIdMusic()));
+			cursor_Musics = ms.findBy(collection_Musics, findQuery_MusicByIdMusic);
+			
+			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
+				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
+				doc = new Document();
+				doc.put("idMusic", ims.getIdMusic());
+				doc.put("nameMusic", doc_Musics.getString("nameMusic"));
+				doc.put("artistName", doc_Musics.getString("artistName"));
+				doc.put("spotifyId", doc_Musics.getString("spotifyId"));
+				doc.put("soundCloudId", doc_Musics.getString("soundCloudId"));
+				ms.insertOne(collection, doc);
+			}
+	    }
+	}
+	
+	public static void generateAndInsertTopOfThisWeekByAge(String intervalle){
+	    List<IdMusicScore> listIdMusicScore = new ArrayList<>();
+	    int score =0;
+		GregorianCalendar gc = new GregorianCalendar();
+	    String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+	    
+	    MongoCollection<Document> collection = ms.getCollection(week); 
+	    MongoCursor<Document> cursor = ms.findAll(collection);
+	    Document doc;
+	    while(cursor.hasNext()){
+	    	doc = cursor.next();
+	    	switch(intervalle){
+	    	case "<18" :score += doc.getInteger("<18");
+	    				break;
+	    	case "18<=x<24" :score += doc.getInteger("18<=x<24");
+	    					break;
+	    	case "24<=x<35" :score += doc.getInteger("18<=x<24");
+							break;
+	    	case "35<=x<50" :score += doc.getInteger("35<=x<50");
+	    					break;
+	    	case "50<=x<65" :score += doc.getInteger("50<=x<65");
+	    					break;
+	    	case ">=65"		:score += doc.getInteger(">=65");
+	    					break;
+	    	}
+	    	listIdMusicScore.add(new IdMusicScore(doc.getString("idMusic"), score));
+	    	score=0;
+	    }
+	    Collections.sort(listIdMusicScore);
+
+	    collection = ms.getCollection("TOP-Week-"+week+"-"+intervalle); 
+	    MongoCursor<Document> cursor_Musics;
+		Document doc_Musics, findQuery_MusicByIdMusic;
+		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+	    for(IdMusicScore ims : listIdMusicScore){
+	    	findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ims.getIdMusic()));
+			cursor_Musics = ms.findBy(collection_Musics, findQuery_MusicByIdMusic);
+			
+			if(cursor_Musics.hasNext()){ 
+				doc_Musics = cursor_Musics.next();
+				doc = new Document();
+				doc.put("idMusic", ims.getIdMusic());
+				doc.put("nameMusic", doc_Musics.getString("nameMusic"));
+				doc.put("artistName", doc_Musics.getString("artistName"));
+				doc.put("spotifyId", doc_Musics.getString("spotifyId"));
+				doc.put("soundCloudId", doc_Musics.getString("soundCloudId"));
+				ms.insertOne(collection, doc);
+			}
+	    }
+	}
+
+	public static void deleteCacheUserExceedOneHour(){
+		long timeNow = new Date().getTime() - TimeInMilliSeconds.HOUR.value;
+		Document doc;
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
+		doc = new Document("time", new Document("$lt",timeNow));
+		System.out.println(timeNow);
+		System.out.println(doc);
+		ms.deleteMany(collection, doc);
+	}
+
 }

@@ -32,9 +32,7 @@ public class MongoServiceInsert {
 			List<IdMusicScore> listIdMusicScore = new ArrayList<IdMusicScore>(1);
 			listIdMusicScore.add(new IdMusicScore(musicId, 1));
 			
-			List<String> listId = new ArrayList<String>(1);
-			listId.add(musicId);
-			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listId);
+			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listIdMusicScore);
 			ms.insertOne(collection, doc);
 			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){

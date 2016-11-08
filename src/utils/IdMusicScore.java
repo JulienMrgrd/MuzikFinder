@@ -1,5 +1,7 @@
 package utils;
 
+import org.bson.Document;
+
 public class IdMusicScore implements Comparable<IdMusicScore>{
 	
 	private Integer score;
@@ -7,7 +9,7 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 	
 	public IdMusicScore(String tag, Integer score) {
 		this.score = score;
-		this.idMusic = tag;
+		this.idMusic =tag;
 	}
 
 	public Integer getScore() {
@@ -33,5 +35,12 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 	@Override
 	public int compareTo(IdMusicScore t2) {
 		return (this.getScore() > t2.getScore()) ? -1 : (this.getScore() < t2.getScore()) ? 1 : 0;
+	}
+	
+	public Document IdMusicScoreToDoc(){
+		Document doc = new Document();
+		doc.put("idMusic", this.getIdMusic());
+		doc.put("score", this.getScore());
+		return doc;
 	}
 }

@@ -26,52 +26,57 @@ public class MongoServiceInsert {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
 		Document doc;
 		if(!ms.containsTag(tag)){
+			System.out.println("1er if");
 			doc = new Document();
 			doc.put(MongoCollectionsAndKeys.TAG_TAGS,tag);
-			
-			List<IdMusicScore> listIdMusicScore = new ArrayList<IdMusicScore>(1);
-			listIdMusicScore.add(new IdMusicScore(musicId, 1));
-			
-			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listIdMusicScore);
+
+			IdMusicScore ims = new IdMusicScore(musicId, 1);
+			List<Document> listDoc=new ArrayList<Document>(1);
+			listDoc.add(ims.IdMusicScoreToDoc());
+			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listDoc);
 			ms.insertOne(collection, doc);
-			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
+			System.out.println("2eme if");
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			
 			Document doc_new;
-			List<IdMusicScore> listIdMusic;
-			
+			List<Document> listDocument;
+			List<Document> newListDocument = new ArrayList<>();
+			String tmpIdMusic;
 			while(cursor.hasNext()){
 				doc_new = cursor.next();
-				listIdMusic = (List<IdMusicScore>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-				List<IdMusicScore> newListIdMusicScore = new ArrayList<IdMusicScore>(1);
-				for( IdMusicScore s : listIdMusic ){
-					if(s.getIdMusic().equals(musicId)){
-						newListIdMusicScore.add(new IdMusicScore(s.getIdMusic(), s.getScore()+1));
+				listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+				for(Document doc2 : listDocument){
+					tmpIdMusic=doc2.getString("idMusic");
+					if(tmpIdMusic.equals(musicId)){
+						IdMusicScore ims = new IdMusicScore(tmpIdMusic, doc2.getInteger("score")+1);
+						newListDocument.add(ims.IdMusicScoreToDoc());
 					}else {
-						newListIdMusicScore.add(s);
+						newListDocument.add(doc2);
 					}
 				}
-				Document doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListIdMusicScore)));
-				ms.updateOne(collection, doc,doc2);
 			}
-			return false;
+			Document doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
+			ms.updateOne(collection, doc,doc2);
 		} else {
+			System.out.println("3eme if");
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			if(cursor.hasNext()){
+				System.out.println("in if");
 				Document doc1 = cursor.next();
 				Document doc2;
-				List<IdMusicScore> listId = (List<IdMusicScore>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-				List<IdMusicScore> newListId = new ArrayList<IdMusicScore>();
-				newListId.addAll(listId);
-				newListId.add(new IdMusicScore(musicId, 1));
-				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListId)));
+				
+				List<Document> listDocument = (List<Document>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+				List<Document> newListDocument = new ArrayList<Document>();
+				newListDocument.addAll(listDocument);
+				newListDocument.add(new IdMusicScore(musicId, 1).IdMusicScoreToDoc());
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
 				ms.updateOne(collection, doc1,doc2);
 			}
-			return true;
 		}
+		return true;
 	}
 
 	static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
@@ -171,5 +176,9 @@ public class MongoServiceInsert {
 			ms.insertOne(collection, doc);
 		}
 		System.out.println("Nombre de musiques ajoutées dans la collection Cache = "+idMusics.size());
+	}
+	
+	public static void main(String[] args){
+		insertTagIfNotExists("everybody", "113810490");
 	}
 }

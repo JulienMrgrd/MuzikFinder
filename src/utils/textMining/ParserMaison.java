@@ -23,7 +23,7 @@ public class ParserMaison {
 			lyrics = lyrics.toLowerCase().replaceAll(THE_REGEX, " ");
 			tags = new ArrayList<String>();
 			for(String s : lyrics.split(" ")){
-				if(s != null && s.length()>=2 && !excludeWords.contains(s) && !tags.contains(s)){
+				if(s != null && s.length()>=2 && !excludeWords.contains(s)){
 					tags.add(s);
 				}
 			}

@@ -35,13 +35,16 @@ public class MongoServiceContains {
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		
 		Document doc_new;
-		List<IdMusicScore> listIdMusic;
-		
+		List<Document> listDocument;
+		String tmpIdMusic;
 		while(cursor.hasNext()){
 			doc_new = cursor.next();
-			listIdMusic = (List<IdMusicScore>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-			for( IdMusicScore s : listIdMusic ){
-				if(s.getIdMusic().equals(idMusic)) return true;
+			listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+			for(Document doc2 : listDocument){
+				System.out.println("in for");
+				tmpIdMusic=doc2.getString("idMusic");
+				System.out.println(tmpIdMusic);
+				if(tmpIdMusic.equals(idMusic)) return true;
 			}
 		}
 		return false;

@@ -17,7 +17,7 @@ public class DaemonMain {
 	private MuzikFinderService service;
 	
 	public DaemonMain() {
-		service = new MuzikFinderService();
+		service = new MuzikFinderService(false);
 	}
 	
 	public void process() {

@@ -3,7 +3,7 @@ package server.dto;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 
-public class MusicDTO implements MFMusic{
+public class MFMusicDTO implements MFMusic{
 
 	private String trackId;
 	private String trackName;
@@ -13,11 +13,11 @@ public class MusicDTO implements MFMusic{
 	private String spotifyId;
 	private String soundCloudId;
 	private String hasLyrics;
-	private LyricsDTO lyrics;
+	private MFLyricsDTO lyrics;
 	
-	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
+	public MFMusicDTO(String trackId, String trackName, String idArtist, String artistName,
 				  String albumId, String spotifyId, String soundCloudId, String hasLyrics,
-				  LyricsDTO lyrics){
+				  MFLyricsDTO lyrics){
 		this.trackId=trackId;
 		this.trackName=trackName;
 		this.idArtist=idArtist;
@@ -34,7 +34,7 @@ public class MusicDTO implements MFMusic{
 	 * on a pas besoin de savoir si une musique a des lyrics (si on la trouvée c'est qu'elle a forcément 
 	 * des paroles).
 	 */
-	public MusicDTO(String trackId, String trackName, String idArtist, String artistName,
+	public MFMusicDTO(String trackId, String trackName, String idArtist, String artistName,
 			  String albumId, String spotifyId, String soundCloudId){ 
 	this.trackId=trackId;
 	this.trackName=trackName;
@@ -126,13 +126,13 @@ public class MusicDTO implements MFMusic{
 	}
 
 	@Override
-	public LyricsDTO getLyrics() {
+	public MFLyricsDTO getLyrics() {
 		return lyrics;
 	}
 
 	@Override
 	public void setLyrics(MFLyrics lyrics) {
-		this.lyrics=(LyricsDTO) lyrics;
+		this.lyrics=(MFLyricsDTO) lyrics;
 	}
 
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import nosql.NoSQLDB;
-import server.dto.MusicDTO;
+import server.dto.MFMusicDTO;
 import server.services.MuzikFinderService;
 
 public class DisplayOneMusicServlet extends HttpServlet {
@@ -19,7 +19,8 @@ public class DisplayOneMusicServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("DisplayOneMusicServlet doGet");
-		//TODO getMusicById
+		String idMusic = request.getParameter("idMusic");
+		new MuzikFinderService().getMusicById(idMusic);
 		System.out.println(request.getParameter("idMusic"));
 	}
 

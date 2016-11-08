@@ -2,12 +2,12 @@ package server.dto;
 
 import interfaces.MFLyrics;
 
-public class LyricsDTO implements MFLyrics{
+public class MFLyricsDTO implements MFLyrics{
 
 	private String lyricsBody;
 	private String lyrics_language;
 	
-	public LyricsDTO(String lyricsBody, String lyrics_language){
+	public MFLyricsDTO(String lyricsBody, String lyrics_language){
 		this.lyricsBody = lyricsBody;
 		this.lyrics_language = lyrics_language;
 	}

@@ -12,17 +12,18 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
-import server.dto.LyricsDTO;
-import server.dto.MusicDTO;
+import interfaces.MFMusic;
 import utils.IdMusicScore;
 import utils.MathUtils;
 import utils.TimeInMilliSeconds;
 
 public class MongoServiceSearchUser {
 	
-	public static List<MusicDTO> getTopMusicSearchByPeriod(MongoService ms, TimeInMilliSeconds timeInMilliSeconds){
+	private static MongoService ms = MongoService.getInstance();
+	
+	static List<MFMusic> getTopMusicSearchByPeriod(TimeInMilliSeconds timeInMilliSeconds){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.SEARCH);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH);
 		MongoCursor<Document> cursor = ms.findAll(collection);
 
 		boolean presentInList=false;
@@ -48,9 +49,9 @@ public class MongoServiceSearchUser {
 		}
 		Collections.sort(idMusicScore);
 
-		MusicDTO msDto;
-		List<MusicDTO> listMusic= new ArrayList<MusicDTO>(idMusicScore.size());
-		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollections.MUSICS);
+		MFMusic msDTO;
+		List<MFMusic> listMusic= new ArrayList<MFMusic>(idMusicScore.size());
+		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 		
 		// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
 		MongoCursor<Document> cursor_Musics;
@@ -63,10 +64,8 @@ public class MongoServiceSearchUser {
 			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
 				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
 				
-				msDto = new MusicDTO(ims.getIdMusic(), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"),
-						doc_Musics.getString("artistName"), "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"),
-						"", new LyricsDTO(doc_Musics.getString("lyrics"), doc_Musics.getString("langue")));
-				listMusic.add(msDto);
+				msDTO = MongoUtils.transformDocumentIntoMFMusic(doc_Musics);
+				if(msDTO != null) listMusic.add(msDTO);
 				
 			}
 		}
@@ -74,7 +73,7 @@ public class MongoServiceSearchUser {
 		return listMusic;
 	}
 	
-	public static void addNewSearch(String idMusic, Date userBirth, MongoService ms){
+	static void addNewSearch(String idMusic, Date userBirth){
 		System.out.println(userBirth);
 	    int age = MathUtils.calculAge(userBirth);
 	    System.out.println(age);

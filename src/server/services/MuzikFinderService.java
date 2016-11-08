@@ -8,7 +8,6 @@ import api.API;
 import interfaces.MFArtist;
 import interfaces.MFMusic;
 import nosql.NoSQLDB;
-import server.dto.MusicDTO;
 import sql.SQLDB;
 import sql.metier.User;
 import utils.MuzikFinderPreferences;
@@ -53,8 +52,12 @@ public class MuzikFinderService {
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
-	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche) {
+	public List<MFMusic> searchMusics(List<String> tags, String idRecherche) {
 		return nosql.searchMusics(tags, idRecherche);
+	}
+	
+	public MFMusic getMusicById(String idMusic) {
+		return nosql.getMusicById(idMusic);
 	}
 	
 	

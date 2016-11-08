@@ -1,6 +1,5 @@
-<%@page import="com.google.gson.Gson"%>
+<%@page import="interfaces.MFMusic"%>
 <%@page import="java.util.List"%>
-<%@page import="server.dto.MusicDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -46,7 +45,7 @@
 				</div>
 			<% } else {
 					@SuppressWarnings("unchecked")
-					List<MusicDTO> musics = (List<MusicDTO>) request.getAttribute("results");
+					List<MFMusic> musics = (List<MFMusic>) request.getAttribute("results");
 					if(musics == null || musics.isEmpty()){ %>
 						<div id="errorMessageSearch" class="alert alert-danger fade in">
 							<strong id="strongErrorMessageSearch"><%=request.getAttribute("message")%></strong>
@@ -55,7 +54,7 @@
 						<h4>Résultats de votre recherche : </h4>
 						<form method="post" action="DisplayOneMusicServlet">	
 							<div class="list-group">
-			<%				for(MusicDTO music : musics){	%>
+			<%				for(MFMusic music : musics){	%>
 								<input type="hidden" name="idMusic" value="<%=music.getTrackId()%>"/>
 								<button type="submit" class="list-group-item clearfix">
 									<%=music.getArtistName()+" - "+music.getTrackName()%>

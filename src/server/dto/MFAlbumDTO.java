@@ -2,7 +2,7 @@ package server.dto;
 
 import interfaces.MFAlbum;
 
-public class AlbumDTO implements MFAlbum{
+public class MFAlbumDTO implements MFAlbum{
 
 	private String albumId;
 	private String albumName;
@@ -11,7 +11,7 @@ public class AlbumDTO implements MFAlbum{
 	private String albumReleaseType;
 	private String artistName;
 
-	public AlbumDTO(String albumId, String albumName, String albumTrackCount,
+	public MFAlbumDTO(String albumId, String albumName, String albumTrackCount,
 					String albumReleaseDate, String albumReleaseType,
 					String artistName){
 		this.albumId = albumId;

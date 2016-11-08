@@ -12,14 +12,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
 import interfaces.MFMusic;
-import server.dto.LyricsDTO;
-import server.dto.MusicDTO;
 import utils.IdMusicScore;
 import utils.MuzikFinderPreferences;
 
 public class MongoServiceSearchMusic {
 	
-	public static List<MFMusic> filterByExistingMusics(List<MFMusic> musics, MongoService ms) {
+	private static MongoService ms = MongoService.getInstance();
+	
+	static List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		List<String> idAlbumAlreadyExist = ms.getAllAlbumIds();
 
 		if(idAlbumAlreadyExist==null) return musics;
@@ -34,16 +34,16 @@ public class MongoServiceSearchMusic {
 	}
 
 	//TODO : retirer les Instant en fin de tests
-	public static List<MusicDTO> searchMusics(List<String> tags, MongoService ms, String idRecherche){
+	static List<MFMusic> searchMusics(List<String> tags, String idRecherche){
 		
 		Instant start = Instant.now();
-		List<MusicDTO> resultSearchMusicsByTagsInLyrics = ms.searchMusicsByTagsInLyrics(tags, idRecherche);
+		List<MFMusic> resultSearchMusicsByTagsInLyrics = ms.searchMusicsByTagsInLyrics(tags, idRecherche);
 		Instant end = Instant.now();
 		System.out.println("searchMusicsByTagsInLyrics =="+Duration.between(start, end));
 		System.out.println("resultSearchMusicsByTagsInLyrics size =="+resultSearchMusicsByTagsInLyrics.size());
 		if(resultSearchMusicsByTagsInLyrics.isEmpty()){
 			start = Instant.now();
-			List<MusicDTO> resultInTagsByTags = ms.searchMusicsByTagsInTags(tags, idRecherche);
+			List<MFMusic> resultInTagsByTags = ms.searchMusicsByTagsInTags(tags, idRecherche);
 			end = Instant.now();
 			System.out.println("searchMusicByTagsInTags =="+Duration.between(start, end)); // prints PT1M3.553S
 			System.out.println("resultInTagsByTags size = "+resultInTagsByTags.size());
@@ -52,7 +52,7 @@ public class MongoServiceSearchMusic {
 		return resultSearchMusicsByTagsInLyrics;
 	}
 	
-	public static List<MusicDTO> searchMusicsByTagsInTags(List<String> tags, MongoService ms, String idRecherche){
+	static List<MFMusic> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
 		List<String> listIdMusics = new ArrayList<>();
 		boolean presentInList = false;
@@ -81,7 +81,7 @@ public class MongoServiceSearchMusic {
 			listIdMusics.add(iMS.getIdMusic());
 		}
 		
-		return generateListMusicDTOWithListId(tags, listIdMusics, ms, idRecherche);
+		return generateListMFMusicWithListId(tags, listIdMusics, idRecherche);
 	}
 	
 
@@ -91,11 +91,11 @@ public class MongoServiceSearchMusic {
 	 * @param tags
 	 * @return
 	 */
-	public static List<String> matchMusicsWithTags(List<String> tags, MongoService ms){
+	static List<String> matchMusicsWithTags(List<String> tags){
 		Document docRegex = formRegexForSearch(tags);
 		if(docRegex!=null){
 			ArrayList<String> result = new ArrayList<String>();
-			MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollections.MUSICS);
+			MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 			MongoCursor<Document> cursor_Music = ms.findBy(collection_Musics, formRegexForSearch(tags));
 			
 			// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
@@ -103,7 +103,7 @@ public class MongoServiceSearchMusic {
 			String idMusic;
 			while(cursor_Music.hasNext()){
 				doc_lyrics = cursor_Music.next();
-				idMusic = doc_lyrics.getString("idMusic");
+				idMusic = doc_lyrics.getString(MongoCollectionsAndKeys.IDMUSIC_MUSICS);
 				result.add(idMusic);
 			}
 			return result;
@@ -111,8 +111,8 @@ public class MongoServiceSearchMusic {
 		return null;
 	}
 
-	public static List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, MongoService ms, String idRecherche){
-		List<MusicDTO> listMDTO = new ArrayList<MusicDTO>();
+	static List<MFMusic> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
+		List<MFMusic> listMDTO = new ArrayList<MFMusic>();
 		System.out.println(tags.size());
 		if(tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){	//Si il y a moins de 3 tags on ne fait pas de recherche by tags in lyrics
 			System.out.println("tags.size<3");
@@ -139,31 +139,29 @@ public class MongoServiceSearchMusic {
 			i++;
 		}
 	
-		return generateListMusicDTOWithListId(tags, tmp, ms, idRecherche);
+		return generateListMFMusicWithListId(tags, tmp, idRecherche);
 	}
 
-	//TODO : le nom de ta fonction à l'air de dire qu'il va juste transformer des Musics en MusicsDTO, sauf qu'il insère aussi dans cache
-	// donc peut-etre à sortir dans une autre fonction. C'est normalement pas son rôle
-	private static List<MusicDTO> generateListMusicDTOWithListId(List<String> tags, List<String> idMusics, MongoService ms, String idRecherche){
+	//TODO : le nom de ta fonction à l'air de dire qu'il va juste transformer des Musics en MFMusic, sauf qu'il insère aussi dans cache
+	// donc peut-etre à sortir dans une autre fonction. C'est normalement pas son rôle. Sortir la partie cache dans une autre fonction
+	static List<MFMusic> generateListMFMusicWithListId(List<String> tags, List<String> idMusics, String idRecherche){
 		
 		List<String> copyIdMusics= new ArrayList<String>();
 		copyIdMusics.addAll(idMusics);
 		List<Integer> listIndexToDelete=new ArrayList<Integer>();
-		List<MusicDTO> listMDTO = new ArrayList<MusicDTO>();
-		for(int i=0; i<idMusics.size() && i < MuzikFinderPreferences.LIMITACCEPTABLETEMPS ;i++){
-			MusicDTO msDTO;
-			MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollections.MUSICS);
+		List<MFMusic> listMDTO = new ArrayList<MFMusic>();
+		for(int i=0; i<idMusics.size() && i < MuzikFinderPreferences.LIMITACCEPTABLETEMPS; i++){
+			MFMusic msDTO;
+			MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 			
 			MongoCursor<Document> cursor_Musics;
 			Document doc_Musics, findQuery_MusicByIdMusic;
-			findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq", idMusics.get(i)));
+			findQuery_MusicByIdMusic = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq", idMusics.get(i)));
 			cursor_Musics = ms.findBy(collection_Musics, findQuery_MusicByIdMusic);
 			if(cursor_Musics.hasNext()){ // On récupere l'ensemble du document dans Musics faisant 
 				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
-				msDTO = new MusicDTO(idMusics.get(i), doc_Musics.getString("nameMusic"), doc_Musics.getString("idArtist"), 
-						doc_Musics.getString("artistName"), "", doc_Musics.getString("spotifyId"), doc_Musics.getString("soundcloudId"), 
-						"", new LyricsDTO(doc_Musics.getString("lyrics"), doc_Musics.getString("langue")));
-				listMDTO.add(msDTO);
+				msDTO = MongoUtils.transformDocumentIntoMFMusic(doc_Musics);
+				if(msDTO != null) listMDTO.add(msDTO);
 				
 			}
 			listIndexToDelete.add(0,i);
@@ -179,20 +177,20 @@ public class MongoServiceSearchMusic {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<MusicDTO> getMoreResults(String idRecherche, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document("idRecherche", new Document("$eq",idRecherche));
+	static List<MFMusic> getMoreResults(String idRecherche){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		
 		List<String> listIdMusic = new ArrayList<String>();
 		List<String> tags = new ArrayList<String>();
 		if(cursor.hasNext()){
 			Document doc = cursor.next();
-			listIdMusic = (ArrayList<String>) doc.get("idMusics");
-			tags = (ArrayList<String>) doc.get("tags");
+			listIdMusic = (ArrayList<String>) doc.get(MongoCollectionsAndKeys.IDMUSICS_CACHE);
+			tags = (ArrayList<String>) doc.get(MongoCollectionsAndKeys.TAGS_CACHE);
 		}
 		if(listIdMusic ==null || listIdMusic.isEmpty()) return ms.searchMusicsByTagsInTags(tags, idRecherche);
-		return generateListMusicDTOWithListId(tags, listIdMusic, ms, idRecherche);
+		return generateListMFMusicWithListId(tags, listIdMusic, idRecherche);
 	}
 	
 	private static Document formRegexForSearch(List<String> listTags){
@@ -200,12 +198,12 @@ public class MongoServiceSearchMusic {
 		String search="";
 		if(listTags!=null){
 			if(listTags.size()==1){
-				return new Document("lyrics",new Document("$regex",listTags.get(0)).append("$options", "i"));
+				return new Document(MongoCollectionsAndKeys.LYRICS_MUSICS,new Document("$regex",listTags.get(0)).append("$options", "i"));
 			}
 			for(String tag : listTags){
 				search+=tag+regex;
 			}
-			return new Document("lyrics",new Document("$regex",search).append("$options", "i"));
+			return new Document(MongoCollectionsAndKeys.LYRICS_MUSICS,new Document("$regex",search).append("$options", "i"));
 		}
 		return null;
 	}

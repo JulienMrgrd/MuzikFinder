@@ -17,67 +17,69 @@ import interfaces.MFMusic;
 import utils.textMining.ParserMaison;
 
 public class MongoServiceInsert {
+	
+	private static MongoService ms = MongoService.getInstance();
 
 	@SuppressWarnings("unchecked")
-	public static boolean insertTagIfNotExists(String tag, String musicId, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.TAGS);
+	static boolean insertTagIfNotExists(String tag, String musicId){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
 		Document doc;
 		if(!ms.containsTag(tag)){
 			doc = new Document();
-			doc.put("tag",tag);
+			doc.put(MongoCollectionsAndKeys.TAG_TAGS,tag);
 			List<String> listId = new ArrayList<String>(1);
 			listId.add(musicId);
-			doc.put("idMusic", listId);
+			doc.put(MongoCollectionsAndKeys.IDMUSIC_TAGS, listId);
 			ms.insertOne(collection, doc);
 			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
 			return false;
 		} else {
-			doc = new Document("tag", new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				List<String> listeId = (List<String>) doc1.get("idMusic");
-				List<String> newListeId = new ArrayList<String>();
-				newListeId.addAll(listeId);
-				newListeId.add(musicId);
-				doc2 = new Document(new Document("$set",new Document("idMusic",newListeId)));
+				List<String> listId = (List<String>) doc1.get(MongoCollectionsAndKeys.IDMUSIC_TAGS);
+				List<String> newListId = new ArrayList<String>();
+				newListId.addAll(listId);
+				newListId.add(musicId);
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.IDMUSIC_TAGS, newListId)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 			return true;
 		}
 	}
 
-	public static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
-			String nameMusic, String langue, String spotifyId, String soundCloudId, MongoService ms){
+	static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
+			String nameMusic, String langue, String spotifyId, String soundCloudId){
 		if(ms.containsLyrics(musicId)) return false; 
 
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.MUSICS);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 		Document doc = new Document();
-		if(musicId!=null) doc.put("idMusic",musicId);
-		if(words!=null) doc.put("lyrics",words);
-		if(artistId!=null) doc.put("idArtist",artistId);
-		if(artistName!=null) doc.put("artistName",artistName);
-		if(nameMusic!=null) doc.put("nameMusic", nameMusic);
-		if(langue!=null) doc.put("langue", langue);
-		if(spotifyId!=null) doc.put("spotifyId", spotifyId);
-		if(soundCloudId!=null) doc.put("soundCloudId",soundCloudId);
+		if(musicId!=null) doc.put(MongoCollectionsAndKeys.IDMUSIC_MUSICS,musicId);
+		if(words!=null) doc.put(MongoCollectionsAndKeys.LYRICS_MUSICS,words);
+		if(artistId!=null) doc.put(MongoCollectionsAndKeys.IDARTIST_MUSICS,artistId);
+		if(artistName!=null) doc.put(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS,artistName);
+		if(nameMusic!=null) doc.put(MongoCollectionsAndKeys.NAMEMUSIC_MUSICS, nameMusic);
+		if(langue!=null) doc.put(MongoCollectionsAndKeys.LANGUAGE_MUSICS, langue);
+		if(spotifyId!=null) doc.put(MongoCollectionsAndKeys.SPOTIFYID_MUSICS, spotifyId);
+		if(soundCloudId!=null) doc.put(MongoCollectionsAndKeys.SOUNDCLOUDID_MUSICS,soundCloudId);
 		ms.insertOne(collection, doc);
 		return true;
 	}
 
-	public static boolean insertIdAlbumIfNotExist(String idAlbum, MongoService ms){
+	static boolean insertIdAlbumIfNotExist(String idAlbum){
 		if(ms.containsIdAlbum(idAlbum)) return false;
 
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.ALBUMS);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.ALBUMS);
 		Document doc = new Document();
-		doc.put("idAlbum", idAlbum);
+		doc.put(MongoCollectionsAndKeys.IDALBUM_ALBUMS, idAlbum);
 		ms.insertOne(collection,doc);
 		return true;
 	}
 
-	public static void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum, MongoService ms){
+	static void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum){
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
 		ArrayList<MFMusic> listMusic;
 		
@@ -118,27 +120,27 @@ public class MongoServiceInsert {
 		}
 	}
 
-	public static void insertCacheSearchUser(List<String> tags, List<String> idMusics, MongoService ms, String idRecherche){
+	static void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
 		Document doc;
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
 		System.out.println("tags =="+tags);
 		if(ms.containsIdRecherche(idRecherche)){
-			doc = new Document("idRecherche", new Document("$eq",idRecherche));
+			doc = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				doc2 = new Document(new Document("$set",new Document("tags",tags)));
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.TAGS_CACHE,tags)));
 				ms.updateOne(collection, doc1,doc2);
-				doc2 = new Document(new Document("$set",new Document("idMusics",idMusics)));
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.IDMUSICS_CACHE,idMusics)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 		}else{
 			doc = new Document();
-			doc.put("tags", tags);
-			doc.put("idRecherche",idRecherche);
-			doc.put("idMusics", idMusics);
-			doc.put("time",new Date().getTime());
+			doc.put(MongoCollectionsAndKeys.TAGS_CACHE, tags);
+			doc.put(MongoCollectionsAndKeys.SEARCHID_CACHE,idRecherche);
+			doc.put(MongoCollectionsAndKeys.IDMUSICS_CACHE, idMusics);
+			doc.put(MongoCollectionsAndKeys.TIME_CACHE,new Date().getTime());
 			ms.insertOne(collection, doc);
 		}
 		System.out.println("Nombre de musiques ajoutées dans la collection Cache = "+idMusics.size());

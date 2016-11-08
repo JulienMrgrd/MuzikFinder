@@ -6,7 +6,6 @@ import java.util.Map;
 
 import interfaces.MFMusic;
 import nosql.mongo.MongoService;
-import server.dto.MusicDTO;
 
 /**
  * Appel les fonctions de la BD choisies (MongoDB, DynamoDB, etc ...)
@@ -88,6 +87,10 @@ public class NoSQLDB {
 	public List<String> getAllAlbumIds(){
 		return mongo.getAllAlbumIds();
 	}
+	
+	public MFMusic getMusicById(String idMusic) {
+		return mongo.getMusicById(idMusic);
+	}
 
 	//////////////PARTIE SEARCH///////////////////////
 	/**
@@ -99,11 +102,11 @@ public class NoSQLDB {
 		return mongo.filterByExistingMusics(musics);
 	}
 
-	public List<MusicDTO> searchMusics(List<String> tags, String idRecherche){
+	public List<MFMusic> searchMusics(List<String> tags, String idRecherche){
 		return mongo.searchMusics(tags, idRecherche);
 	}
 	
-	public List<MusicDTO> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
+	public List<MFMusic> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
 		return mongo.searchMusicsByTagsInTags(tags, idRecherche);
 	}
 
@@ -117,7 +120,7 @@ public class NoSQLDB {
 		return mongo.matchMusicsWithTags(tags);
 	}
 
-	public List<MusicDTO> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
+	public List<MFMusic> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
 		return mongo.searchMusicsByTagsInLyrics(tags, idRecherche);
 	}
 
@@ -126,11 +129,11 @@ public class NoSQLDB {
 		mongo.addNewSearch(idMusic, userBirth);
 	}
 	
-	public List<MusicDTO> getTopMusicSearchThisWeek(){
+	public List<MFMusic> getTopMusicSearchThisWeek(){
 		return mongo.getTopMusicSearchThisWeek();
 	}
 	
-	public List<MusicDTO> getTopMusicSearchThisMonth(){
+	public List<MFMusic> getTopMusicSearchThisMonth(){
 		return mongo.getTopMusicSearchThisMonth();
 	}
 

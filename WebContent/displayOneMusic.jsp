@@ -1,5 +1,5 @@
+<%@page import="interfaces.MFMusic"%>
 <%@page import="java.util.List"%>
-<%@page import="server.dto.MusicDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -45,7 +45,7 @@
 				</div>
 			<% } else {
 					@SuppressWarnings("unchecked")
-					List<MusicDTO> musics = (List<MusicDTO>) request.getAttribute("results");
+					List<MFMusic> musics = (List<MFMusic>) request.getAttribute("results");
 					if(musics == null || musics.isEmpty()){ %>
 						<div id="errorMessageSearch" class="alert alert-danger fade in">
 							<strong id="strongErrorMessageSearch"><%=request.getAttribute("message")%></strong>
@@ -53,7 +53,7 @@
 			<%		} else {  %>
 						<h4>Résultats de votre recherche : </h4>	
 						<ul class="list-group">
-			<%			for(MusicDTO music : musics){	%>
+			<%			for(MFMusic music : musics){	%>
 							<li class="list-group-item clearfix">
 								<%=music.getArtistName()+" - "+music.getTrackName()%>
 								<span class="badge"><i>Pop</i></span>

@@ -8,25 +8,28 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
 public class MongoServiceContains {
-	public static boolean containsLyrics(String musicId, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.MUSICS); // récupère la collection mongo qui stocke les musiques
-		Document doc = new Document("idMusic", new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
+	
+	private static MongoService ms = MongoService.getInstance();
+	
+	static boolean containsLyrics(String musicId){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS); // récupère la collection mongo qui stocke les musiques
+		Document doc = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		return cursor.hasNext();
 	}
 
-	public static boolean containsTag(String tag, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.TAGS);
-		Document findQuery = new Document("tag", new Document("$eq",tag));
+	static boolean containsTag(String tag){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		return cursor.hasNext();
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean containsIdMusicInTag(String tag, String idMusic, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.TAGS); // récupère la collection mongo qui stocke les tags
+	static boolean containsIdMusicInTag(String tag, String idMusic){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS); // récupère la collection mongo qui stocke les tags
 
-		Document doc = new Document("tag",new Document("$regex",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+		Document doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$regex",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		
 		Document doc_new;
@@ -34,7 +37,7 @@ public class MongoServiceContains {
 		
 		while(cursor.hasNext()){
 			doc_new = cursor.next();
-			listIdMusic = (List<String>) doc_new.get("idMusic");
+			listIdMusic = (List<String>) doc_new.get(MongoCollectionsAndKeys.IDMUSIC_TAGS);
 			for( String s : listIdMusic ){
 				if(s.equals(idMusic)) return true;
 			}
@@ -42,17 +45,17 @@ public class MongoServiceContains {
 		return false;
 	}
 
-	public static boolean containsIdAlbum(String idAlbum, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.ALBUMS);
-		Document doc = new Document("idAlbum",new Document("$eq",idAlbum));
+	static boolean containsIdAlbum(String idAlbum){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.ALBUMS);
+		Document doc = new Document(MongoCollectionsAndKeys.IDALBUM_ALBUMS,new Document("$eq",idAlbum));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 
 		return cursor.hasNext();
 	}
 
-	public static boolean containsIdRecherche(String idRecherche, MongoService ms){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollections.CACHE);
-		Document findQuery = new Document("idRecherche", new Document("$eq",idRecherche));
+	static boolean containsIdRecherche(String idRecherche){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
+		Document findQuery = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		return cursor.hasNext();
 	}

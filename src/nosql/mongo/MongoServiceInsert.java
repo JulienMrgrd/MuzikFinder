@@ -26,17 +26,15 @@ public class MongoServiceInsert {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
 		Document doc;
 		if(!ms.containsTag(tag)){
-			System.out.println("1er if");
-			doc = new Document();
-			doc.put(MongoCollectionsAndKeys.TAG_TAGS,tag);
+			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,tag);
 
 			IdMusicScore ims = new IdMusicScore(musicId, 1);
 			List<Document> listDoc=new ArrayList<Document>(1);
 			listDoc.add(ims.IdMusicScoreToDoc());
 			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listDoc);
 			ms.insertOne(collection, doc);
+			
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
-			System.out.println("2eme if");
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			
@@ -59,12 +57,11 @@ public class MongoServiceInsert {
 			}
 			Document doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
 			ms.updateOne(collection, doc,doc2);
+			
 		} else {
-			System.out.println("3eme if");
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
 			if(cursor.hasNext()){
-				System.out.println("in if");
 				Document doc1 = cursor.next();
 				Document doc2;
 				
@@ -155,7 +152,6 @@ public class MongoServiceInsert {
 	static void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
 		Document doc;
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
-		System.out.println("tags =="+tags);
 		if(ms.containsIdRecherche(idRecherche)){
 			doc = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);

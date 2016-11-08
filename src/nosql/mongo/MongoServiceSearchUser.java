@@ -74,9 +74,7 @@ public class MongoServiceSearchUser {
 	}
 	
 	static void addNewSearch(String idMusic, Date userBirth){
-		System.out.println(userBirth);
 	    int age = MathUtils.calculAge(userBirth);
-	    System.out.println(age);
 	    Document doc;
 	    GregorianCalendar gc = new GregorianCalendar();
 	    String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
@@ -93,7 +91,6 @@ public class MongoServiceSearchUser {
 				score =  doc1.getInteger("<18");
 				tranche="<18";
 			}else if(age<24){
-				System.out.println("age<24");
 				score =  doc1.getInteger("18<=x<24");
 				tranche="18<=x<24";
 			}else if(age<35){
@@ -109,10 +106,8 @@ public class MongoServiceSearchUser {
 				tranche=">=65";
 				score = doc1.getInteger(">=65");
 			}
-			System.out.println("tranche ="+tranche);
 
-			System.out.println("score ="+score);
-			score =score+1;
+			score++;
 			Document doc2 = new Document(new Document("$set",new Document(tranche,score)));
 			ms.updateOne(collection, doc1,doc2);
 		}else{
@@ -218,18 +213,24 @@ public class MongoServiceSearchUser {
 	    while(cursor.hasNext()){
 	    	doc = cursor.next();
 	    	switch(intervalle){
-	    	case "<18" :score += doc.getInteger("<18");
-	    				break;
-	    	case "18<=x<24" :score += doc.getInteger("18<=x<24");
-	    					break;
-	    	case "24<=x<35" :score += doc.getInteger("18<=x<24");
-							break;
-	    	case "35<=x<50" :score += doc.getInteger("35<=x<50");
-	    					break;
-	    	case "50<=x<65" :score += doc.getInteger("50<=x<65");
-	    					break;
-	    	case ">=65"		:score += doc.getInteger(">=65");
-	    					break;
+	    	case "<18" :
+	    		score += doc.getInteger("<18");
+	    		break;
+	    	case "18<=x<24" :
+	    		score += doc.getInteger("18<=x<24");
+	    		break;
+	    	case "24<=x<35" :
+	    		score += doc.getInteger("18<=x<24");
+	    		break;
+	    	case "35<=x<50" :
+	    		score += doc.getInteger("35<=x<50");
+	    		break;
+	    	case "50<=x<65" :
+	    		score += doc.getInteger("50<=x<65");
+	    		break;
+	    	case ">=65"	:
+	    		score += doc.getInteger(">=65");
+	    		break;
 	    	}
 	    	listIdMusicScore.add(new IdMusicScore(doc.getString("idMusic"), score));
 	    	score=0;
@@ -262,8 +263,6 @@ public class MongoServiceSearchUser {
 		Document doc;
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
 		doc = new Document("time", new Document("$lt",timeNow));
-		System.out.println(timeNow);
-		System.out.println(doc);
 		ms.deleteMany(collection, doc);
 	}
 

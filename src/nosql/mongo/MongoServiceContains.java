@@ -7,8 +7,6 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
-import utils.IdMusicScore;
-
 public class MongoServiceContains {
 	
 	private static MongoService ms = MongoService.getInstance();
@@ -36,15 +34,11 @@ public class MongoServiceContains {
 		
 		Document doc_new;
 		List<Document> listDocument;
-		String tmpIdMusic;
 		while(cursor.hasNext()){
 			doc_new = cursor.next();
 			listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
 			for(Document doc2 : listDocument){
-				System.out.println("in for");
-				tmpIdMusic=doc2.getString("idMusic");
-				System.out.println(tmpIdMusic);
-				if(tmpIdMusic.equals(idMusic)) return true;
+				if(doc2.getString("idMusic").equals(idMusic)) return true;
 			}
 		}
 		return false;
@@ -54,7 +48,6 @@ public class MongoServiceContains {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.ALBUMS);
 		Document doc = new Document(MongoCollectionsAndKeys.ALBUMID_ALBUMS,new Document("$eq",idAlbum));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
-
 		return cursor.hasNext();
 	}
 

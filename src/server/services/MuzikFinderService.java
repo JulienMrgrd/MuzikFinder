@@ -18,12 +18,18 @@ public class MuzikFinderService {
 	private SQLDB sql;
 	private API api;
 	
-	public MuzikFinderService(){
+	/**
+	 * @param withSQL Pour instancier uniquement les connexions à la base NoSQL et aux API
+	 */
+	public MuzikFinderService(boolean withSQL){
 		 nosql = new NoSQLDB(); // (va instancier ou récupérer le singleton du NoSQL, MongoDB, Cassandra ou autre) 
-		 sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL, PostgreSQL ou autre) 
+		 if(withSQL) sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL, PostgreSQL ou autre) 
 		 api = new API(); // (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
 	}
 	
+	public MuzikFinderService(){
+		this(true);
+	}
 	
 	////====== API PART ====== ////
 	public List<MFArtist> getTopArtistsFromAPI(int pos, int nbArtistsToGet, String country) {

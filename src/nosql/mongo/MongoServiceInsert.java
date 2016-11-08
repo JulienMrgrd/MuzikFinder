@@ -53,20 +53,26 @@ public class MongoServiceInsert {
 		}
 	}
 
-	static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
-			String nameMusic, String langue, String spotifyId, String soundCloudId){
-		if(ms.containsLyrics(musicId)) return false; 
+	static boolean insertMusicIfNotExists(String musicId, String lyrics, String artistId, String artistName, 
+			String albumId, String albumName, String nameMusic, String language, String spotifyId, 
+			String soundCloudId, String genre){
+		
+		if(ms.containsMusic(musicId)) return false; 
 
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 		Document doc = new Document();
 		if(musicId!=null) doc.put(MongoCollectionsAndKeys.IDMUSIC_MUSICS,musicId);
-		if(words!=null) doc.put(MongoCollectionsAndKeys.LYRICS_MUSICS,words);
+		if(lyrics!=null) doc.put(MongoCollectionsAndKeys.LYRICS_MUSICS,lyrics);
 		if(artistId!=null) doc.put(MongoCollectionsAndKeys.ARTISTID_MUSICS,artistId);
 		if(artistName!=null) doc.put(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS,artistName);
+		if(albumId!=null) doc.put(MongoCollectionsAndKeys.ALBUMID_MUSICS,albumId);
+		if(albumName!=null) doc.put(MongoCollectionsAndKeys.ALBUMNAME_MUSICS,albumName);
 		if(nameMusic!=null) doc.put(MongoCollectionsAndKeys.MUSICNAME_MUSICS, nameMusic);
-		if(langue!=null) doc.put(MongoCollectionsAndKeys.LANGUAGE_MUSICS, langue);
+		if(language!=null) doc.put(MongoCollectionsAndKeys.LANGUAGE_MUSICS, language);
 		if(spotifyId!=null) doc.put(MongoCollectionsAndKeys.SPOTIFYID_MUSICS, spotifyId);
 		if(soundCloudId!=null) doc.put(MongoCollectionsAndKeys.SOUNDCLOUDID_MUSICS,soundCloudId);
+		if(genre!=null) doc.put(MongoCollectionsAndKeys.MUSICGENRE_MUSICS, genre);
+		
 		ms.insertOne(collection, doc);
 		return true;
 	}
@@ -83,7 +89,7 @@ public class MongoServiceInsert {
 
 	static void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum){
 		Set<String> listIdAlbum = mapAlbumIdWithAlbum.keySet();
-		ArrayList<MFMusic> listMusic;
+		List<MFMusic> listMusic;
 		
 		int cpt = 0;
 		System.out.println("Début de l'insertion des albums (et tout ce qui s'y rattache) en base");
@@ -105,9 +111,9 @@ public class MongoServiceInsert {
 							lyrics = mfL.getLyricsBody().substring(0, mfL.getLyricsBody().length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
 
 							// on récupère les lyrics et on insère dans la base mongo Lyrics
-							ms.insertLyricsIfNotExists(lyrics, mf.getTrackId(),
-									mf.getArtistId(), mf.getArtistName(), mf.getTrackName(),mfL.getLyrics_language(), 
-									mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
+							ms.insertMusicIfNotExists(mf.getTrackId(), lyrics, mf.getArtistId(), mf.getArtistName(), 
+									mf.getAlbumId(), mf.getAlbumName(), mf.getTrackName(),mfL.getLyrics_language(), 
+									mf.getTrackSpotifyId(), mf.getTrackSoundcloudId(), mf.getMusicGenre());
 							
 							// Début de la création des tags pour chaque lyrics
 							Map<String, Integer> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());

@@ -11,7 +11,7 @@ public class MongoServiceContains {
 	
 	private static MongoService ms = MongoService.getInstance();
 	
-	static boolean containsLyrics(String musicId){
+	static boolean containsMusic(String musicId){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS); // récupère la collection mongo qui stocke les musiques
 		Document doc = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",musicId)); // crée le document retournant les informations pr�sentes dans la collection lyrics correspondantes
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);

@@ -117,10 +117,11 @@ public class MongoService {
 	}
 
 	//////////////PARTIE INSERT///////////////
-	public boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName,
-			String nameMusic, String langue, String spotifyId, String soundCloudId){
-		return MongoServiceInsert.insertLyricsIfNotExists(words, musicId, artistId, artistName, 
-				nameMusic, langue, spotifyId, soundCloudId);
+	public boolean insertMusicIfNotExists(String musicId, String lyrics, String artistId, String artistName,
+			String albumId, String albumName, String nameMusic, String language, String spotifyId, 
+			String soundCloudId, String genre){
+		
+		return MongoServiceInsert.insertMusicIfNotExists(musicId, lyrics, artistId, artistName, albumId, albumName, nameMusic, language, spotifyId, soundCloudId, genre);
 	}
 
 	public void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
@@ -140,8 +141,8 @@ public class MongoService {
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
-	public boolean containsLyrics(String musicId){
-		return MongoServiceContains.containsLyrics(musicId);
+	public boolean containsMusic(String musicId){
+		return MongoServiceContains.containsMusic(musicId);
 	}
 
 	public boolean containsTag(String tag){

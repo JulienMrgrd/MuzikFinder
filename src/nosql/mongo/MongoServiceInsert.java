@@ -48,7 +48,7 @@ public class MongoServiceInsert {
 				newListDocument.addAll(listDocument);
 				newListDocument.add(new IdMusicScore(musicId, nbOccur).IdMusicScoreToDoc());
 				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
-				ms.updateOne(collection, doc1,doc2);
+				ms.updateOne(collection, doc1, doc2);
 			}
 		}
 	}

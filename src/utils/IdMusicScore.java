@@ -2,6 +2,8 @@ package utils;
 
 import org.bson.Document;
 
+import nosql.mongo.MongoCollectionsAndKeys;
+
 public class IdMusicScore implements Comparable<IdMusicScore>{
 	
 	private Integer score;
@@ -37,10 +39,10 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 		return (this.getScore() > t2.getScore()) ? -1 : (this.getScore() < t2.getScore()) ? 1 : 0;
 	}
 	
-	public Document IdMusicScoreToDoc(){
+	public Document idMusicScoreToDoc(){
 		Document doc = new Document();
-		doc.put("idMusic", this.getIdMusic());
-		doc.put("score", this.getScore());
+		doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, this.getIdMusic());
+		doc.put(MongoCollectionsAndKeys.SCORE_TAGS, this.getScore());
 		return doc;
 	}
 }

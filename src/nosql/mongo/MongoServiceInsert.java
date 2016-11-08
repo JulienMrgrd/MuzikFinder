@@ -30,7 +30,7 @@ public class MongoServiceInsert {
 
 			IdMusicScore ims = new IdMusicScore(musicId, nbOccur);
 			List<Document> listDoc=new ArrayList<Document>(1);
-			listDoc.add(ims.IdMusicScoreToDoc());
+			listDoc.add(ims.idMusicScoreToDoc());
 			doc.put(MongoCollectionsAndKeys.IDMUSICS_TAGS, listDoc);
 			ms.insertOne(collection, doc);
 			
@@ -46,7 +46,7 @@ public class MongoServiceInsert {
 				List<Document> listDocument = (List<Document>) doc1.get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
 				List<Document> newListDocument = new ArrayList<Document>();
 				newListDocument.addAll(listDocument);
-				newListDocument.add(new IdMusicScore(musicId, nbOccur).IdMusicScoreToDoc());
+				newListDocument.add(new IdMusicScore(musicId, nbOccur).idMusicScoreToDoc());
 				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
 				ms.updateOne(collection, doc1, doc2);
 			}

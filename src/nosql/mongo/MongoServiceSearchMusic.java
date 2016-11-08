@@ -186,7 +186,7 @@ public class MongoServiceSearchMusic {
 		List<String> tags = new ArrayList<String>();
 		if(cursor.hasNext()){
 			Document doc = cursor.next();
-			listIdMusic = (ArrayList<String>) doc.get(MongoCollectionsAndKeys.IDMUSICS_CACHE);
+			listIdMusic = (ArrayList<String>) doc.get(MongoCollectionsAndKeys.MUSICSID_CACHE);
 			tags = (ArrayList<String>) doc.get(MongoCollectionsAndKeys.TAGS_CACHE);
 		}
 		if(listIdMusic ==null || listIdMusic.isEmpty()) return ms.searchMusicsByTagsInTags(tags, idRecherche);

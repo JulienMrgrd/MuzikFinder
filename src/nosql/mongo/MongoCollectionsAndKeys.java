@@ -12,26 +12,26 @@ public final class MongoCollectionsAndKeys {
 	public static final String CACHE = "Cache";
 
 	/// Collection ALBUMS
-	public static final String IDALBUM_ALBUMS = "idAlbum";
+	public static final String ALBUMID_ALBUMS = "albumId";
 
 	/// Collection MUSICS
-	public static final String IDMUSIC_MUSICS = "idMusic";
+	public static final String IDMUSIC_MUSICS = "musicId";
 	public static final String LYRICS_MUSICS = "lyrics";
-	public static final String IDARTIST_MUSICS = "idArtist";
+	public static final String ARTISTID_MUSICS = "artistId";
 	public static final String ARTISTSNAME_MUSICS = "artistName";
-	public static final String NAMEMUSIC_MUSICS = "nameMusic";
+	public static final String MUSICNAME_MUSICS = "musicName";
 	public static final String LANGUAGE_MUSICS = "language";
 	public static final String SPOTIFYID_MUSICS = "spotifyId";
 	public static final String SOUNDCLOUDID_MUSICS = "soundCloudId";
 
 	/// Collection TAGS
 	public static final String TAG_TAGS = "tag";
-	public static final String IDMUSIC_TAGS = "idMusic";
+	public static final String MUSICID_TAGS = "musicId";
 
 	/// Collection CACHE
 	public static final String TAGS_CACHE = "tags";
 	public static final String SEARCHID_CACHE = "searchId";
-	public static final String IDMUSICS_CACHE = "idMusics";
+	public static final String MUSICSID_CACHE = "musicsId";
 	public static final String TIME_CACHE = "time";
 	
 	/// Collection PREFERENCES

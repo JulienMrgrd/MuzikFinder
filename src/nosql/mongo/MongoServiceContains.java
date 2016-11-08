@@ -37,7 +37,7 @@ public class MongoServiceContains {
 		
 		while(cursor.hasNext()){
 			doc_new = cursor.next();
-			listIdMusic = (List<String>) doc_new.get(MongoCollectionsAndKeys.IDMUSIC_TAGS);
+			listIdMusic = (List<String>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
 			for( String s : listIdMusic ){
 				if(s.equals(idMusic)) return true;
 			}
@@ -47,7 +47,7 @@ public class MongoServiceContains {
 
 	static boolean containsIdAlbum(String idAlbum){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.ALBUMS);
-		Document doc = new Document(MongoCollectionsAndKeys.IDALBUM_ALBUMS,new Document("$eq",idAlbum));
+		Document doc = new Document(MongoCollectionsAndKeys.ALBUMID_ALBUMS,new Document("$eq",idAlbum));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 
 		return cursor.hasNext();

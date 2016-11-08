@@ -29,7 +29,7 @@ public class MongoServiceInsert {
 			doc.put(MongoCollectionsAndKeys.TAG_TAGS,tag);
 			List<String> listId = new ArrayList<String>(1);
 			listId.add(musicId);
-			doc.put(MongoCollectionsAndKeys.IDMUSIC_TAGS, listId);
+			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listId);
 			ms.insertOne(collection, doc);
 			return true;
 		} else if(ms.containsIdMusicInTag(tag,musicId)){
@@ -40,11 +40,11 @@ public class MongoServiceInsert {
 			if(cursor.hasNext()){
 				Document doc1 = cursor.next();
 				Document doc2;
-				List<String> listId = (List<String>) doc1.get(MongoCollectionsAndKeys.IDMUSIC_TAGS);
+				List<String> listId = (List<String>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
 				List<String> newListId = new ArrayList<String>();
 				newListId.addAll(listId);
 				newListId.add(musicId);
-				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.IDMUSIC_TAGS, newListId)));
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListId)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 			return true;
@@ -59,9 +59,9 @@ public class MongoServiceInsert {
 		Document doc = new Document();
 		if(musicId!=null) doc.put(MongoCollectionsAndKeys.IDMUSIC_MUSICS,musicId);
 		if(words!=null) doc.put(MongoCollectionsAndKeys.LYRICS_MUSICS,words);
-		if(artistId!=null) doc.put(MongoCollectionsAndKeys.IDARTIST_MUSICS,artistId);
+		if(artistId!=null) doc.put(MongoCollectionsAndKeys.ARTISTID_MUSICS,artistId);
 		if(artistName!=null) doc.put(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS,artistName);
-		if(nameMusic!=null) doc.put(MongoCollectionsAndKeys.NAMEMUSIC_MUSICS, nameMusic);
+		if(nameMusic!=null) doc.put(MongoCollectionsAndKeys.MUSICNAME_MUSICS, nameMusic);
 		if(langue!=null) doc.put(MongoCollectionsAndKeys.LANGUAGE_MUSICS, langue);
 		if(spotifyId!=null) doc.put(MongoCollectionsAndKeys.SPOTIFYID_MUSICS, spotifyId);
 		if(soundCloudId!=null) doc.put(MongoCollectionsAndKeys.SOUNDCLOUDID_MUSICS,soundCloudId);
@@ -74,7 +74,7 @@ public class MongoServiceInsert {
 
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.ALBUMS);
 		Document doc = new Document();
-		doc.put(MongoCollectionsAndKeys.IDALBUM_ALBUMS, idAlbum);
+		doc.put(MongoCollectionsAndKeys.ALBUMID_ALBUMS, idAlbum);
 		ms.insertOne(collection,doc);
 		return true;
 	}
@@ -132,14 +132,14 @@ public class MongoServiceInsert {
 				Document doc2;
 				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.TAGS_CACHE,tags)));
 				ms.updateOne(collection, doc1,doc2);
-				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.IDMUSICS_CACHE,idMusics)));
+				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICSID_CACHE,idMusics)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 		}else{
 			doc = new Document();
 			doc.put(MongoCollectionsAndKeys.TAGS_CACHE, tags);
 			doc.put(MongoCollectionsAndKeys.SEARCHID_CACHE,idRecherche);
-			doc.put(MongoCollectionsAndKeys.IDMUSICS_CACHE, idMusics);
+			doc.put(MongoCollectionsAndKeys.MUSICSID_CACHE, idMusics);
 			doc.put(MongoCollectionsAndKeys.TIME_CACHE,new Date().getTime());
 			ms.insertOne(collection, doc);
 		}

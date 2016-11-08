@@ -18,8 +18,8 @@ public final class MongoUtils {
 	public static MFMusic transformDocumentIntoMFMusic(Document music){
 		try {
 			return new MFMusicDTO(music.getString(MongoCollectionsAndKeys.IDMUSIC_MUSICS), 
-					music.getString(MongoCollectionsAndKeys.NAMEMUSIC_MUSICS), 
-					music.getString(MongoCollectionsAndKeys.IDARTIST_MUSICS), 
+					music.getString(MongoCollectionsAndKeys.MUSICNAME_MUSICS), 
+					music.getString(MongoCollectionsAndKeys.ARTISTID_MUSICS), 
 					music.getString(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS), 
 					"", 
 					music.getString(MongoCollectionsAndKeys.SPOTIFYID_MUSICS), 

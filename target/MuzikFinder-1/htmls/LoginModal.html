@@ -7,18 +7,18 @@
 				<h4 class="modal-title" id="myModalLabel">Login</h4>
 			</div>
 			<div class="modal-body">
-				<div id="errorMessage" class="alert alert-danger fade in" style="display:none">
-					<strong id="strongErrorMessage"></strong>
+				<div id="errorMessageLogin" class="alert alert-danger fade in" style="display:none">
+					<strong id="strongErrorMessageLogin"></strong>
 				</div>
 				
 				<form id="myAjaxRequestForm">
 					<div class="form-group">
 						<label class="form-control-label">User :</label>
-						<input id="usernameLogin" type="text" class="form-control"/>
+						<input id="usernameLogin" type="text" name="username" class="form-control"/>
 					</div>
 					<div class="form-group">
 						<label class="form-control-label">Password :</label>
-						<input id="passwordLogin" type="password" class="form-control"></input>
+						<input id="passwordLogin" type="password" name="password" class="form-control"></input>
 					</div>
 				</form>
 			</div>
@@ -53,11 +53,9 @@ $(document).ready(function() {
 	        success: function(data, textStatus, jqXHR) {
 	             if(data.success){
 	            	 location.reload();
-	             } 
-	             //display error message
-	             else {
-	            	 $("#strongErrorMessage").text(data.message);
-	            	 $("#errorMessage").show();
+	             } else { //display error message
+	            	 $("#strongErrorMessageLogin").text(data.message);
+	            	 $("#errorMessageLogin").show();
 	             }
 	        },
 	       

@@ -22,14 +22,14 @@ public class MongoServiceGetId {
 		
 		List<String> listIdMusic = new ArrayList<String>();
 		if(cursor.hasNext()){
-			listIdMusic = (ArrayList<String>) cursor.next().get(MongoCollectionsAndKeys.IDMUSIC_TAGS);
+			listIdMusic = (ArrayList<String>) cursor.next().get(MongoCollectionsAndKeys.MUSICID_TAGS);
 		}
 		return listIdMusic;
 	}
 
 	static List<String> getIdMusicsByIdArtist(String idArtist){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document(MongoCollectionsAndKeys.IDARTIST_MUSICS, new Document("$eq",idArtist));
+		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTID_MUSICS, new Document("$eq",idArtist));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 
 		List<String> listeId = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class MongoServiceGetId {
 
 		List<String> allIdAlbum = new ArrayList<String>(); 
 		while(cursor.hasNext()){
-			allIdAlbum.add(cursor.next().getString(MongoCollectionsAndKeys.IDALBUM_ALBUMS));
+			allIdAlbum.add(cursor.next().getString(MongoCollectionsAndKeys.ALBUMID_ALBUMS));
 		}
 		return allIdAlbum;
 	}

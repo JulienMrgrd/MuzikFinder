@@ -36,7 +36,7 @@ public class MongoServiceContains {
 		List<Document> listDocument;
 		if(cursor.hasNext()){
 			doc_new = cursor.next();
-			listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
+			listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
 			for(Document doc2 : listDocument){
 				if(doc2.getString(MongoCollectionsAndKeys.MUSICID_TAGS).equals(idMusic)) return true;
 			}

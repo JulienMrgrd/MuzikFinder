@@ -30,6 +30,7 @@ public final class MongoCollectionsAndKeys {
 
 	/// Collection TAGS
 	public static final String TAG_TAGS = "tag";
+	public static final String IDMUSICS_TAGS = "idMusics";
 	public static final String MUSICID_TAGS = "musicId";
 
 	/// Collection CACHE

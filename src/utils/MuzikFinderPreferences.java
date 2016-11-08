@@ -3,7 +3,7 @@ package utils;
 public final class MuzikFinderPreferences {
 
 	// Preferences
-	public static final Integer MAX_TOP_TRACKS = 10;
+	public static final Integer MAX_TOP_TRACKS = 100;
 	public static final int PAGE_MAX = 100;
 	public static final int MIN_SIZE_OF_USERNAME = 5;
 	public static final int MIN_SIZE_OF_PASSWORD = 5;

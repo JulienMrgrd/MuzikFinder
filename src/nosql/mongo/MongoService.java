@@ -123,8 +123,8 @@ public class MongoService {
 				nameMusic, langue, spotifyId, soundCloudId);
 	}
 
-	public boolean insertTagIfNotExists(String tag, String musicId){
-		return MongoServiceInsert.insertTagIfNotExists(tag, musicId);
+	public void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
+		MongoServiceInsert.insertTagIfNotExists(tag, nbOccur, musicId);
 	}
 
 	public boolean insertIdAlbumIfNotExist(String idAlbum){

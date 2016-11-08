@@ -2,16 +2,8 @@ package tests;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
-import nosql.mongo.MongoService;
-import nosql.mongo.MongoServiceInsert;
-import nosql.mongo.MongoServiceSearchUser;
 import server.services.MuzikFinderService;
-import sql.metier.User;
 import sql.mysql.MySQLService;
 
 public class Test {

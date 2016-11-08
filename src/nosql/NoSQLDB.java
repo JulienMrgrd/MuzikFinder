@@ -30,8 +30,8 @@ public class NoSQLDB {
 				spotifyId, soundCloudId);
 	}
 
-	public boolean insertTagIfNotExists(String tag, String musicId){
-		return mongo.insertTagIfNotExists(tag, musicId);
+	public void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
+		mongo.insertTagIfNotExists(tag, nbOccur, musicId);
 	}
 
 	public boolean insertIdAlbumIfNotExist(String idAlbum){

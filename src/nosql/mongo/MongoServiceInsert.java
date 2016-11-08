@@ -22,42 +22,20 @@ public class MongoServiceInsert {
 	private static MongoService ms = MongoService.getInstance();
 
 	@SuppressWarnings("unchecked")
-	static boolean insertTagIfNotExists(String tag, String musicId){
+	static void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
 		Document doc;
 		if(!ms.containsTag(tag)){
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,tag);
 
-			IdMusicScore ims = new IdMusicScore(musicId, 1);
+			IdMusicScore ims = new IdMusicScore(musicId, nbOccur);
 			List<Document> listDoc=new ArrayList<Document>(1);
 			listDoc.add(ims.IdMusicScoreToDoc());
 			doc.put(MongoCollectionsAndKeys.MUSICID_TAGS, listDoc);
 			ms.insertOne(collection, doc);
 			
-		} else if(ms.containsIdMusicInTag(tag,musicId)){
-			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
-			MongoCursor<Document> cursor = ms.findBy(collection, doc);
-			
-			Document doc_new;
-			List<Document> listDocument;
-			List<Document> newListDocument = new ArrayList<>();
-			String tmpIdMusic;
-			while(cursor.hasNext()){
-				doc_new = cursor.next();
-				listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.MUSICID_TAGS);
-				for(Document doc2 : listDocument){
-					tmpIdMusic=doc2.getString("idMusic");
-					if(tmpIdMusic.equals(musicId)){
-						IdMusicScore ims = new IdMusicScore(tmpIdMusic, doc2.getInteger("score")+1);
-						newListDocument.add(ims.IdMusicScoreToDoc());
-					}else {
-						newListDocument.add(doc2);
-					}
-				}
-			}
-			Document doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
-			ms.updateOne(collection, doc,doc2);
-			
+		} else if(ms.containsIdMusicInTag(tag,musicId)){ // Par sécurité
+			return ;
 		} else {
 			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);
@@ -68,12 +46,11 @@ public class MongoServiceInsert {
 				List<Document> listDocument = (List<Document>) doc1.get(MongoCollectionsAndKeys.MUSICID_TAGS);
 				List<Document> newListDocument = new ArrayList<Document>();
 				newListDocument.addAll(listDocument);
-				newListDocument.add(new IdMusicScore(musicId, 1).IdMusicScoreToDoc());
+				newListDocument.add(new IdMusicScore(musicId, nbOccur).IdMusicScoreToDoc());
 				doc2 = new Document(new Document("$set",new Document(MongoCollectionsAndKeys.MUSICID_TAGS, newListDocument)));
 				ms.updateOne(collection, doc1,doc2);
 			}
 		}
-		return true;
 	}
 
 	static boolean insertLyricsIfNotExists(String words, String musicId, String artistId, String artistName, 
@@ -133,10 +110,10 @@ public class MongoServiceInsert {
 									mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
 							
 							// Début de la création des tags pour chaque lyrics
-							List<String> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
+							Map<String, Integer> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
 							if(tags != null && !tags.isEmpty()){
-								for( String tag : tags ) {
-									ms.insertTagIfNotExists(tag, mf.getTrackId());
+								for( String tag : tags.keySet() ) {
+									ms.insertTagIfNotExists(tag, tags.get(tag), mf.getTrackId());
 								}
 							}
 						}
@@ -174,7 +151,4 @@ public class MongoServiceInsert {
 		System.out.println("Nombre de musiques ajoutées dans la collection Cache = "+idMusics.size());
 	}
 	
-	public static void main(String[] args){
-		insertTagIfNotExists("everybody", "113810490");
-	}
 }

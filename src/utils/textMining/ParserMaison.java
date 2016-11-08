@@ -19,7 +19,7 @@ public class ParserMaison {
 		Map<String, Integer> tags = null;
 		List<String> excludeWords;
 		try {
-			excludeWords = (ArrayList<String>) getExcludedWords(langage);
+			excludeWords = (List<String>) getExcludedWords(langage);
 			if(excludeWords==null || excludeWords.isEmpty()) return null;
 			
 			lyrics = lyrics.toLowerCase().replaceAll(THE_REGEX, " ");

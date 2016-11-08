@@ -10,41 +10,29 @@ public class MFMusicDTO implements MFMusic{
 	private String idArtist;
 	private String artistName;
 	private String albumId;
+	private String albumName;
 	private String spotifyId;
 	private String soundCloudId;
 	private String hasLyrics;
 	private MFLyricsDTO lyrics;
-	
+	private String musicGenre;
+
 	public MFMusicDTO(String trackId, String trackName, String idArtist, String artistName,
-				  String albumId, String spotifyId, String soundCloudId, String hasLyrics,
-				  MFLyricsDTO lyrics){
+				  String albumId, String albumName, String spotifyId, String soundCloudId, String hasLyrics,
+				  MFLyricsDTO lyrics, String musicGenre){
 		this.trackId=trackId;
 		this.trackName=trackName;
 		this.idArtist=idArtist;
 		this.artistName=artistName;
 		this.albumId=albumId;
+		this.albumName=albumName;
 		this.spotifyId=spotifyId;
 		this.soundCloudId=soundCloudId;
 		this.hasLyrics=hasLyrics;
 		this.lyrics=lyrics;
+		this.musicGenre=musicGenre;
 	}
 	
-	/**
-	 * Utilisée surtout dans la récupération des musiques correspondants aux critères. Par conséquent
-	 * on a pas besoin de savoir si une musique a des lyrics (si on la trouvée c'est qu'elle a forcément 
-	 * des paroles).
-	 */
-	public MFMusicDTO(String trackId, String trackName, String idArtist, String artistName,
-			  String albumId, String spotifyId, String soundCloudId){ 
-	this.trackId=trackId;
-	this.trackName=trackName;
-	this.idArtist=idArtist;
-	this.artistName=artistName;
-	this.albumId=albumId;
-	this.spotifyId=spotifyId;
-	this.soundCloudId=soundCloudId;
-}
-
 	@Override
 	public String getTrackId() {
 		return trackId;
@@ -94,6 +82,16 @@ public class MFMusicDTO implements MFMusic{
 	public void setAlbumId(String albumId) {
 		this.albumId=albumId;
 	}
+	
+	@Override
+	public String getAlbumName() {
+		return albumName;
+	}
+
+	@Override
+	public void setAlbumName(String albumName) {
+		this.albumName = albumName;
+	}
 
 	@Override
 	public String getTrackSpotifyId() {
@@ -133,6 +131,16 @@ public class MFMusicDTO implements MFMusic{
 	@Override
 	public void setLyrics(MFLyrics lyrics) {
 		this.lyrics=(MFLyricsDTO) lyrics;
+	}
+
+	@Override
+	public String getMusicGenre() {
+		return musicGenre;
+	}
+
+	@Override
+	public void setMusicGenre(String musicGenre) {
+		this.musicGenre = musicGenre;
 	}
 
 }

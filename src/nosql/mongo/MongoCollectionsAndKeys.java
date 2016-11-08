@@ -20,10 +20,13 @@ public final class MongoCollectionsAndKeys {
 	public static final String LYRICS_MUSICS = "lyrics";
 	public static final String ARTISTID_MUSICS = "artistId";
 	public static final String ARTISTSNAME_MUSICS = "artistName";
+	public static final String ALBUMID_MUSICS = "albumId";
+	public static final String ALBUMNAME_MUSICS = "albumName";
 	public static final String MUSICNAME_MUSICS = "musicName";
 	public static final String LANGUAGE_MUSICS = "language";
 	public static final String SPOTIFYID_MUSICS = "spotifyId";
 	public static final String SOUNDCLOUDID_MUSICS = "soundCloudId";
+	public static final String MUSICGENRE_MUSICS = "musicGenre";
 
 	/// Collection TAGS
 	public static final String TAG_TAGS = "tag";

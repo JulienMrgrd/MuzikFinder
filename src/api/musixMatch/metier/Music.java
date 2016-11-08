@@ -22,6 +22,9 @@ public class Music implements MFMusic {
 	@SerializedName("album_id")
 	private String albumId;
 	
+	@SerializedName("album_name")
+	private String albumName;
+	
 	@SerializedName("track_spotify_id")
 	private String trackSpotifyId;
 	
@@ -31,6 +34,8 @@ public class Music implements MFMusic {
 	@SerializedName("has_lyrics")
 	private String hasLyrics;
 	
+	private String musicGenre;
+
 	// Lyrics info
 	private Lyrics lyrics;
 	
@@ -73,7 +78,15 @@ public class Music implements MFMusic {
 	public void setAlbumId(String albumId) {
 		this.albumId = albumId;
 	}
+	
+	public String getAlbumName() {
+		return albumName;
+	}
 
+	public void setAlbumName(String albumName) {
+		this.albumName = albumName;
+	}
+	
 	public String getTrackSpotifyId() {
 		return trackSpotifyId;
 	}
@@ -104,6 +117,14 @@ public class Music implements MFMusic {
 
 	public void setLyrics(MFLyrics lyrics) {
 		this.lyrics = (Lyrics) lyrics;
+	}
+
+	public String getMusicGenre() {
+		return musicGenre;
+	}
+
+	public void setMusicGenre(String musicGenre) {
+		this.musicGenre = musicGenre;
 	}
 
 }

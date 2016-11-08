@@ -41,12 +41,10 @@ public class MusixMatchService {
 		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(MusixMatchConstants.MAX_PAGE) );
 		params.put(MusixMatchConstants.ALBUM_ID, albumId);
 		String request = RequestHelper.createRequest(MusixMatchConstants.ALBUM_TRACKS_GET, params);
-		
-//		System.out.println("Requête in MusixMatch : "+request);
-
 		String response = RequestHelper.sendRequest(request);
 		
 		List<MFMusic> musics = MusixMatchAPIHelper.getMusicsList(response);
+		if(musics==null) return null;
 		musics.forEach(music -> addLyricsToMusic(music)); // add Lyrics from API
 		
 		return musics;
@@ -58,9 +56,6 @@ public class MusixMatchService {
 
 			params.put(MusixMatchConstants.TRACK_ID, music.getTrackId());
 			String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_LYRICS_GET, params);
-			
-//			System.out.println("Requête in MusixMatch : "+request);
-
 			String response = RequestHelper.sendRequest(request);
 			
 			music.setLyrics( MusixMatchAPIHelper.getLyrics(response) );
@@ -73,8 +68,6 @@ public class MusixMatchService {
 		params.put(MusixMatchConstants.PAGE, Integer.toString(from));
 		params.put(MusixMatchConstants.COUNTRY, country);
 		String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_CHART_GET, params);
-//		System.out.println("Requête in MusixMatch : "+request);
-
 		String response = RequestHelper.sendRequest(request);
 		return MusixMatchAPIHelper.getMusicsList(response);
 	}
@@ -86,9 +79,6 @@ public class MusixMatchService {
 		params.put(MusixMatchConstants.PAGE, Integer.toString(pos));
 		params.put(MusixMatchConstants.COUNTRY, country);
 		String request = RequestHelper.createRequest(MusixMatchConstants.ARTIST_CHART_GET, params);
-		
-//		System.out.println("Requête in MusixMatch : "+request);
-
 		String response = RequestHelper.sendRequest(request);
 		
 		return MusixMatchAPIHelper.getArtistsList(response);

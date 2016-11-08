@@ -8,7 +8,8 @@ import java.util.Map;
 
 public final class RequestHelper {
 	
-	public static int cpt = 0;
+	public static int cpt = 0; // TODO : to delete
+	private static int api_key_position = 0;
 	
 	/** Prevent instantiation. */
 	private RequestHelper(){ }
@@ -26,10 +27,6 @@ public final class RequestHelper {
 	}
 	
 	public static String sendRequest(String requestString) {
-		return sendRequest(requestString, 0);
-	}
-	
-	public static String sendRequest(String requestString, int api_key_position) {
 		cpt++; // TODO: to remove, just give the actual number of generated requests.
 		StringBuffer buffer = new StringBuffer();
 		BufferedReader in;
@@ -40,7 +37,7 @@ public final class RequestHelper {
 
 		do{
 			try {
-				key = MusixMatchConstants.API_KEYS[position_copy];
+				key = MusixMatchConstants.API_KEYS[api_key_position];
 				requestString = requestString.replaceFirst(MusixMatchConstants.API_KEY_REGXP, key);
 				
 				url = new URL(requestString);
@@ -59,7 +56,7 @@ public final class RequestHelper {
 		
 			if(buffer.toString().contains("\"status_code\":401")){
 				System.out.println("Plus assez de crédit d'API pour la clé "+key+" pour aujourd'hui...");
-				position_copy = (position_copy+1) % MusixMatchConstants.API_KEYS.length; // permet de parcourir chaque clef
+				api_key_position = (api_key_position+1) % MusixMatchConstants.API_KEYS.length; // permet de parcourir chaque clef
 			} else {
 				responseOK = true;
 			}

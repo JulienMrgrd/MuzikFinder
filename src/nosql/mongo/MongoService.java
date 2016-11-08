@@ -22,10 +22,10 @@ import utils.TimeInMilliSeconds;
 
 public class MongoService {
 
-	ServerAddress serverAddress;
-	MongoCredential mongoCredential;
-	MongoClient mongoClient;
-	MongoDatabase db;
+	private ServerAddress serverAddress;
+	private MongoCredential mongoCredential;
+	private static MongoClient mongoClient;
+	private MongoDatabase db;
 
 	/** Constructeur privé */
 	private MongoService(){

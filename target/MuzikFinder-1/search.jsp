@@ -9,19 +9,23 @@
 .container {
 	margin-top: 100px;
 }
-.list-group {
+.panel-group {
 	margin-top: 20px;
 	line-height:30px;
 }
 
+.badge{
+	float: right;
+}
+
 @media (min-width: 750px) {
-	.list-group {
+	.panel-group {
 		width: 60%;
 	}
-	}
+}
 
 @media (max-width: 750px) {
-	.list-group {
+	.panel-group {
 		width: 80%;
 	}
 }
@@ -48,21 +52,44 @@
 					List<MFMusic> musics = (List<MFMusic>) request.getAttribute("results");
 					if(musics == null || musics.isEmpty()){ %>
 						<div id="errorMessageSearch" class="alert alert-danger fade in">
-							<strong id="strongErrorMessageSearch"><%=request.getAttribute("message")%></strong>
+							<strong id="strongErrorMessageSearch">Aucun résultat...</strong>
 						</div>
-			<%		} else {  %>
+			<%		} else {  		%>
 						<h4>Résultats de votre recherche : </h4>
-						<form method="post" action="DisplayOneMusicServlet">	
-							<div class="list-group">
-			<%				for(MFMusic music : musics){	%>
-								<input type="hidden" name="idMusic" value="<%=music.getTrackId()%>"/>
-								<button type="submit" class="list-group-item clearfix">
-									<%=music.getArtistName()+" - "+music.getTrackName()%>
+						<div class="panel-group" id="panel-results">
+						
+			<%			for(MFMusic music : musics){
+							String id = music.getTrackId();
+							if(id==null) id="";
+							String artistName = music.getArtistName();
+							if(artistName==null) artistName="";
+							String trackName = music.getTrackName();
+							if(trackName==null) trackName="";
+							String genre = music.getMusicGenre();
+							if(genre==null) genre="";
+							
+							String lyricsToDisplay;
+							String regex = (String) request.getAttribute("tagsRegex");
+							if(music.getLyrics()==null || music.getLyrics().getLyricsBody().isEmpty()){
+								lyricsToDisplay = "Pas de lyrics disponibles...";
+							} else if(regex==null || regex.isEmpty()){
+								lyricsToDisplay = music.getLyrics().getLyricsBody();
+							} else {
+								lyricsToDisplay = music.getLyrics().getLyricsBody().replaceAll(regex, "<font color=\"red\">$1</font>");
+							}
+			%>
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<a class="panel-title" data-toggle="collapse" data-parent="#panel-results" 
+										href="#panel-element-<%=id%>"><%=artistName+" - "+trackName %></a>
 									<span class="badge"><i>Pop</i></span>
-								</button>
-			<%				} 	%>
+								</div>
+								<div id="panel-element-<%=id%>" class="panel-collapse collapse">
+									<div class="panel-body"><pre><%=lyricsToDisplay%></pre></div>
+								</div>
 							</div>
-						</form>
+			<%			} 	%>
+						</div>
 			<%		}
 				}
 			%>
@@ -80,6 +107,12 @@
 <script> (function() { $("#header").load("htmls/header/headerConnected.html"); })(); </script>
 <% } %>
 
-<script> (function() { $("#footer").load("htmls/footer.html"); })(); </script>
+<script> 
+(function() { $("#footer").load("htmls/footer.html"); })(); 
+
+$(window).load(function() {
+    var str = $("#panel-body").innerHTML
+});
+</script>
 </body>
 </html>

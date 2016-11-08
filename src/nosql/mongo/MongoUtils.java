@@ -21,13 +21,16 @@ public final class MongoUtils {
 					music.getString(MongoCollectionsAndKeys.MUSICNAME_MUSICS), 
 					music.getString(MongoCollectionsAndKeys.ARTISTID_MUSICS), 
 					music.getString(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS), 
-					"", 
+					music.getString(MongoCollectionsAndKeys.ALBUMID_MUSICS),
+					music.getString(MongoCollectionsAndKeys.ALBUMNAME_MUSICS),
 					music.getString(MongoCollectionsAndKeys.SPOTIFYID_MUSICS), 
 					music.getString(MongoCollectionsAndKeys.SOUNDCLOUDID_MUSICS), 
-					"", 
+					"",
 					new MFLyricsDTO(music.getString(MongoCollectionsAndKeys.LYRICS_MUSICS), 
-									music.getString(MongoCollectionsAndKeys.LANGUAGE_MUSICS)));
+									music.getString(MongoCollectionsAndKeys.LANGUAGE_MUSICS)),
+					music.getString(MongoCollectionsAndKeys.MUSICGENRE_MUSICS));
 		} catch (NullPointerException e){
+			System.out.println("transformDocumentIntoMFMusic error : "+e);
 			return null;
 		}
 	}

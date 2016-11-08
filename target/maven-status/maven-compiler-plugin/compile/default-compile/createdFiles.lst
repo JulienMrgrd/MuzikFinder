@@ -29,7 +29,6 @@ nosql\NoSQLDB.class
 api\musixMatch\MusixMatchService.class
 api\musixMatch\metier\Artist.class
 utils\TimeInMilliSeconds.class
-server\servlets\DisplayOneMusicServlet.class
 interfaces\MFMusic.class
 utils\MuzikFinderPreferences.class
 interfaces\MFAlbum.class

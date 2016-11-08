@@ -21,6 +21,10 @@ public interface MFMusic {
 	public String getAlbumId();
 
 	public void setAlbumId(String albumId);
+	
+	public String getAlbumName();
+
+	public void setAlbumName(String albumName);
 
 	public String getTrackSpotifyId();
 
@@ -37,5 +41,9 @@ public interface MFMusic {
 	public MFLyrics getLyrics();
 
 	public void setLyrics(MFLyrics lyrics);
+	
+	public String getMusicGenre();
+
+	public void setMusicGenre(String musicGenre);
 
 }

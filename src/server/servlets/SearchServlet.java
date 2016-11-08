@@ -57,6 +57,13 @@ public class SearchServlet extends HttpServlet {
 				request.setAttribute("success", true);
 				request.setAttribute("results", new MuzikFinderService().searchMusics(tags, 
 						MuzikFinderUtils.generateRandomIdSearch(user.getLogin())));
+				
+				// Regex construction (voir coloration des mots dans search.jsp)
+				String str = tags.get(0);
+				for(int i=1; i<tags.size(); i++){
+					str+="|"+tags.get(i);
+				}
+				request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
 			}
 		}
 
@@ -68,5 +75,5 @@ public class SearchServlet extends HttpServlet {
 		System.out.println("SearchServlet doPost");
 		doGet(request, response);
 	}
-
+	
 }

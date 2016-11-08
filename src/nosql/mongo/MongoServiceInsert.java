@@ -90,25 +90,29 @@ public class MongoServiceInsert {
 			listMusic = new ArrayList<MFMusic>(mapAlbumIdWithAlbum.get(idAlbum));
 			
 			// ajout de l'artist dans la base mongo Artists 
-			//(test de présence de l'artiste déjà effectué dans la méthode appelée)
+			//(test de présence de l'artiste déjà effectué dans la méthode appelante)
 			if(!listMusic.isEmpty()){
 				for(MFMusic mf : listMusic){
 					// Pour chaque MFMusic présentes dans l'album
 					MFLyrics mfL = mf.getLyrics();
 					if(mfL != null){
-						// delete last MusixMatch characters
-						String lyrics = mfL.getLyricsBody().substring(0, mfL.getLyricsBody().length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
-
-						// on récupère les lyrics et on insère dans la base mongo Lyrics
-						ms.insertLyricsIfNotExists(lyrics, mf.getTrackId(),
-								mf.getArtistId(), mf.getArtistName(), mf.getTrackName(),mfL.getLyrics_language(), 
-								mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
 						
-						// Début de la création des tags pour chaque lyrics
-						List<String> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
-						if(tags != null && !tags.isEmpty()){
-							for( String tag : tags ) {
-								ms.insertTagIfNotExists(tag, mf.getTrackId());
+						String lyrics = mfL.getLyricsBody();
+						if(lyrics != null && !lyrics.isEmpty()){
+							// delete last MusixMatch characters
+							lyrics = mfL.getLyricsBody().substring(0, mfL.getLyricsBody().length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
+
+							// on récupère les lyrics et on insère dans la base mongo Lyrics
+							ms.insertLyricsIfNotExists(lyrics, mf.getTrackId(),
+									mf.getArtistId(), mf.getArtistName(), mf.getTrackName(),mfL.getLyrics_language(), 
+									mf.getTrackSpotifyId(), mf.getTrackSoundcloudId());
+							
+							// Début de la création des tags pour chaque lyrics
+							List<String> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
+							if(tags != null && !tags.isEmpty()){
+								for( String tag : tags ) {
+									ms.insertTagIfNotExists(tag, mf.getTrackId());
+								}
 							}
 						}
 					}

@@ -41,7 +41,7 @@ public class MongoService {
 	}
  
 	/** Instance unique préinitialisée */
-	private static MongoService INSTANCE = new MongoService();
+	private static MongoService INSTANCE = getInstance();
  
 	/** Technique du double-cheking */
 	public static MongoService getInstance(){	

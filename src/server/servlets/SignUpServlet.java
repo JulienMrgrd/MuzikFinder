@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import com.google.gson.JsonObject;
 
 import server.services.MuzikFinderService;
 import sql.metier.User;
+import utils.MuzikFinderPreferences;
 
 public class SignUpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +34,7 @@ public class SignUpServlet extends HttpServlet {
 		String mail = request.getParameter("mail");
 		
 		JsonObject myResponse = new JsonObject();
-		MuzikFinderService service = new MuzikFinderService();
+		MuzikFinderService service = MuzikFinderService.getInstance();
 		
 		if(username==null || username.isEmpty() || username.length()<5){
 			myResponse.addProperty("message", "Username invalide");
@@ -54,7 +56,21 @@ public class SignUpServlet extends HttpServlet {
 			// inscription
 			User user = service.createNewUser(username, password, mail, 1994, 02, 16); // TODO: date
 			if(user!=null){
-				request.getSession().setAttribute("acc", user);
+				Cookie userCookie = new Cookie(MuzikFinderPreferences.COOKIE_LOGIN, username);
+				userCookie.setMaxAge(MuzikFinderPreferences.COOKIE_DURATION); //Store cookie for 1 day
+				userCookie.setPath(MuzikFinderPreferences.COOKIE_PATH);
+				response.addCookie(userCookie);
+				
+				userCookie = new Cookie(MuzikFinderPreferences.COOKIE_BIRTH, user.getDateBirth().toString()); // for stats
+				userCookie.setMaxAge(MuzikFinderPreferences.COOKIE_DURATION); //Store cookie for 1 day
+				userCookie.setPath(MuzikFinderPreferences.COOKIE_PATH);
+				response.addCookie(userCookie);
+				
+				userCookie = new Cookie(MuzikFinderPreferences.COOKIE_USERID, user.getId()); // for stats
+				userCookie.setMaxAge(MuzikFinderPreferences.COOKIE_DURATION); //Store cookie for 1 day
+				userCookie.setPath(MuzikFinderPreferences.COOKIE_PATH);
+				response.addCookie(userCookie);
+				
 				myResponse.addProperty("success", true);
 			} else {
 				myResponse.addProperty("success", true);

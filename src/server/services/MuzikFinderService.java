@@ -21,14 +21,32 @@ public class MuzikFinderService {
 	/**
 	 * @param withSQL Pour instancier uniquement les connexions à la base NoSQL et aux API
 	 */
-	public MuzikFinderService(boolean withSQL){
+	private MuzikFinderService(boolean withSQL){
 		 nosql = new NoSQLDB(); // (va instancier ou récupérer le singleton du NoSQL, MongoDB, Cassandra ou autre) 
 		 if(withSQL) sql = new SQLDB(); // (va instancier ou récupérer le singleton du SQL, MySQL, PostgreSQL ou autre) 
 		 api = new API(); // (va instancier ou récupérer le singleton de l'API, MusixMatch ou autre) 
 	}
 	
-	public MuzikFinderService(){
-		this(true);
+	/** Instance unique préinitialisée */
+	private static MuzikFinderService INSTANCE = getInstance();
+ 
+	/**
+	 * Technique du double checking (Singleton)
+	 * @return
+	 */
+	public static MuzikFinderService getInstance(boolean withSQL) {
+		if (INSTANCE == null){ 	
+			synchronized(MuzikFinderService.class){
+				if (INSTANCE == null){
+					INSTANCE = new MuzikFinderService(withSQL);
+				}
+			}
+		}
+		return INSTANCE;
+	}
+	
+	public static MuzikFinderService getInstance() {
+		return getInstance(true);
 	}
 	
 	////====== API PART ====== ////

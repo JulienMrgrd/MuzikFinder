@@ -28,7 +28,7 @@ public class Test {
 	
 	public static void main(String[] args){
 		
-		MuzikFinderService mzf = new MuzikFinderService();
+		MuzikFinderService mzf = MuzikFinderService.getInstance();
 		
 
 		/*MongoService ms = MongoService.getInstance();

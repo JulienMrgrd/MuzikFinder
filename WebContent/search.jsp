@@ -106,18 +106,16 @@
 </body>
 
 <script src="js/jquery.min.js"></script>
-<% if(request.getSession().getAttribute("acc")==null){ %>
-<script> (function() { $("#header").load("htmls/header/headerNotConnected.html"); })(); </script>
-<% } else { %>
-<script> (function() { $("#header").load("htmls/header/headerConnected.html"); })(); </script>
-<% } %>
-
+<script src="js/js.cookie.min.js"></script>
 <script> 
-(function() { $("#footer").load("htmls/footer.html"); })(); 
-
-$(window).load(function() {
-    var str = $("#panel-body").innerHTML
-});
+	(function() { 
+		var login = Cookies.get('MUZIKFINDERLOGIN');
+		if(login==null) $("#header").load("htmls/header/headerNotConnected.html");
+		else $("#header").load("htmls/header/headerConnected.html");
+		
+		$("#carousel").load("htmls/carousel.html");
+		$("#footer").load("htmls/footer.html");
+	})(); 
 </script>
 </body>
 </html>

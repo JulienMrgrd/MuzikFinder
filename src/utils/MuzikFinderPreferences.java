@@ -17,6 +17,13 @@ public final class MuzikFinderPreferences {
 	public static final int MAX_SIZE_OF_TAGS_FOR_SEARCH = 10;
 	public static final int MIN_SIZE_OF_TAGS_FOR_SEARCH = 3;
 	
+	///// COOKIES
+	public static final int COOKIE_DURATION = 60*60*1;
+	public static final String COOKIE_LOGIN = "MUZIKFINDERLOGIN";
+	public static final String COOKIE_BIRTH = "MUZIKFINDERBIRTH";
+	public static final String COOKIE_USERID = "MUZIKFINDERUSERID";
+	public static final String COOKIE_PATH = "/";
+	
 	public static int[] getPrefNbMusicFilter() {
 		return PREF_NB_MUSIC_FILTER;
 	}

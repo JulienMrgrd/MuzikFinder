@@ -8,6 +8,7 @@
 	<meta charset="utf-8">
 	<link rel="icon" href="images/favicon.png?2">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/ladda-themeless.min.css">
 	<link href="css/index.css" rel="stylesheet">
 	<title>MuzikFinder</title>
 </head>
@@ -78,12 +79,16 @@
 </body>
 
 <script src="js/jquery.min.js"></script>
-<% if(request.getSession().getAttribute("acc")==null){ %>
-<script> (function() { $("#header").load("htmls/header/headerNotConnected.html"); })(); </script>
-<% } else { %>
-<script> (function() { $("#header").load("htmls/header/headerConnected.html"); })(); </script>
-<% } %>
-
-<script> (function() { $("#carousel").load("htmls/carousel.html"); })(); </script>
-<script> (function() { $("#footer").load("htmls/footer.html"); })(); </script>
+<script src="js/js.cookie.min.js"></script>
+<script> 
+	(function() { 
+		var login = Cookies.get('MUZIKFINDERLOGIN');
+		console.log(login);
+		if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
+		else $("#header").load("htmls/header/headerConnected.html");
+		
+		$("#carousel").load("htmls/carousel.html");
+		$("#footer").load("htmls/footer.html");
+	})(); 
+</script>
 </html>

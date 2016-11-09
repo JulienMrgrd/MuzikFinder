@@ -31,6 +31,6 @@
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/mongo-java-driver-3.3.0-javadoc.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gson-2.7.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/json-20160810.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-6.0.5.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.40-bin.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

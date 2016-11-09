@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import server.services.MuzikFinderService;
-import sql.metier.User;
 import utils.MuzikFinderPreferences;
 import utils.MuzikFinderUtils;
 
@@ -25,12 +24,10 @@ public class SearchServlet extends HttpServlet {
 		
 		boolean success = true;
 		String userSearch = (String) request.getParameter("userSearch");
-		System.out.println(request.getAttribute("userSearch"));
-		System.out.println(request.getParameter("userSearch"));
-		System.out.println(userSearch);
-		User user = (User) request.getSession().getAttribute("acc");
+		String userLogin = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_LOGIN, request.getCookies());
+		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());
 		
-		if(user == null){
+		if(userLogin == null){
 			success = false;
 			request.setAttribute("message", "Veuillez vous connecter");
 		} else if(userSearch==null || userSearch.isEmpty()){
@@ -55,13 +52,13 @@ public class SearchServlet extends HttpServlet {
 
 			} else {
 				request.setAttribute("success", true);
-				request.setAttribute("results", new MuzikFinderService().searchMusics(tags, 
-						MuzikFinderUtils.generateRandomIdSearch(user.getLogin())));
+				request.setAttribute("results", MuzikFinderService.getInstance().searchMusics(tags, 
+						MuzikFinderUtils.generateRandomIdSearch(userLogin)));
 				
 				// Regex construction (voir coloration des mots dans search.jsp)
 				String str = tags.get(0);
 				for(int i=1; i<tags.size(); i++){
-					str+="|"+tags.get(i);
+					if(tags.get(i)!=null && !tags.get(i).isEmpty()) str+="|"+tags.get(i);
 				}
 				request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
 			}

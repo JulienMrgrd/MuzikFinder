@@ -25,9 +25,10 @@ public class MySQLService {
 	    String username = dbUri.getUserInfo().split(":")[0];
 	    String password = dbUri.getUserInfo().split(":")[1];
 	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
-	    Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("com.mysql.cj.jdbc.Driver");
+	    DriverManager.setLoginTimeout(10);
 		connection = DriverManager.getConnection(dbUrl, username, password);
-		System.out.println(connection.getClientInfo());
+		connection.setAutoCommit(true);
 		createTableUser();
 		createTableSearch();
 	}
@@ -68,7 +69,7 @@ public class MySQLService {
 			stmt.execute(sqlCreate);
 			stmt.close();
 		} catch (SQLException e) {
-			System.out.println("Erreur MySQL lors de la création de TABLUE_USER");
+			System.out.println("Erreur MySQL lors de la création de TABLE_USER");
 		}
 	}
 	
@@ -109,6 +110,7 @@ public class MySQLService {
 				}
 				// Parcourir les autres resultat de la requête si il y en a
 				results = stmt.getMoreResults();
+				
 			}
 			stmt.close();
 		} catch (SQLException e) {
@@ -169,6 +171,7 @@ public class MySQLService {
 			}
 			stmt.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("Problème de connection sql lors de la connection de l'utilisateur");
 			return null;
 		}

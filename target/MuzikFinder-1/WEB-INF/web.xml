@@ -7,6 +7,15 @@
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<servlet>
+		<description></description>
+		<display-name>InitServlet</display-name>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>server.servlets.InitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
 	<servlet>
 		<description></description>
 		<display-name>WelcomeServlet</display-name>
@@ -40,17 +49,6 @@
 		<url-pattern>/SignUpServlet</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<description></description>
-		<display-name>DisconnectServlet</display-name>
-		<servlet-name>DisconnectServlet</servlet-name>
-		<servlet-class>server.servlets.DisconnectServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>DisconnectServlet</servlet-name>
-		<url-pattern>/DisconnectServlet</url-pattern>
-	</servlet-mapping>
-	
 	<servlet>
 		<description></description>
 		<display-name>SearchServlet</display-name>

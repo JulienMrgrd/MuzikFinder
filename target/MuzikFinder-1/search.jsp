@@ -62,11 +62,13 @@
 							String id = music.getTrackId();
 							if(id==null) id="";
 							String artistName = music.getArtistName();
-							if(artistName==null) artistName="";
+							if(artistName==null) artistName="N/C";
+							String albumName = music.getAlbumName();
+							if(albumName==null) albumName="N/C";
 							String trackName = music.getTrackName();
-							if(trackName==null) trackName="";
+							if(trackName==null) trackName="N/C";
 							String genre = music.getMusicGenre();
-							if(genre==null) genre="";
+							if(genre==null) genre="N/C";
 							
 							String lyricsToDisplay;
 							String regex = (String) request.getAttribute("tagsRegex");
@@ -81,11 +83,14 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<a class="panel-title" data-toggle="collapse" data-parent="#panel-results" 
-										href="#panel-element-<%=id%>"><%=artistName+" - "+trackName %></a>
-									<span class="badge"><i>Pop</i></span>
+										href="#panel-element-<%=id%>"><%=artistName+" - "+trackName%></a>
+									<span class="badge"><i><%=genre%></i></span>
 								</div>
 								<div id="panel-element-<%=id%>" class="panel-collapse collapse">
-									<div class="panel-body"><pre><%=lyricsToDisplay%></pre></div>
+									<div class="panel-body">
+										Album : <%=albumName %>
+										<pre><%=lyricsToDisplay%></pre>
+									</div>
 								</div>
 							</div>
 			<%			} 	%>
@@ -101,18 +106,16 @@
 </body>
 
 <script src="js/jquery.min.js"></script>
-<% if(request.getSession().getAttribute("acc")==null){ %>
-<script> (function() { $("#header").load("htmls/header/headerNotConnected.html"); })(); </script>
-<% } else { %>
-<script> (function() { $("#header").load("htmls/header/headerConnected.html"); })(); </script>
-<% } %>
-
+<script src="js/js.cookie.min.js"></script>
 <script> 
-(function() { $("#footer").load("htmls/footer.html"); })(); 
-
-$(window).load(function() {
-    var str = $("#panel-body").innerHTML
-});
+	(function() { 
+		var login = Cookies.get('MUZIKFINDERLOGIN');
+		if(login==null) $("#header").load("htmls/header/headerNotConnected.html");
+		else $("#header").load("htmls/header/headerConnected.html");
+		
+		$("#carousel").load("htmls/carousel.html");
+		$("#footer").load("htmls/footer.html");
+	})(); 
 </script>
 </body>
 </html>

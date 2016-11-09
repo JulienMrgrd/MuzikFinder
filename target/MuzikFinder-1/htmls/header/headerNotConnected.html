@@ -68,8 +68,14 @@
 
 <div id="modalLogin"></div>
 <div id="modalSignUp"></div>
-<script> (function() { $("#modalLogin").load("htmls/LoginModal.html"); })(); </script>
-<script> (function() { $("#modalSignUp").load("htmls/SignUpModal.html"); })(); </script>
+<script> 
 
+(function() { 
+	$("#modalLogin").load("htmls/modals/loginModal.html"); 
+	$("#modalSignUp").load("htmls/modals/signUpModal.html");
+})(); 
+</script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/spin.min.js"></script>
+<script src="js/ladda.min.js"></script>

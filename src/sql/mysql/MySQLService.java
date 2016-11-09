@@ -84,6 +84,7 @@ public class MySQLService {
 			stmt.execute(sqlCreate);
 			stmt.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("Erreur MySQL lors de la création de TABLUE_SEARCH");
 		}
 	}
@@ -114,6 +115,7 @@ public class MySQLService {
 			}
 			stmt.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("Problème de connection avec sql dans la méthode getUserByLogin");
 		}
 		return null;
@@ -139,6 +141,7 @@ public class MySQLService {
 			stmt.execute(sqlRequest);
 			stmt.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("Problème de connection avec sql lors de la création d'un nouveau user");
 			return null;
 		}
@@ -197,7 +200,7 @@ public class MySQLService {
 				stmt.execute(sqlRequest);
 				stmt.close();
 			} catch (SQLException e) {
-				System.out.println("problème lors de l'ajout d'une recherche");
+				System.out.println("Problème lors de l'ajout d'une recherche");
 			}
 		}
 	}

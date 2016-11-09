@@ -1,6 +1,5 @@
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFAlbum.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Album.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\DisconnectServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoCollectionsAndKeys.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\MFMusicDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\metier\User.java
@@ -41,5 +40,6 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFMusic.
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\API.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\textMining\ParserMaison.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFArtist.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\InitServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\dto\MFLyricsDTO.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\mysql\MySQLService.java

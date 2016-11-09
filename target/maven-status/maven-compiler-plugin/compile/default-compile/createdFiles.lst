@@ -32,10 +32,10 @@ utils\TimeInMilliSeconds.class
 interfaces\MFMusic.class
 utils\MuzikFinderPreferences.class
 interfaces\MFAlbum.class
+server\servlets\InitServlet.class
 interfaces\MFArtist.class
 nosql\mongo\MongoService.class
 nosql\mongo\MongoServicePreference.class
-server\servlets\DisconnectServlet.class
 sql\SQLDB.class
 server\servlets\SignUpServlet.class
 api\musixMatch\utils\MusixMatchConstants.class

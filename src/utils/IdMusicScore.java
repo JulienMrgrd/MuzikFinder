@@ -8,10 +8,18 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 	
 	private Integer score;
 	private String idMusic;
+	private int nbOccur;
+	
 	
 	public IdMusicScore(String tag, Integer score) {
 		this.score = score;
 		this.idMusic =tag;
+	}
+	
+	public IdMusicScore(String tag, Integer score, int nbOccur) {
+		this.score = score;
+		this.idMusic = tag;
+		this.nbOccur = nbOccur;
 	}
 
 	public Integer getScore() {
@@ -33,10 +41,30 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 	public void setIdMusic(String idMusic) {
 		this.idMusic = idMusic;
 	}
+	
+	public int getNbOccur() {
+		return nbOccur;
+	}
+
+	public void setNbOccur(int nbOccur) {
+		this.nbOccur = nbOccur;
+	}
 
 	@Override
 	public int compareTo(IdMusicScore t2) {
-		return (this.getScore() > t2.getScore()) ? -1 : (this.getScore() < t2.getScore()) ? 1 : 0;
+		if(this.getScore() > t2.getScore()){
+			return -1;
+		}else if (this.getScore() < t2.getScore()){
+			return 1;
+		}else{
+			if(this.getNbOccur() > t2.getNbOccur()){
+				return -1;
+			}else if(this.getNbOccur() < t2.getNbOccur()){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
 	}
 	
 	public Document idMusicScoreToDoc(){

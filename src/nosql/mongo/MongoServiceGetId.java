@@ -79,4 +79,17 @@ public class MongoServiceGetId {
 		}
 		return music;
 	}
+	
+	@SuppressWarnings("unchecked")
+	static List<Document> getListDocumentIdMusicScoreByTag(String tag){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS); // récupère la collection mongo qui stocke les musiques
+		Document findQuery = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		
+		List<Document> listIdMusicDocument = new ArrayList<Document>();
+		if(cursor.hasNext()){
+			return (ArrayList<Document>) cursor.next().get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
+		}
+		return listIdMusicDocument;
+	}
 }

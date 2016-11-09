@@ -1,0 +1,80 @@
+<link href="css/modal.css" rel="stylesheet">
+
+<div class="modal fade" id="modal-container-login" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">Login</h4>
+			</div>
+			<div class="modal-body">
+				<div id="errorMessageLogin" class="alert alert-danger fade in"
+					style="display: none">
+					<strong id="strongErrorMessageLogin"></strong>
+				</div>
+				<form id="myAjaxRequestForm" autocomplete="on">
+					<div class="form-group">
+						<label class="form-control-label">Login :</label> 
+						<input id="usernameLogin" type="text" name="username"
+							class="form-control" checked="checked" autocomplete="on" />
+					</div>
+					<div class="form-group">
+						<label class="form-control-label">Password :</label> 
+						<input id="passwordLogin" type="password" name="password"
+							class="form-control" autocomplete="on"></input>
+					</div>
+					<button id="connectButtonLogin" class="mfBtn ladda-button"
+						data-style="zoom-in" type="submit">Connect</button>
+				</form>
+				<a href="#" class="forgot-password"> Forgot the password? </a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+
+		//Stops the submit request
+		$("#myAjaxRequestForm").submit(function(e) {
+			e.preventDefault();
+		});
+
+		//checks for the button click event
+		$("#connectButtonLogin").click(function(e) {
+			e.preventDefault();
+			var laddaButton = Ladda.create(this);
+			laddaButton.start();
+			$.ajax({
+				type : "POST",
+				url : "LoginServlet",
+				data : {
+					username : $("#usernameLogin").val(),
+					password : $("#passwordLogin").val(),
+				},
+
+				//if received a response from the server
+				success : function(data, textStatus, jqXHR) {
+					laddaButton.stop();
+					if (data.success) {
+						location.reload();
+					} else { //display error message
+						$("#strongErrorMessageLogin").text(data.message);
+						$("#errorMessageLogin").show();
+					}
+				},
+
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("No response from the server");
+					laddaButton.stop();
+				},
+
+				always : function() {
+					laddaButton.stop();
+				}
+			});
+			return false;
+		});
+	});
+</script>

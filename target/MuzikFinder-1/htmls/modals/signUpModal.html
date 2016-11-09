@@ -1,0 +1,82 @@
+<link href="css/modal.css" rel="stylesheet">
+
+<div class="modal fade" id="modal-container-signup" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel">Sign up</h4>
+			</div>
+			<div class="modal-body">
+				<div id="errorMessageSignup" class="alert alert-danger fade in" style="display:none">
+					<strong id="strongErrorMessageSignup"></strong>
+				</div>
+				
+				<form id="myAjaxRequestForm" autocomplete="on">
+					<div class="form-group">
+						<label class="form-control-label">Login :</label>
+						<input id="usernameSignup" type="text" name="username" class="form-control" placeholder="5 characters minimum..." checked="checked"/>
+					</div>
+					<div class="form-group">
+						<label class="form-control-label">Password :</label>
+						<input id="passwordSignup" type="password" name="password" class="form-control" placeholder="5 characters minimum..."></input>
+					</div>
+					<div id="mail" class="form-group">
+						<label class="form-control-label">Email :</label>
+						<input id="mailSignup" type="email" class="form-control" value=""></input>
+					</div>
+					<button id="connectButtonSignup" class="mfBtn ladda-button"
+						data-style="zoom-in" type="submit">Confirm</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+
+		//Stops the submit request
+		$("#myAjaxRequestForm").submit(function(e) {
+			e.preventDefault();
+		});
+
+		//checks for the button click event
+		$("#connectButtonSignup").click(function(e) {
+			e.preventDefault();
+			var laddaButton = Ladda.create(this);
+			laddaButton.start();
+			$.ajax({
+				type : "POST",
+				url : "SignUpServlet",
+				data : {
+					username : $("#usernameSignup").val(),
+					password : $("#passwordSignup").val(),
+					mail : $("#mailSignup").val()
+				},
+
+				//if received a response from the server
+				success : function(data, textStatus, jqXHR) {
+					laddaButton.stop();
+					if (data.success) {
+						location.reload();
+					} else { //display error message
+						$("#strongErrorMessageSignup").text(data.message);
+						$("#errorMessageSignup").show();
+					}
+				},
+
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("No response from the server");
+					laddaButton.stop();
+				},
+
+				always : function() {
+					laddaButton.stop();
+				}
+			});
+			return false;
+		});
+	});
+</script>

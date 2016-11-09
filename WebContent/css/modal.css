@@ -1,0 +1,30 @@
+.modal-dialog {
+	width: 30%;
+}
+
+.mfBtn {
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+	position: relative;
+	background-color: #354ae8;
+	color: #fff;
+	padding: 14px 0px;
+	font-family: roboto;
+	font-size: 18px;
+	transition: all 0.518s;
+}
+
+.mfBtn:hover, .mfBtn:active, .mfBtn:focus {
+	background-color: rgb(92, 41, 156);
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.forgot-password {
+	color: rgb(104, 145, 162);
+}
+
+.forgot-password:hover, .forgot-password:active, .forgot-password:focus
+	{
+	color: rgb(92, 41, 156);
+}

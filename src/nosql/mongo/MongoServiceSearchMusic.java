@@ -77,6 +77,9 @@ public class MongoServiceSearchMusic {
 		}
 		listIdMusics.removeAll(listIdMusics);
 		Collections.sort(idMusicScore);
+		if(idMusicScore.size()>1 && idMusicScore.get(0).getScore() == idMusicScore.get(idMusicScore.size()-1).getScore()){
+			idMusicScore = sortByScoreInTag(tags);
+		}
 		for(IdMusicScore iMS: idMusicScore){
 			listIdMusics.add(iMS.getIdMusic());
 		}
@@ -113,9 +116,7 @@ public class MongoServiceSearchMusic {
 
 	static List<MFMusic> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
 		List<MFMusic> listMDTO = new ArrayList<MFMusic>();
-		System.out.println(tags.size());
 		if(tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){	//Si il y a moins de 3 tags on ne fait pas de recherche by tags in lyrics
-			System.out.println("tags.size<3");
 			return listMDTO;
 		}
 		int i=0;
@@ -128,7 +129,6 @@ public class MongoServiceSearchMusic {
 				for(int j=k; j<tags.size()-i+k; j++){
 					tag.add(tags.get(j));
 				}
-				System.out.println(ms.matchMusicsWithTags(tag));
 				tmp.addAll(ms.matchMusicsWithTags(tag));
 				tag.removeAll(tag);
 				k++;
@@ -191,6 +191,46 @@ public class MongoServiceSearchMusic {
 		}
 		if(listIdMusic ==null || listIdMusic.isEmpty()) return ms.searchMusicsByTagsInTags(tags, idRecherche);
 		return generateListMFMusicWithListId(tags, listIdMusic, idRecherche);
+	}
+	
+	@SuppressWarnings("unchecked")
+	static List<IdMusicScore> sortByScoreInTag(List<String> tags){
+		List<IdMusicScore> listIdMusicScore = new ArrayList<>();
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
+		Document doc;
+		MongoCursor<Document> cursor;
+		Document doc_new;
+		List<Document> listDocument;
+		String idMusic;
+		int score;
+		boolean present=false;
+		for(String tag: tags){
+			doc = new Document(MongoCollectionsAndKeys.TAG_TAGS,new Document("$eq",tag)); // crée le document retournant les informations présentes dans la collection lyrics correspondantes
+			cursor = ms.findBy(collection, doc);
+			while(cursor.hasNext()){
+				doc_new = cursor.next();
+				listDocument = (List<Document>) doc_new.get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
+				for(Document doc2 : listDocument){
+					idMusic=doc2.getString(MongoCollectionsAndKeys.MUSICID_TAGS);
+					score=doc2.getInteger(MongoCollectionsAndKeys.SCORE_TAGS);
+					for(IdMusicScore ims : listIdMusicScore){
+						if(idMusic.equals(ims.getIdMusic())){
+							ims.setScore(ims.getScore()+score);
+							present = true;
+							break;
+						}
+					}
+					if(!present){
+						listIdMusicScore.add(new IdMusicScore(idMusic, score));
+					}else{
+						present=false;
+					}
+				}
+			}
+		}
+		Collections.sort(listIdMusicScore);
+		
+		return listIdMusicScore;
 	}
 	
 	private static Document formRegexForSearch(List<String> listTags){

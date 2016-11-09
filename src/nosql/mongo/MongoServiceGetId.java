@@ -20,9 +20,13 @@ public class MongoServiceGetId {
 		Document findQuery = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		
+		List<Document> listIdMusicDocument = new ArrayList<Document>();
 		List<String> listIdMusic = new ArrayList<String>();
 		if(cursor.hasNext()){
-			listIdMusic = (ArrayList<String>) cursor.next().get(MongoCollectionsAndKeys.MUSICID_TAGS);
+			listIdMusicDocument = (ArrayList<Document>) cursor.next().get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
+			for(Document doc : listIdMusicDocument){
+				listIdMusic.add(doc.getString(MongoCollectionsAndKeys.MUSICID_TAGS));
+			}
 		}
 		return listIdMusic;
 	}

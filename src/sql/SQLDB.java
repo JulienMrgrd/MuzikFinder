@@ -3,7 +3,9 @@ package sql;
 import java.net.URISyntaxException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
+import sql.metier.Search;
 import sql.metier.User;
 import sql.mysql.MySQLService;
 
@@ -17,7 +19,6 @@ public class SQLDB {
 	
 	public SQLDB() {
 		try {
-//			mySqlService = MySQLService.getInstance();
 			mySqlService = new MySQLService();
 		} catch (ExceptionInInitializerError | ClassNotFoundException | URISyntaxException | SQLException error) {
 			error.printStackTrace();
@@ -36,32 +37,28 @@ public class SQLDB {
 		return mySqlService.checkLogin(username);
 	}
 	
-	public void addSearch(User user, String recherche) {
-		mySqlService.addSearch(user, recherche);
+	public void addSearch(String id_user, String recherche, String id_recherche) {
+		mySqlService.addSearch(id_user, recherche, id_recherche);
 	}
 	
-	public void setPassword(User user, String newPassword) {
-		mySqlService.setPassword(user, newPassword);
+	public void update(String id_user, String newPassword, String newEmail){
+		mySqlService.update(id_user, newPassword, newEmail);
 	}
 	
-	public void setEmail(User user, String newEmail){
-		mySqlService.setEmail(user, newEmail);
+	public void deleteSearchByDateAndUser(String id_user, Date date) {
+		mySqlService.deleteSearchByDateAndUser(id_user, date);
+	}
+	
+	public List<Search> getSearchByDateAndUser(String id_user, Date date) {
+		return mySqlService.getSearchByDateAndUser(id_user, date);
 	}
 
-	public void deleteSearchByDateAndUser(User user, Date date) {
-		mySqlService.deleteSearchByDateAndUser(user, date);
-	}
-	
-	public String getSearchByDateAndUser(User user, Date date) {
-		return mySqlService.getSearchByDateAndUser(user, date);
-	}
-
-	public User deleteAccountUser(User user) {
-		return mySqlService.deleteAccountUser(user);
+	public User deleteAccountUser(String id_user) {
+		return mySqlService.deleteAccountUser(id_user);
 	}
 		
-	public void deleteSearchUser(User user){
-		mySqlService.deleteSearchUser(user);
+	public void deleteSearchUser(String id_user){
+		mySqlService.deleteSearchUser(id_user);
 	}
 	
 	//TODO: A supprimer

@@ -6,11 +6,13 @@ public class Search {
 
 	private String id;
 	private String recherche;
+	private String idRecherche;
 	private Date dateSearch;
 	
-	public Search(String id, String recherche, Date dateSearch){
+	public Search(String id, String recherche, String idRecherche, Date dateSearch){
 		this.id=id;
 		this.recherche=recherche;
+		this.idRecherche=idRecherche;
 		this.dateSearch=dateSearch;
 	}
 
@@ -28,6 +30,14 @@ public class Search {
 
 	public void setRecherche(String recherche) {
 		this.recherche = recherche;
+	}
+
+	public String getIdRecherche() {
+		return idRecherche;
+	}
+
+	public void setIdRecherche(String idRecherche) {
+		this.idRecherche = idRecherche;
 	}
 
 	public Date getDateSearch() {

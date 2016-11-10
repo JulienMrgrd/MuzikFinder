@@ -185,6 +185,7 @@ public class MongoServiceSearchUser {
 		for(IdMusicScore mscore : list_music_score){
 			list_id.add(mscore.getIdMusic());
 		}
+		System.out.println("taille list_id : "+range+" = "+list_id.size());
 		return list_id;
 	}
 
@@ -271,6 +272,7 @@ public class MongoServiceSearchUser {
 
 	@SuppressWarnings("unchecked")
 	static void addListIdMusicMostPopularByRange(String range){
+		System.out.println("addList : "+range);
 		List<String> list_id_music = new ArrayList<String>();
 		if(range.equals(MongoCollectionsAndKeys.GENERAL_STATS_CACHE))
 			list_id_music= getListIdMostPopularAllRangeInStats(range);

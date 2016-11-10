@@ -49,6 +49,10 @@ public class NoSQLDB {
 	public void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
 		mongo.insertCacheSearchUser(tags, idMusics, idRecherche);
 	}
+	
+	public void addListIdMusicMostPopularAllRange(){
+		mongo.addListIdMusicMostPopularAllRange();
+	}
 
 	///////////////PARTIE CONTAINS//////////////////
 	public boolean containsMusic(String musicId){

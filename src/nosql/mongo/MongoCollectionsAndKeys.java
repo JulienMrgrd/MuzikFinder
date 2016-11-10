@@ -64,6 +64,7 @@ public final class MongoCollectionsAndKeys {
 	/** [0-17] = -18 ; [18-24] = -25 ; [25-49] = -50 ; [50+] = +50 **/
 	public static final String AGERANGE_STATS_CACHE = "ageRanges";
 	public static final String AGE_STATS_CACHE = "age";
+	public static final String GENERAL_STATS_CACHE = "general";
 	public static final String MUSICS_STATS_CACHE = "musics";
 	public static final String MUSIC_ID_STATS_CACHE = "musicId";
 	//TODO:

@@ -84,6 +84,9 @@ public class MuzikFinderService {
 		return nosql.getMusicById(idMusic);
 	}
 	
+	public void addListIdMusicMostPopularAllRange(){
+		nosql.addListIdMusicMostPopularAllRange();
+	}
 	
 	////====== SQL PART ====== ////
 	

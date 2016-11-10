@@ -86,6 +86,10 @@ public class MongoService {
 		collection.replaceOne(before, after);
 	}
 	
+	public void addListIdMusicMostPopularAllRange(){
+		addListIdMusicMostPopularAllRange();
+	}
+	
 	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, 
 			Document findQuery, Document orderBy){
 		return collection.find(findQuery).sort(orderBy).iterator();

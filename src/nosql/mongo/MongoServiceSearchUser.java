@@ -359,11 +359,11 @@ public class MongoServiceSearchUser {
 
 
 	public static void main(String[] args){
-		MySQLService mysql = MySQLService.getInstance();
-		User user = mysql.checkConnexion("llll", "llll");
+	//	MySQLService mysql = MySQLService.getInstance();
+//		User user = mysql.checkConnexion("llll", "llll");
 	//	User user1 = mysql.createNewUser("aaaa", "aaaa", "dada@dada", 2000, 12, 5);
 		//addNewSearch("113810490", user1.getDateBirth());
-		addNewSearch("10000010", user.getDateBirth());
+//		addNewSearch("10000010", user.getDateBirth());
 		/*	List<MFMusicDTO> list = getIdMusicMostPopular(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS); 
 		System.out.println(list);
 		for(MFMusicDTO m : list)

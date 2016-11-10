@@ -25,7 +25,7 @@ public class MySQLService {
 	    String username = dbUri.getUserInfo().split(":")[0];
 	    String password = dbUri.getUserInfo().split(":")[1];
 	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
-	    Class.forName("com.mysql.cj.jdbc.Driver");
+	    Class.forName("com.mysql.jdbc.Driver");
 	    DriverManager.setLoginTimeout(10);
 		connection = DriverManager.getConnection(dbUrl, username, password);
 		connection.setAutoCommit(true);

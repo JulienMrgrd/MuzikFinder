@@ -87,7 +87,7 @@ public class MongoService {
 	}
 	
 	public void addListIdMusicMostPopularAllRange(){
-		addListIdMusicMostPopularAllRange();
+		MongoServiceSearchUser.addListIdMusicMostPopularAllRange();
 	}
 	
 	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, 

@@ -19,7 +19,7 @@ public class MySQLService {
 	private static final String USER_DB_NAME = "user";
 	private static final String SEARCH_DB_NAME = "search";
 
-	private MySQLService() throws URISyntaxException, SQLException, ClassNotFoundException {
+	public MySQLService() throws URISyntaxException, ClassNotFoundException, SQLException {
 		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net/heroku_1a48668fb87a67e?reconnect=true");
 
 	    String username = dbUri.getUserInfo().split(":")[0];
@@ -33,28 +33,28 @@ public class MySQLService {
 		createTableSearch();
 	}
 	
-	/** Instance unique préinitialisée */
-	private static MySQLService INSTANCE = getInstance();
- 
-	/**
-	 * Technique du double checking (Singleton)
-	 * @return
-	 * @throws ExceptionInInitializerError
-	 */
-	public static MySQLService getInstance() throws ExceptionInInitializerError {	
-		if (INSTANCE == null){ 	
-			synchronized(MySQLService.class){
-				if (INSTANCE == null){
-					try {
-						INSTANCE = new MySQLService();
-					} catch (URISyntaxException | SQLException | ClassNotFoundException e) {
-						throw new ExceptionInInitializerError(e);
-					}
-				}
-			}
-		}
-		return INSTANCE;
-	}
+//	/** Instance unique préinitialisée */
+//	private static MySQLService INSTANCE = getInstance();
+// 
+//	/**
+//	 * Technique du double checking (Singleton)
+//	 * @return
+//	 * @throws ExceptionInInitializerError
+//	 */
+//	public static MySQLService getInstance() throws ExceptionInInitializerError {	
+//		if (INSTANCE == null){ 	
+//			synchronized(MySQLService.class){
+//				if (INSTANCE == null){
+//					try {
+//						INSTANCE = new MySQLService();
+//					} catch (URISyntaxException | SQLException | ClassNotFoundException e) {
+//						throw new ExceptionInInitializerError(e);
+//					}
+//				}
+//			}
+//		}
+//		return INSTANCE;
+//	}
 	
 	private void createTableUser() {
 	    String sqlCreate = "CREATE TABLE IF NOT EXISTS " + USER_DB_NAME

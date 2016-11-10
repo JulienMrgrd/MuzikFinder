@@ -1,5 +1,6 @@
 package sql;
 
+import java.net.URISyntaxException;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -16,8 +17,9 @@ public class SQLDB {
 	
 	public SQLDB() {
 		try {
-			mySqlService = MySQLService.getInstance();
-		} catch (ExceptionInInitializerError error) {
+//			mySqlService = MySQLService.getInstance();
+			mySqlService = new MySQLService();
+		} catch (ExceptionInInitializerError | ClassNotFoundException | URISyntaxException | SQLException error) {
 			error.printStackTrace();
 		}
 	}

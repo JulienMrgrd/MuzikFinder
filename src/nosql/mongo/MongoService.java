@@ -82,6 +82,10 @@ public class MongoService {
 		return collection.find(findQuery).iterator();
 	}
 
+	protected void replaceOne(MongoCollection<Document> collection, Document before, Document after){
+		collection.replaceOne(before, after);
+	}
+	
 	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, 
 			Document findQuery, Document orderBy){
 		return collection.find(findQuery).sort(orderBy).iterator();

@@ -5,11 +5,12 @@
 <html>
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="../../favicon.ico">
-<link href="bootstrap/bootstrap.min.css" rel="stylesheet">
-<title>Mes contacts</title>
+	<meta charset="utf-8">
+	<link rel="icon" href="images/favicon.png?2">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/ladda-themeless.min.css">
+	<link href="css/index.css" rel="stylesheet">
+	<title>MuzikFinder</title>
 </head>
 
 <body>
@@ -37,7 +38,7 @@
 <script> 
 	(function() { 
 		var login = Cookies.get('MUZIKFINDERLOGIN');
-		if(login==null) $("#header").load("htmls/header/headerNotConnected.html");
+		if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
 		else $("#header").load("htmls/header/headerConnected.html");
 		
 		$("#carousel").load("htmls/carousel.html");

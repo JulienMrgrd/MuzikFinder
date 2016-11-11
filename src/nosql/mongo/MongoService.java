@@ -1,7 +1,7 @@
 package nosql.mongo;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -18,7 +18,6 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFMusic;
 import utils.MuzikFinderPreferences;
-import utils.MuzikFinderUtils;
 import utils.TimeInMilliSeconds;
 
 public class MongoService {
@@ -50,26 +49,6 @@ public class MongoService {
 			synchronized(MongoService.class){
 				if (INSTANCE == null){
 					INSTANCE = new MongoService();
-					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
-					try {
-						synchronized (MuzikFinderUtils.class) {
-							MuzikFinderUtils.class.wait(2000);
-						}
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
-					try {
-						synchronized (MuzikFinderUtils.class) {
-							MuzikFinderUtils.class.wait(2000);
-						}
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
-					System.out.println();
 				}
 			}
 		}
@@ -107,8 +86,8 @@ public class MongoService {
 		collection.replaceOne(before, after);
 	}
 	
-	public void addListIdMusicMostPopularAllRange(){
-		MongoServiceSearchUser.addListIdMusicMostPopularAllRange();
+	public void addListIdMusicMostPopularAllRanges(){
+		MongoServiceSearchUser.addListIdMusicMostPopularAllRanges();
 	}
 	
 	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, 
@@ -218,7 +197,7 @@ public class MongoService {
 	public List<String> getListTrackNameBeginWith(String trackName){
 		return MongoServiceGetId.getListTrackNameBeginWith(trackName);
 	}
-	
+
 	//////////////PARTIE SEARCH////////////////////////
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		return MongoServiceSearchMusic.filterByExistingMusics(musics);
@@ -259,7 +238,7 @@ public class MongoService {
 	}
 	
 	///////////////PARTIE SEARCH USER/////////////////////////
-	public void addNewSearch(String idMusic, Date userBirth){
+	public void addNewSearch(String idMusic, LocalDate userBirth){
 		MongoServiceSearchUser.addNewSearch(idMusic, userBirth);
 	}
 	
@@ -275,8 +254,8 @@ public class MongoService {
 		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.MONTH);
 	}
 	
-	public void deleteCacheUserExceedOneHour(){
-		MongoServiceSearchUser.deleteCacheUserExceedOneHour();
+	public void deleteCacheUserExceed(long time){
+		MongoServiceSearchUser.deleteCacheUserExceed(time);
 	}
 
 	//////////////PARTIE PREFERENCE//////////////////////////

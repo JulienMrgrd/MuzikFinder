@@ -36,9 +36,9 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MuzikFinderPr
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\TimeInMilliSeconds.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\WelcomeServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoServiceSearchUser.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\FindGoodMusicServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\MusixMatchService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\tests\Test.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MuzikFinderService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\metier\Search.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Music.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoServiceGetId.java

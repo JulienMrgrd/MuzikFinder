@@ -1,6 +1,7 @@
 package server.services;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,17 +110,14 @@ public class MuzikFinderService {
 		return nosql.getMusicByTrackName(trackName);
 	}
 	
- 	public void addListIdMusicMostPopularAllRange(){
-		nosql.addListIdMusicMostPopularAllRange();
-	}
-	
 	public List<MFMusic> getListMFMusicMostPopularByRange(String range){
 		return nosql.getListMFMusicMostPopularByRange(range);
 	}
 	
-	public void deleteCacheUserExceedOneHour(){
-		nosql.deleteCacheUserExceedOneHour();
+	public void addNewSearch(String idMusic, LocalDate userBirth){
+		nosql.addNewSearch(idMusic, userBirth);
 	}
+
 	////====== SQL PART ====== ////
 	
 	public User createNewUser(String username, String password, String mail, int year, int month, int day) {
@@ -181,6 +179,14 @@ public class MuzikFinderService {
 		System.out.println("\nNombre de musiques récupérées au final : "+cpt);
 		nosql.insertNewMusics(mapAlbumIdWithAlbum);
 		nosql.setPref(MuzikFinderPreferences.POS_COUNTRY_PREF, Integer.toString(MuzikFinderPreferences.getNextPosition(lastCountry)) );
+	}
+	
+	public void deleteCacheUserExceed(long time){
+		nosql.deleteCacheUserExceed(time);
+	}
+	
+ 	public void addListIdMusicMostPopularAllRanges(){
+		nosql.addListIdMusicMostPopularAllRanges();
 	}
 
 }

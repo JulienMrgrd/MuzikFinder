@@ -1,9 +1,7 @@
 package server.servlets;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.Date;
-import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import server.services.MuzikFinderService;
-import sql.mysql.MySQLService;
 import utils.MuzikFinderPreferences;
 import utils.MuzikFinderUtils;
 
@@ -22,17 +19,8 @@ import utils.MuzikFinderUtils;
 public class AccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AccountServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+    public AccountServlet() {}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());		
 		System.out.println(userId);
@@ -42,21 +30,13 @@ public class AccountServlet extends HttpServlet {
 			request.setAttribute("message", "Veuillez vous connecter");
 			request.setAttribute("success", false);
 		}*/
-		MySQLService mysql;
-		try {
-			mysql = new MySQLService();
-			request.setAttribute("results",  mysql.getSearchByDateAndUser(/*userId*/"2",null));
-		} catch (ClassNotFoundException | URISyntaxException | SQLException e) {
-			e.printStackTrace();
-		}
+		MuzikFinderService.getInstance();	
+		request.setAttribute("results",  MuzikFinderService.getInstance().getSearchByDateAndUser(/*userId*/"2",null));
 	
 		RequestDispatcher dispatcher = request.getRequestDispatcher("myAccount.jsp");
 		dispatcher.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("doPost");
 		

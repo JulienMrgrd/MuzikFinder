@@ -65,5 +65,5 @@ public class ShowMoreResultsServlet extends HttpServlet {
 	    out.print(myResponse);
 	    out.close();
 	}
-
+	
 }

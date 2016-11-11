@@ -1,5 +1,6 @@
 package nosql.mongo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -100,8 +101,9 @@ public class MongoServiceSearchUser {
 	// Il faut également savoir où écrire la nouvelle information. Si la range dans lequel l'âge de l'utilisateur
 	// existe déjà, il faut écrire dedans et ne pas créer une nouvelle (clef,valeur). 
 	@SuppressWarnings("unchecked")
-	static void addNewSearch(String idMusic, Date userBirth){
-		int age = MathUtils.calculAge(userBirth);
+	static void addNewSearch(String idMusic, LocalDate userBirth){
+		
+		int age = MathUtils.calculateAge(userBirth, LocalDate.now());
 		String range= getRangeByAge(age);
 		int test = 0;
 		Document fin = new Document();
@@ -429,8 +431,8 @@ public class MongoServiceSearchUser {
 
 //////////////************************ PARTIE DEAMON AJOUT DANS STATS_CACHE **************///////////////////
 
-	/* Méthode appelé par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
-	public static void addListIdMusicMostPopularAllRange(){
+	/* Méthode appelée par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
+	public static void addListIdMusicMostPopularAllRanges(){
 		System.out.println("Début appel addList");
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
@@ -461,12 +463,12 @@ public class MongoServiceSearchUser {
 		}
 		return list_music_dto;
 	}	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-	public static void deleteCacheUserExceedOneHour(){
-		long timeNow = new Date().getTime() - TimeInMilliSeconds.HOUR.value;
+	
+//////////////////**************** PARTIE DAEMON *******//////////////////////
+	public static void deleteCacheUserExceed(long time){
 		Document doc;
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
-		doc = new Document("time", new Document("$lt",timeNow));
+		doc = new Document("time", new Document("$lt",time));
 		ms.deleteMany(collection, doc);
 	}
 }

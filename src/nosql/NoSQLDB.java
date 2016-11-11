@@ -1,6 +1,6 @@
 package nosql;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -50,8 +50,8 @@ public class NoSQLDB {
 		mongo.insertCacheSearchUser(tags, idMusics, idRecherche);
 	}
 	
-	public void addListIdMusicMostPopularAllRange(){
-		mongo.addListIdMusicMostPopularAllRange();
+	public void addListIdMusicMostPopularAllRanges(){
+		mongo.addListIdMusicMostPopularAllRanges();
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
@@ -149,7 +149,7 @@ public class NoSQLDB {
 	}
 	
 	///////////////PARTIE SEARCH USER/////////////////////////
-	public void addNewSearch(String idMusic, Date userBirth){
+	public void addNewSearch(String idMusic, LocalDate userBirth){
 		mongo.addNewSearch(idMusic, userBirth);
 	}
 	
@@ -165,8 +165,8 @@ public class NoSQLDB {
 		return mongo.getTopMusicSearchThisMonth();
 	}
 
-	public void deleteCacheUserExceedOneHour(){
-		mongo.deleteCacheUserExceedOneHour();
+	public void deleteCacheUserExceed(long time){
+		mongo.deleteCacheUserExceed(time);
 	}
 	
 	//////////////PARTIE PREFERENCE//////////////////////////

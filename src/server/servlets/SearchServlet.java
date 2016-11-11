@@ -27,8 +27,10 @@ public class SearchServlet extends HttpServlet {
 		
 		boolean success = true;
 		String userSearch = (String) request.getParameter("userSearch");
+		
 		String userLogin = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_LOGIN, request.getCookies());
 		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());
+		String userBirth = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_BIRTH, request.getCookies());
 		
 		if(userLogin == null){
 			success = false;
@@ -68,6 +70,7 @@ public class SearchServlet extends HttpServlet {
 					if(tags.get(i)!=null && !tags.get(i).isEmpty()) str+="|"+tags.get(i);
 				}
 				request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
+				MuzikFinderUtils.updateTimeCookies(userLogin, userId, userBirth, response);
 			}
 		}
 

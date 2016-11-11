@@ -1,8 +1,8 @@
 package utils;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MathUtils {
@@ -27,25 +27,11 @@ public class MathUtils {
 		return listId;
 	}
 
-	public static int calculAge(Date dateBirth){
-		
-		java.util.Date utilDate = new java.util.Date();
-	    java.util.Date dateNow = new java.util.Date(utilDate.getTime());	
-		
-		Calendar calBirth = Calendar.getInstance();
-		calBirth.setTime(dateBirth);
-		Calendar calNow = Calendar.getInstance();
-		calNow.setTime(dateNow);
-
-		if(calBirth.get(Calendar.MONTH)>calNow.get(Calendar.MONTH)){
-			return (calNow.get(Calendar.YEAR)-calBirth.get(Calendar.YEAR))-1;
-		}
-		if(calBirth.get(Calendar.MONTH)<calNow.get(Calendar.MONTH)){
-			return calNow.get(Calendar.YEAR)-calBirth.get(Calendar.YEAR);
-		}
-		if(calBirth.get(Calendar.DAY_OF_MONTH)<calNow.get(Calendar.DAY_OF_MONTH)){
-			return (calNow.get(Calendar.YEAR)-calBirth.get(Calendar.YEAR))-1;
-		}
-		return calNow.get(Calendar.YEAR)-calBirth.get(Calendar.YEAR);
+	public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
 	}
 }

@@ -81,4 +81,15 @@
 		<servlet-name>ShowMoreResultsServlet</servlet-name>
 		<url-pattern>/ShowMoreResultsServlet</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>FindGoodMusicServlet</display-name>
+		<servlet-name>FindGoodMusicServlet</servlet-name>
+		<servlet-class>server.servlets.FindGoodMusicServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FindGoodMusicServlet</servlet-name>
+		<url-pattern>/FindGoodMusicServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

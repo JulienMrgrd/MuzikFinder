@@ -1,0 +1,41 @@
+.container {
+	margin-top: 100px;
+}
+.panel-group {
+	margin-top: 20px;
+	line-height:30px;
+}
+
+.panel-group a {
+    word-break:break-all;
+}
+
+@media (min-width: 750px) {
+	.panel-group {
+		width: 65%;
+	}
+}
+
+@media (max-width: 750px) {
+	.panel-group {
+		width: 85%;
+	}
+}
+
+.moreResults{
+	text-decoration: none;
+	color: #371495;
+}
+.moreResults:focus, .moreResults:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.btn-success.btn-outline:hover{
+    color: #fff;
+}
+.btn-success.btn-outline {
+    color: #5cb85c;
+    font-weight: bold;
+    background-color: transparent;
+}

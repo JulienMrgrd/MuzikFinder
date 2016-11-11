@@ -21,13 +21,13 @@ public class MySQLService {
 	private static final String SEARCH_DB_NAME = "search";
 
 	public MySQLService() throws URISyntaxException, ClassNotFoundException, SQLException {
-		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net/heroku_1a48668fb87a67e?reconnect=true");
+		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net:3306/heroku_1a48668fb87a67e?autoReconnect=true&reconnect=true");
 
 	    String username = dbUri.getUserInfo().split(":")[0];
 	    String password = dbUri.getUserInfo().split(":")[1];
-	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath()+"?reconnect=true";
+	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() +":"+ dbUri.getPort() + dbUri.getPath()+"?reconnect=true";
 	    Class.forName("com.mysql.jdbc.Driver");
-	    DriverManager.setLoginTimeout(10);
+	    DriverManager.setLoginTimeout(0);
 		connection = DriverManager.getConnection(dbUrl, username, password);
 		connection.setAutoCommit(true);
 		createTableUser();
@@ -175,6 +175,7 @@ public class MySQLService {
 				stmt.execute(sqlRequest);
 				stmt.close();
 			} catch (SQLException e) {
+				e.printStackTrace();
 				System.out.println("Problème lors de l'ajout d'une recherche");
 			}
 		}
@@ -373,31 +374,4 @@ public class MySQLService {
 		stmt.close();
 	}
 
-	public static void main(String[] args) throws ClassNotFoundException, URISyntaxException, SQLException{
-		java.util.Date utilDate = new java.util.Date();
-	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());	
-	    
-		MySQLService mysql = new MySQLService();
-		
-		User us=mysql.checkConnexion("julien", "julien");
-		/*mysql.addSearch(us.getId(), "recherche", "845456");
-		mysql.addSearch(us.getId(), "recherche2", "845456");
-		mysql.addSearch(us.getId(), "recherche3", "845456");
-		mysql.addSearch(us.getId(), "recherche4", "845456");*/
-		for(Search s :mysql.getSearchByDateAndUser("2", sqlDate)){
-			System.out.println(s.getRecherche());
-		}
-		//mysql.seeAllDBSearch();
-		//mysql.seeAllDBUser();
-		//User us = mysql.createNewUser("pseudo", "password", "email", 1994, 12, 5);
-		//String id_user=us.getId();
-		//mysql.addSearch(id_user, "recherche leeekn^^peefok lkefo", "id_recherche");
-		//mysql.update(id_user, "password", "");	
-	    
-		//mysql.deleteAccountUser(id_user);
-		
-		/*for(Search s:mysql.getSearchByDateAndUser(id_user, null)){
-			System.out.println(s.getIdRecherche());
-		}*/
-	}
 }

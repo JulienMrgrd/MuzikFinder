@@ -211,6 +211,14 @@ public class MongoService {
 		return MongoServiceGetId.getMusicById(idMusic);
 	}
 
+	public List<String> getListNameArtistBeginWith(String nameArtist){
+		return MongoServiceGetId.getListNameArtistBeginWith(nameArtist);
+	}
+	
+	public List<String> getListTrackNameBeginWith(String trackName){
+		return MongoServiceGetId.getListTrackNameBeginWith(trackName);
+	}
+	
 	//////////////PARTIE SEARCH////////////////////////
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		return MongoServiceSearchMusic.filterByExistingMusics(musics);
@@ -242,7 +250,14 @@ public class MongoService {
 		return MongoServiceSearchMusic.getMoreResults(idRecherche);
 	}
 
-
+	public List<MFMusic> getMusicsByArtist(String artistName){
+		return MongoServiceSearchMusic.getMusicsByArtist(artistName);
+	}
+	
+	public List<MFMusic> getMusicsByTrackName(String trackName){
+		return MongoServiceSearchMusic.getMusicsByTrackName(trackName);
+	}
+	
 	///////////////PARTIE SEARCH USER/////////////////////////
 	public void addNewSearch(String idMusic, Date userBirth){
 		MongoServiceSearchUser.addNewSearch(idMusic, userBirth);
@@ -259,7 +274,6 @@ public class MongoService {
 	public List<MFMusic> getTopMusicSearchThisMonth(){
 		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.MONTH);
 	}
-	
 	
 	public void deleteCacheUserExceedOneHour(){
 		MongoServiceSearchUser.deleteCacheUserExceedOneHour();

@@ -1,7 +1,9 @@
 package nosql.mongo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bson.Document;
 
@@ -50,7 +52,7 @@ public class MongoServiceGetId {
 		Document findQuery = new Document(MongoCollectionsAndKeys.LYRICS_MUSICS, new Document("$regex",chainWords));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 
-		ArrayList<String> listeId = new ArrayList<String>();
+		List<String> listeId = new ArrayList<String>();
 		while(cursor.hasNext()){
 			listeId.add(cursor.next().getString(MongoCollectionsAndKeys.IDMUSIC_MUSICS));
 		}
@@ -82,8 +84,8 @@ public class MongoServiceGetId {
 	
 	@SuppressWarnings("unchecked")
 	static List<Document> getListDocumentIdMusicScoreByTag(String tag){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS); // récupère la collection mongo qui stocke les musiques
-		Document findQuery = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag));
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.TAG_TAGS, new Document("$eq",tag.toLowerCase()));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		
 		List<Document> listIdMusicDocument = new ArrayList<Document>();
@@ -91,5 +93,31 @@ public class MongoServiceGetId {
 			return (ArrayList<Document>) cursor.next().get(MongoCollectionsAndKeys.IDMUSICS_TAGS);
 		}
 		return listIdMusicDocument;
+	}
+
+	static List<String> getListNameArtistBeginWith(String nameArtist){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS, new Document("$regex","^"+nameArtist).append("$options", "i"));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+
+		Set<String> setNameArtist = new HashSet<String>();
+		while(cursor.hasNext() && setNameArtist.size()<6){
+			setNameArtist.add(cursor.next().getString(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS));
+		}
+		List<String> listNameArtist = new ArrayList<String>(setNameArtist);
+		return listNameArtist;
+	}
+	
+	static List<String> getListTrackNameBeginWith(String trackName){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.MUSICNAME_MUSICS, new Document("$regex","^"+trackName).append("$options", "i"));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+
+		Set<String> setTrackNAme = new HashSet<String>();
+		while(cursor.hasNext() && setTrackNAme.size()<6){
+			setTrackNAme.add(cursor.next().getString(MongoCollectionsAndKeys.MUSICNAME_MUSICS));
+		}
+		List<String> listTrackNAme = new ArrayList<String>(setTrackNAme);
+		return listTrackNAme;
 	}
 }

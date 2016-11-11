@@ -95,7 +95,15 @@ public class NoSQLDB {
 	public MFMusic getMusicById(String idMusic) {
 		return mongo.getMusicById(idMusic);
 	}
+	
+	public List<String> getListNameArtistBeginWith(String nameArtist){
+		return mongo.getListNameArtistBeginWith(nameArtist);
+	}
 
+	public List<String> getListTrackNameBeginWith(String trackName){
+		return mongo.getListTrackNameBeginWith(trackName);
+	}
+	
 	//////////////PARTIE SEARCH///////////////////////
 	/**
 	 * Reduced the given list in parameter if one of these musics exists in Mongo 
@@ -132,6 +140,14 @@ public class NoSQLDB {
 		return mongo.getMoreResults(idRecherche);
 	}
 
+	public List<MFMusic> getMusicsByArtist(String artistName){
+		return mongo.getMusicsByArtist(artistName);
+	}
+	
+	public List<MFMusic> getMusicByTrackName(String trackName){
+		return mongo.getMusicsByTrackName(trackName);
+	}
+	
 	///////////////PARTIE SEARCH USER/////////////////////////
 	public void addNewSearch(String idMusic, Date userBirth){
 		mongo.addNewSearch(idMusic, userBirth);
@@ -149,6 +165,10 @@ public class NoSQLDB {
 		return mongo.getTopMusicSearchThisMonth();
 	}
 
+	public void deleteCacheUserExceedOneHour(){
+		mongo.deleteCacheUserExceedOneHour();
+	}
+	
 	//////////////PARTIE PREFERENCE//////////////////////////
 	/** Get a pref in nosql database by name
 	 * @param param

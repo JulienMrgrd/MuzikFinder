@@ -233,9 +233,43 @@ public class MongoServiceSearchMusic {
 		return null;
 	}
 
+	static List<MFMusic> getMusicsByArtist(String artistName){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS, new Document("$eq",artistName));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		
+		List<MFMusic> listMusic= new ArrayList<>();
+		MFMusic music = null;
+		while(cursor.hasNext()){
+			music = MongoUtils.transformDocumentIntoMFMusic(cursor.next());
+			listMusic.add(music);
+		}
+		return listMusic;
+	}
+	
+	static List<MFMusic> getMusicsByTrackName(String trackName){
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+		Document findQuery = new Document(MongoCollectionsAndKeys.MUSICNAME_MUSICS, new Document("$eq",trackName));
+		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		
+		List<MFMusic> listMusic= new ArrayList<>();
+		MFMusic music = null;
+		while(cursor.hasNext()){
+			music = MongoUtils.transformDocumentIntoMFMusic(cursor.next());
+			listMusic.add(music);
+		}
+		return listMusic;
+	}
 	
 	public static void main(String[] args){
-		List<String> tags = new ArrayList<>();
+		for(MFMusic s: getMusicsByTrackName("Let Me in Your Life")){
+			System.out.println(s.getLyrics().getLyricsBody());
+		}
+		System.out.println();
+		for(String s : MongoServiceGetId.getListTrackNameBeginWith("let me")){
+			System.out.println(s);
+		}
+		/*List<String> tags = new ArrayList<>();
 		tags.add("i");
 		searchMusics(tags, "llpkpkp");
 		System.out.println("FIN PRECHAUFFE");
@@ -246,8 +280,9 @@ public class MongoServiceSearchMusic {
 		tags.add("black");
 		tags.add("nigga");
 		Instant start = Instant.now();
-		searchMusics(tags, "idRecherche999");
+		//searchMusics(tags, "idRecherche999");
+		getMoreResults("julien480");
 		Instant end = Instant.now();
-		System.out.println("searchMusicByTagsInTags =="+Duration.between(start, end));
+		System.out.println("searchMusicByTagsInTags =="+Duration.between(start, end));*/
 	}
 }

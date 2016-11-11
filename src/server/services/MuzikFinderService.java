@@ -78,7 +78,15 @@ public class MuzikFinderService {
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
-	public List<MFMusic> searchMusics(String id_user,List<String> tags, String idRecherche) {
+	public List<String> getListNameArtistBeginWith(String nameArtist){
+		return nosql.getListNameArtistBeginWith(nameArtist);
+	}
+	
+	public List<String> getListTrackNameBeginWith(String trackName){
+		return nosql.getListTrackNameBeginWith(trackName);
+	}
+	
+ 	public List<MFMusic> searchMusics(String id_user,List<String> tags, String idRecherche) {
 		String recherche="";
 		for(String s : tags) recherche+=s+" ";
 		sql.addSearch(id_user, recherche, idRecherche);
@@ -93,7 +101,15 @@ public class MuzikFinderService {
 		return nosql.getMoreResults(idRecherche);
 	}
 	
-	public void addListIdMusicMostPopularAllRange(){
+	public List<MFMusic> getMusicsByArtist(String artistName){
+		return nosql.getMusicsByArtist(artistName);
+	}
+	
+	public List<MFMusic> getMusicByTrackName(String trackName){
+		return nosql.getMusicByTrackName(trackName);
+	}
+	
+ 	public void addListIdMusicMostPopularAllRange(){
 		nosql.addListIdMusicMostPopularAllRange();
 	}
 	
@@ -101,7 +117,9 @@ public class MuzikFinderService {
 		return nosql.getListMFMusicMostPopularByRange(range);
 	}
 	
-	
+	public void deleteCacheUserExceedOneHour(){
+		nosql.deleteCacheUserExceedOneHour();
+	}
 	////====== SQL PART ====== ////
 	
 	public User createNewUser(String username, String password, String mail, int year, int month, int day) {

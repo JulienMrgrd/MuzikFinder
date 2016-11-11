@@ -25,12 +25,13 @@ public class DaemonMainStatsCache {
 	}
 	
 	public void process() {
-		System.out.println("===========> Daemon de remplissage de Mongo : Collection Stats_Cache <============");
+		System.out.println("===========> Daemon de remplissage de Mongo : Collection Stats_Cache et suppression du cache des recherche <============");
 		Instant start = Instant.now();
 		service.addListIdMusicMostPopularAllRange();
+		service.deleteCacheUserExceedOneHour();
 		Instant end = Instant.now();
 		System.out.println(Duration.between(start, end)); // prints PT1M3.553S
-		System.out.println("=========> Fin du daemon de remplissage de Mongo : Collection Stats_Cache <==========");
+		System.out.println("=========> Fin du daemon de remplissage de Mongo : Collection Stats_Cache et suppression du cache des recherche  <==========");
 	}
 
 	public static void main(String[] args) throws IOException {

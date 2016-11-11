@@ -98,6 +98,7 @@ public class MongoServiceSearchUser {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
 		GregorianCalendar gc = new GregorianCalendar();
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+		System.out.println(week);
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS,new Document("$eq",week));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		List<IdMusicScore> list_music_score = new ArrayList<IdMusicScore>();

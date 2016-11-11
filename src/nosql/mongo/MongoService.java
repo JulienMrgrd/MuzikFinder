@@ -53,7 +53,7 @@ public class MongoService {
 					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
 					try {
 						synchronized (MuzikFinderUtils.class) {
-							MuzikFinderUtils.class.wait(5000);
+							MuzikFinderUtils.class.wait(2000);
 						}
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -62,7 +62,7 @@ public class MongoService {
 					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
 					try {
 						synchronized (MuzikFinderUtils.class) {
-							MuzikFinderUtils.class.wait(5000);
+							MuzikFinderUtils.class.wait(2000);
 						}
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block

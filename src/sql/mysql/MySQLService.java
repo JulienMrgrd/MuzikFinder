@@ -1,6 +1,5 @@
 package sql.mysql;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -16,25 +15,35 @@ import sql.metier.User;
 
 public class MySQLService {
 	
-	Connection connection;
-	String username;
-	String password;
-	String dbUrl;
+	/** Do Not Use connection directly, in case of problems with MySQL Always Data DB. Use getConnection() instead */
+	@Deprecated
+	private Connection connection;
 	private static final String USER_DB_NAME = "user";
 	private static final String SEARCH_DB_NAME = "search";
 
 	public MySQLService() throws URISyntaxException, ClassNotFoundException, SQLException {
-		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net:3306/heroku_1a48668fb87a67e?autoReconnect=true&reconnect=true");
 
-	    this.username = dbUri.getUserInfo().split(":")[0];
-	    this. password = dbUri.getUserInfo().split(":")[1];
-	    this.dbUrl = "jdbc:mysql://" + dbUri.getHost() +":"+ dbUri.getPort() + dbUri.getPath()+"?reconnect=true";
 	    Class.forName("com.mysql.jdbc.Driver");
-	    DriverManager.setLoginTimeout(0);
-		connection = DriverManager.getConnection(dbUrl, username, password);
+		connection = DriverManager.getConnection("jdbc:mysql://mysql-muzikfinder.alwaysdata.net/muzikfinder_mysql", "129684","MuzikFinder2016");
 		connection.setAutoCommit(true);
 		createTableUser();
 		createTableSearch();
+	}
+	
+	public Connection getConnection(){
+		try {
+			if(connection.isClosed() || !connection.isValid(0)){ // some issues oblige us to make this check at every request
+				new MySQLService();
+			}
+		} catch (ClassNotFoundException | URISyntaxException | SQLException e) {
+			e.printStackTrace();
+			try {
+				new MySQLService();
+			} catch (ClassNotFoundException | URISyntaxException | SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return connection;
 	}
 	
 	private void createTableUser() {
@@ -46,7 +55,7 @@ public class MySQLService {
 	            + "   email	           VARCHAR(30))";
 
 	    try {
-	    	Statement stmt = connection.createStatement();
+	    	Statement stmt = getConnection().createStatement();
 			stmt.execute(sqlCreate);
 			stmt.close();
 		} catch (SQLException e) {
@@ -62,7 +71,7 @@ public class MySQLService {
 	            + "   date             DATE)";
 	    
 	    try {
-	    	Statement stmt = connection.createStatement();
+	    	Statement stmt = getConnection().createStatement();
 			stmt.execute(sqlCreate);
 			stmt.close();
 		} catch (SQLException e) {
@@ -75,10 +84,7 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
-			if(connection.isClosed()){
-				connection = DriverManager.getConnection(dbUrl, username, password);
-			}
-			stmt = connection.createStatement();
+			stmt = getConnection().createStatement();
 			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"';";
 			boolean results = stmt.execute(sqlRequest);
 	
@@ -115,10 +121,7 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
-			if(connection.isClosed()){
-				connection = DriverManager.getConnection(dbUrl, username, password);
-			}
-			stmt = connection.createStatement();
+			stmt = getConnection().createStatement();
 		
 			String dateNow = year+"-"+month+"-"+day;
 			Date sqlDate = Date.valueOf(dateNow);
@@ -141,10 +144,7 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
-			if(connection.isClosed()){
-				connection = DriverManager.getConnection(dbUrl, username, password);
-			}
-			stmt = connection.createStatement();
+			stmt = getConnection().createStatement();
 			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"' and password = '"+password+"';";
 			boolean results = stmt.execute(sqlRequest);
 	
@@ -177,10 +177,7 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				stmt = connection.createStatement();
+				stmt = getConnection().createStatement();
 			
 				java.util.Date utilDate = new java.util.Date();
 			    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());		
@@ -211,10 +208,7 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				stmt = connection.createStatement();
+				stmt = getConnection().createStatement();
 			
 				String sqlRequest = "UPDATE "+USER_DB_NAME+" "
 						+ "SET password='"+newPassword+"'"
@@ -231,10 +225,7 @@ public class MySQLService {
 	public void setEmail(String id_user, String newEmail){
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				Statement stmt = connection.createStatement();
+				Statement stmt = getConnection().createStatement();
 				
 				String sqlRequest = "UPDATE "+USER_DB_NAME+" "
 						+ "SET email='"+newEmail+"'"
@@ -252,10 +243,7 @@ public class MySQLService {
 		
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				Statement stmt = connection.createStatement();
+				Statement stmt = getConnection().createStatement();
 		
 				String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
 						+ "WHERE id_user='"+id_user+"' and "
@@ -275,10 +263,7 @@ public class MySQLService {
 		System.out.println(date);
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				Statement stmt = connection.createStatement();
+				Statement stmt = getConnection().createStatement();
 				String sqlRequest="";
 				if(date!=null){
 					sqlRequest = "Select * from "+SEARCH_DB_NAME+" "
@@ -313,10 +298,7 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				stmt = connection.createStatement();
+				stmt = getConnection().createStatement();
 				
 				String sqlRequest = "DELETE  from "+USER_DB_NAME+" "
 						+ "WHERE id_user='"+id_user+"';";
@@ -337,10 +319,7 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
-				if(connection.isClosed()){
-					connection = DriverManager.getConnection(dbUrl, username, password);
-				}
-				stmt = connection.createStatement();
+				stmt = getConnection().createStatement();
 
 				String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
 						+ "WHERE id_user='"+id_user+"';";
@@ -358,7 +337,7 @@ public class MySQLService {
 	////////////////METHODE UTILES JUSTE PENDANT LA PERIODE DE DEV/////////////////////
 	public void seeAllDBUser() throws SQLException{
 		
-		Statement stmt = connection.createStatement();
+		Statement stmt = getConnection().createStatement();
 		String sqlRequest = "SELECT * from user "+USER_DB_NAME+";";
 		boolean results = stmt.execute(sqlRequest);
 
@@ -384,7 +363,7 @@ public class MySQLService {
 	
 	public void seeAllDBSearch() throws SQLException{
 		
-		Statement stmt = connection.createStatement();
+		Statement stmt = getConnection().createStatement();
 		String sqlRequest = "SELECT * from "+SEARCH_DB_NAME+";";
 		boolean results = stmt.execute(sqlRequest);
 

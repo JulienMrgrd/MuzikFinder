@@ -115,6 +115,7 @@ public class MuzikFinderService {
 	}
 	
 	public void addNewSearch(String idMusic, LocalDate userBirth){
+		System.out.println("new search");
 		nosql.addNewSearch(idMusic, userBirth);
 	}
 

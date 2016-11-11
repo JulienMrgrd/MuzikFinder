@@ -31,8 +31,14 @@
     text-decoration: underline;
 }
 
+a:active, a:hover {
+    outline: 0;
+}
+
 .btn-success.btn-outline:hover{
     color: #fff;
+    background-color: #5cb85c;
+    font-weight: bold;
 }
 .btn-success.btn-outline {
     color: #5cb85c;

@@ -17,15 +17,18 @@ import sql.metier.User;
 public class MySQLService {
 	
 	Connection connection;
+	String username;
+	String password;
+	String dbUrl;
 	private static final String USER_DB_NAME = "user";
 	private static final String SEARCH_DB_NAME = "search";
 
 	public MySQLService() throws URISyntaxException, ClassNotFoundException, SQLException {
 		URI dbUri = new URI("mysql://b9fb1bf9d96fd5:336ac448@us-cdbr-iron-east-04.cleardb.net:3306/heroku_1a48668fb87a67e?autoReconnect=true&reconnect=true");
 
-	    String username = dbUri.getUserInfo().split(":")[0];
-	    String password = dbUri.getUserInfo().split(":")[1];
-	    String dbUrl = "jdbc:mysql://" + dbUri.getHost() +":"+ dbUri.getPort() + dbUri.getPath()+"?reconnect=true";
+	    this.username = dbUri.getUserInfo().split(":")[0];
+	    this. password = dbUri.getUserInfo().split(":")[1];
+	    this.dbUrl = "jdbc:mysql://" + dbUri.getHost() +":"+ dbUri.getPort() + dbUri.getPath()+"?reconnect=true";
 	    Class.forName("com.mysql.jdbc.Driver");
 	    DriverManager.setLoginTimeout(0);
 		connection = DriverManager.getConnection(dbUrl, username, password);
@@ -72,6 +75,9 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
+			if(connection.isClosed()){
+				connection = DriverManager.getConnection(dbUrl, username, password);
+			}
 			stmt = connection.createStatement();
 			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"';";
 			boolean results = stmt.execute(sqlRequest);
@@ -109,6 +115,9 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
+			if(connection.isClosed()){
+				connection = DriverManager.getConnection(dbUrl, username, password);
+			}
 			stmt = connection.createStatement();
 		
 			String dateNow = year+"-"+month+"-"+day;
@@ -132,6 +141,9 @@ public class MySQLService {
 
 		Statement stmt;
 		try {
+			if(connection.isClosed()){
+				connection = DriverManager.getConnection(dbUrl, username, password);
+			}
 			stmt = connection.createStatement();
 			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"' and password = '"+password+"';";
 			boolean results = stmt.execute(sqlRequest);
@@ -165,6 +177,9 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				stmt = connection.createStatement();
 			
 				java.util.Date utilDate = new java.util.Date();
@@ -196,6 +211,9 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				stmt = connection.createStatement();
 			
 				String sqlRequest = "UPDATE "+USER_DB_NAME+" "
@@ -213,6 +231,9 @@ public class MySQLService {
 	public void setEmail(String id_user, String newEmail){
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				Statement stmt = connection.createStatement();
 				
 				String sqlRequest = "UPDATE "+USER_DB_NAME+" "
@@ -231,6 +252,9 @@ public class MySQLService {
 		
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				Statement stmt = connection.createStatement();
 		
 				String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "
@@ -251,6 +275,9 @@ public class MySQLService {
 		System.out.println(date);
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				Statement stmt = connection.createStatement();
 				String sqlRequest="";
 				if(date!=null){
@@ -286,6 +313,9 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				stmt = connection.createStatement();
 				
 				String sqlRequest = "DELETE  from "+USER_DB_NAME+" "
@@ -307,6 +337,9 @@ public class MySQLService {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
+				if(connection.isClosed()){
+					connection = DriverManager.getConnection(dbUrl, username, password);
+				}
 				stmt = connection.createStatement();
 
 				String sqlRequest = "DELETE  from "+SEARCH_DB_NAME+" "

@@ -137,6 +137,10 @@ public class NoSQLDB {
 		mongo.addNewSearch(idMusic, userBirth);
 	}
 	
+	public List<MFMusic> getListMFMusicMostPopularByRange(String range) {
+		return mongo.getListMFMusicMostPopularByRange(range);
+	}
+	
 	public List<MFMusic> getTopMusicSearchThisWeek(){
 		return mongo.getTopMusicSearchThisWeek();
 	}
@@ -162,5 +166,4 @@ public class NoSQLDB {
 	public void setPref(String prefName, String param) {
 		mongo.setPref(prefName, param);
 	}
-
 }

@@ -97,6 +97,10 @@ public class MuzikFinderService {
 		nosql.addListIdMusicMostPopularAllRange();
 	}
 	
+	public List<MFMusic> getListMFMusicMostPopularByRange(String range){
+		return nosql.getListMFMusicMostPopularByRange(range);
+	}
+	
 	
 	////====== SQL PART ====== ////
 	

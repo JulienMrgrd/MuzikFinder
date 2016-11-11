@@ -14,7 +14,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
 import interfaces.MFMusic;
-import server.dto.MFMusicDTO;
 import utils.IdMusicScore;
 import utils.MathUtils;
 import utils.MuzikFinderPreferences;
@@ -92,153 +91,6 @@ public class MongoServiceSearchUser {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
-		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
-		GregorianCalendar gc = new GregorianCalendar(Locale.US);
-		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
-		System.out.println(week);
-		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS,new Document("$eq",week));
-		MongoCursor<Document> cursor = ms.findBy(collection, doc);
-		List<IdMusicScore> list_music_score = new ArrayList<IdMusicScore>();
-		if(cursor.hasNext()){
-			Document doc_weeks = cursor.next();
-			System.out.println("doc_weeks : "+doc_weeks);
-			List<Document> list_age_range = (List<Document>) doc_weeks.get(MongoCollectionsAndKeys.AGERANGE_STATS);
-			for(Document doc_range : list_age_range){
-				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS).equals(range)){
-					List<Document> doc_musics = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS);
-					for(Document d : doc_musics){
-						IdMusicScore mscore= new IdMusicScore(d.getString(MongoCollectionsAndKeys.IDMUSIC_STATS)
-								,d.getInteger(MongoCollectionsAndKeys.SCOREMUSIC_STATS));
-						System.out.println("mscore : "+mscore);
-						list_music_score.add(mscore);
-					}
-				}
-			}
-		}
-		Collections.sort(list_music_score);
-		System.out.println(list_music_score);
-		System.out.println("Fin getListIdMUsicScoreMostPopularByRange : "+range);
-		return list_music_score;
-	}
-
-	static List<IdMusicScore> getListIdMusicScoreMostPopularAllRange(){
-		int test = 0;
-		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
-		List<IdMusicScore> list_music_score_min_twenty_five = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
-		List<IdMusicScore> list_music_score_min_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
-		List<IdMusicScore> list_music_score_plus_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
-
-		for(IdMusicScore id_score : list_music_score_min_twenty_five){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
-		for(IdMusicScore id_score : list_music_score_min_fifty){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
-		for(IdMusicScore id_score : list_music_score_plus_fifty){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
-		Collections.sort(list_music_score);
-		return list_music_score;
-	}
-
-	static List<String> getListIdMostPopularAllRangeInStats(String range){
-		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularAllRange();
-		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
-			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
-		List<String> list_id = new ArrayList<String>();
-		for(IdMusicScore mscore : list_music_score){
-			list_id.add(mscore.getIdMusic());
-		}
-		System.out.println(list_id);
-		return list_id;
-
-	}
-
-	static List<String> getListIdMostPopularByRangeInStats(String range){
-		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
-		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
-			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
-
-		List<String> list_id = new ArrayList<String>();
-		for(IdMusicScore mscore : list_music_score){
-			list_id.add(mscore.getIdMusic());
-		}
-		System.out.println("taille list_id : "+range+" = "+list_id.size());
-		return list_id;
-	}
-
-	@SuppressWarnings("unchecked")
-	static List<String> getListIdStringByRangeInStats_Cache(String range){
-		List<String> list_id = new ArrayList<String>();
-		MongoCollection<Document> collection_stats_cache = ms.getCollection(range);
-		GregorianCalendar gc = new GregorianCalendar(Locale.US);
-		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
-		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
-		MongoCursor<Document> cursor = ms.findBy(collection_stats_cache, doc);
-		if(cursor.hasNext()){
-			Document doc_weeks = cursor.next();
-			List<Document> list_age_range = (List<Document>) doc_weeks.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE);
-			for(Document doc_range : list_age_range){
-				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range)){
-					List<Document> doc_musics = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS_CACHE);
-					for(Document d : doc_musics){
-						list_id.add(d.getString(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE));
-					}
-				}
-			}
-		}
-		return list_id;
-	}
-
-	static List<MFMusicDTO> getListMFMusicDTOMostPopularByRange(String range){
-		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
-	
-		List<String> list_id = getListIdStringByRangeInStats_Cache(range);
-		List<MFMusicDTO> list_music_dto = new ArrayList<MFMusicDTO>();
-
-		for(String id : list_id){
-			Document findQuery = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",id));
-			MongoCursor<Document> cursor_music = ms.findBy(collection_musics, findQuery);	
-			if(cursor_music.hasNext()){
-				Document music_doc = cursor_music.next();
-				System.out.println(music_doc);
-				list_music_dto.add((MFMusicDTO) MongoUtils.transformDocumentIntoMFMusic(music_doc));
-			}
-		}
-		return list_music_dto;
-	}
-
-
 	// Méthode retournant la tranche d'âge correspondante à l'âge de l'utilisateur dans la collection STATS 
 	static String getRangeByAge(int age){
 		if(age<18)
@@ -250,103 +102,8 @@ public class MongoServiceSearchUser {
 		else
 			return MongoCollectionsAndKeys.PLUSFIFTY_STATS;
 	}
-
-	/* Méthode appelé par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
-	public static void addListIdMusicMostPopularAllRange(){
-		System.out.println("Début appel addList");
-		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
-		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
-		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
-		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
-		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.GENERAL_STATS_CACHE);
-		System.out.println("Fin appel addList");
-	}
-
-
-	@SuppressWarnings("unchecked")
-	static void addListIdMusicMostPopularByRange(String range){
-		System.out.println("addList : "+range);
-		List<String> list_id_music = new ArrayList<String>();
-		if(range.equals(MongoCollectionsAndKeys.GENERAL_STATS_CACHE))
-			list_id_music= getListIdMostPopularAllRangeInStats(range);
-		else
-			list_id_music = getListIdMostPopularByRangeInStats(range);
-
-		if(list_id_music.isEmpty()) return; // Aucune musique dans le range 
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS_CACHE);
-		GregorianCalendar gc = new GregorianCalendar(Locale.US);
-		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
-		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
-		MongoCursor<Document> cursor = ms.findBy(collection, doc);
-		Document old = new Document();
-		Document fin = new Document();
-		if(cursor.hasNext()){
-			fin.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
-			old.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
-			Document age_range_doc = cursor.next();
-			List<Document> list_age_range =  (List<Document>) age_range_doc.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE);
-			old.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE, list_age_range);
-			for(Document doc_range : list_age_range){
-				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range)){
-					Document age_range = new Document();
-					age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
-					List<Document> list_id_music_doc = new ArrayList<Document>();
-					for(String id : list_id_music){
-						Document doc_id = new Document();
-						doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
-						list_id_music_doc.add(doc_id);
-					}
-					age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
-					List<Document> list_range = new ArrayList<Document>();
-					list_range.add(age_range);
-					for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
-						if(!(list_range.contains(doc_tmp)))
-							list_range.add(doc_tmp);
-					fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
-					ms.replaceOne(collection, old, fin);
-					return;
-				}
-			}
-
-			Document age_range = new Document();
-			age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
-			List<Document> list_id_music_doc = new ArrayList<Document>();
-			for(String id : list_id_music){
-				Document doc_id = new Document();
-				doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
-				list_id_music_doc.add(doc_id);
-			}
-			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
-			List<Document> list_range = new ArrayList<Document>();
-			list_range.add(age_range);
-			for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
-				if(!(list_range.contains(doc_tmp)))
-					list_range.add(doc_tmp);
-			fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
-			ms.replaceOne(collection, old, fin);
-			return;
-		}
-		else{
-			Document new_doc = new Document();
-			new_doc.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
-			Document age_range = new Document();
-			age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
-			List<Document> list_id_music_doc = new ArrayList<Document>();
-			for(String id : list_id_music){
-				Document doc_id = new Document();
-				doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
-				list_id_music_doc.add(doc_id);
-			}
-			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
-			List<Document> list_range = new ArrayList<Document>();
-			list_range.add(age_range);
-			new_doc.put(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
-			ms.insertOne(collection, new_doc);
-			return;
-		}
-	}
-
-
+///////////**********************  PARTIE COLLECTION MONGO STATS ****************///////////////////////////
+	
 	// Méthode permettant de rajouter dans la collection Stats le résultat de la recherche de l'utilisateur.
 	@SuppressWarnings("unchecked")
 	static void addNewSearch(String idMusic, Date userBirth){
@@ -444,7 +201,256 @@ public class MongoServiceSearchUser {
 		}
 
 	}
+	
+////////////////******************* PARTIE COLLECTION MONGO STATS_CACHE ***************////////////////////	
+	
+	
+	@SuppressWarnings("unchecked")
+	static void addListIdMusicMostPopularByRange(String range){
+		System.out.println("addList : "+range);
+		List<String> list_id_music = new ArrayList<String>();
+		if(range.equals(MongoCollectionsAndKeys.GENERAL_STATS_CACHE))
+			list_id_music= getListIdMostPopularAllRangeInStats(range);
+		else
+			list_id_music = getListIdMostPopularByRangeInStats(range);
 
+		if(list_id_music.isEmpty()) return; // Aucune musique dans le range 
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS_CACHE);
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
+		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
+		MongoCursor<Document> cursor = ms.findBy(collection, doc);
+		Document old = new Document();
+		Document fin = new Document();
+		if(cursor.hasNext()){
+			fin.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
+			old.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
+			Document age_range_doc = cursor.next();
+			List<Document> list_age_range =  (List<Document>) age_range_doc.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE);
+			old.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE, list_age_range);
+			for(Document doc_range : list_age_range){
+				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range)){
+					Document age_range = new Document();
+					age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
+					List<Document> list_id_music_doc = new ArrayList<Document>();
+					for(String id : list_id_music){
+						Document doc_id = new Document();
+						doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
+						list_id_music_doc.add(doc_id);
+					}
+					age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
+					List<Document> list_range = new ArrayList<Document>();
+					list_range.add(age_range);
+					for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+						if(!(list_range.contains(doc_tmp)))
+							list_range.add(doc_tmp);
+					fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
+					ms.replaceOne(collection, old, fin);
+					return;
+				}
+			}
+
+			Document age_range = new Document();
+			age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
+			List<Document> list_id_music_doc = new ArrayList<Document>();
+			for(String id : list_id_music){
+				Document doc_id = new Document();
+				doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
+				list_id_music_doc.add(doc_id);
+			}
+			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
+			List<Document> list_range = new ArrayList<Document>();
+			list_range.add(age_range);
+			for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+				if(!(list_range.contains(doc_tmp)))
+					list_range.add(doc_tmp);
+			fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
+			ms.replaceOne(collection, old, fin);
+			return;
+		}
+		else{
+			Document new_doc = new Document();
+			new_doc.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE, week);
+			Document age_range = new Document();
+			age_range.put(MongoCollectionsAndKeys.AGE_STATS_CACHE,range);
+			List<Document> list_id_music_doc = new ArrayList<Document>();
+			for(String id : list_id_music){
+				Document doc_id = new Document();
+				doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
+				list_id_music_doc.add(doc_id);
+			}
+			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
+			List<Document> list_range = new ArrayList<Document>();
+			list_range.add(age_range);
+			new_doc.put(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
+			ms.insertOne(collection, new_doc);
+			return;
+		}
+	}
+	
+	
+	static List<String> getListIdMostPopularByRangeInStats(String range){
+		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
+		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
+			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
+
+		List<String> list_id = new ArrayList<String>();
+		for(IdMusicScore mscore : list_music_score){
+			list_id.add(mscore.getIdMusic());
+		}
+		System.out.println("taille list_id : "+range+" = "+list_id.size());
+		return list_id;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
+		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
+		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+		System.out.println(week);
+		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS,new Document("$eq",week));
+		MongoCursor<Document> cursor = ms.findBy(collection, doc);
+		List<IdMusicScore> list_music_score = new ArrayList<IdMusicScore>();
+		if(cursor.hasNext()){
+			Document doc_weeks = cursor.next();
+			System.out.println("doc_weeks : "+doc_weeks);
+			List<Document> list_age_range = (List<Document>) doc_weeks.get(MongoCollectionsAndKeys.AGERANGE_STATS);
+			for(Document doc_range : list_age_range){
+				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS).equals(range)){
+					List<Document> doc_musics = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS);
+					for(Document d : doc_musics){
+						IdMusicScore mscore= new IdMusicScore(d.getString(MongoCollectionsAndKeys.IDMUSIC_STATS)
+								,d.getInteger(MongoCollectionsAndKeys.SCOREMUSIC_STATS));
+						System.out.println("mscore : "+mscore);
+						list_music_score.add(mscore);
+					}
+				}
+			}
+		}
+		Collections.sort(list_music_score);
+		System.out.println(list_music_score);
+		System.out.println("Fin getListIdMUsicScoreMostPopularByRange : "+range);
+		return list_music_score;
+	}
+
+	static List<IdMusicScore> getListIdMusicScoreMostPopularAllRange(){
+		int test = 0;
+		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
+		List<IdMusicScore> list_music_score_min_twenty_five = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
+		List<IdMusicScore> list_music_score_min_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
+		List<IdMusicScore> list_music_score_plus_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
+
+		for(IdMusicScore id_score : list_music_score_min_twenty_five){
+			for(IdMusicScore id_score_tmp : list_music_score){
+				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
+					test = 1;
+					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
+				}
+			}
+			if(test==0){
+				list_music_score.add(id_score);
+			}
+			test = 0;
+		}
+		for(IdMusicScore id_score : list_music_score_min_fifty){
+			for(IdMusicScore id_score_tmp : list_music_score){
+				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
+					test = 1;
+					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
+				}
+			}
+			if(test==0){
+				list_music_score.add(id_score);
+			}
+			test = 0;
+		}
+		for(IdMusicScore id_score : list_music_score_plus_fifty){
+			for(IdMusicScore id_score_tmp : list_music_score){
+				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
+					test = 1;
+					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
+				}
+			}
+			if(test==0){
+				list_music_score.add(id_score);
+			}
+			test = 0;
+		}
+		Collections.sort(list_music_score);
+		return list_music_score;
+	}
+
+	static List<String> getListIdMostPopularAllRangeInStats(String range){
+		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularAllRange();
+		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
+			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
+		List<String> list_id = new ArrayList<String>();
+		for(IdMusicScore mscore : list_music_score){
+			list_id.add(mscore.getIdMusic());
+		}
+		System.out.println(list_id);
+		return list_id;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	static List<String> getListIdStringByRangeInStats_Cache(String range){
+		List<String> list_id = new ArrayList<String>();
+		MongoCollection<Document> collection_stats_cache = ms.getCollection(range);
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
+		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
+		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
+		MongoCursor<Document> cursor = ms.findBy(collection_stats_cache, doc);
+		if(cursor.hasNext()){
+			Document doc_weeks = cursor.next();
+			List<Document> list_age_range = (List<Document>) doc_weeks.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE);
+			for(Document doc_range : list_age_range){
+				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range)){
+					List<Document> doc_musics = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS_CACHE);
+					for(Document d : doc_musics){
+						list_id.add(d.getString(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE));
+					}
+				}
+			}
+		}
+		return list_id;
+	}
+
+//////////////************************ PARTIE DEAMON AJOUT DANS STATS_CACHE **************///////////////////
+
+	/* Méthode appelé par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
+	public static void addListIdMusicMostPopularAllRange(){
+		System.out.println("Début appel addList");
+		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
+		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
+		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
+		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
+		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.GENERAL_STATS_CACHE);
+		System.out.println("Fin appel addList");
+	}
+
+//////////////////******************* PARTIE FONCTION RECUPERATION DANS STATS_CACHE POUR PAGE WEB *******///////
+
+	public static List<MFMusic> getListMFMusicMostPopularByRange(String range){
+		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+	
+		List<String> list_id = getListIdStringByRangeInStats_Cache(range);
+		List<MFMusic> list_music_dto = new ArrayList<MFMusic>();
+
+		for(String id : list_id){
+			Document findQuery = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",id));
+			MongoCursor<Document> cursor_music = ms.findBy(collection_musics, findQuery);	
+			if(cursor_music.hasNext()){
+				Document music_doc = cursor_music.next();
+				System.out.println(music_doc);
+				list_music_dto.add(MongoUtils.transformDocumentIntoMFMusic(music_doc));
+			}
+		}
+		return list_music_dto;
+	}	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	public static void deleteCacheUserExceedOneHour(){
 		long timeNow = new Date().getTime() - TimeInMilliSeconds.HOUR.value;
 		Document doc;

@@ -248,6 +248,10 @@ public class MongoService {
 		MongoServiceSearchUser.addNewSearch(idMusic, userBirth);
 	}
 	
+	public List<MFMusic> getListMFMusicMostPopularByRange(String range) {
+		return MongoServiceSearchUser.getListMFMusicMostPopularByRange(range);
+	}
+	
 	public List<MFMusic> getTopMusicSearchThisWeek(){
 		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.WEEK);
 	}
@@ -255,6 +259,7 @@ public class MongoService {
 	public List<MFMusic> getTopMusicSearchThisMonth(){
 		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.MONTH);
 	}
+	
 	
 	public void deleteCacheUserExceedOneHour(){
 		MongoServiceSearchUser.deleteCacheUserExceedOneHour();

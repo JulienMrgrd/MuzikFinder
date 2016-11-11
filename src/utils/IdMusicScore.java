@@ -14,6 +14,7 @@ public class IdMusicScore implements Comparable<IdMusicScore>{
 	public IdMusicScore(String tag, Integer score) {
 		this.score = score;
 		this.idMusic =tag;
+		this.nbOccur = 0;
 	}
 	
 	public IdMusicScore(String tag, Integer score, int nbOccur) {

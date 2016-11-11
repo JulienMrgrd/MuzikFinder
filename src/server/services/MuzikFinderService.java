@@ -1,5 +1,6 @@
 package server.services;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import interfaces.MFArtist;
 import interfaces.MFMusic;
 import nosql.NoSQLDB;
 import sql.SQLDB;
+import sql.metier.Search;
 import sql.metier.User;
 import utils.MuzikFinderPreferences;
 
@@ -76,7 +78,10 @@ public class MuzikFinderService {
 		return nosql.getIdMusicsByChainWords(lyrics);
 	}
 	
-	public List<MFMusic> searchMusics(List<String> tags, String idRecherche) {
+	public List<MFMusic> searchMusics(String id_user,List<String> tags, String idRecherche) {
+		String recherche="";
+		for(String s : tags) recherche+=s+" ";
+		sql.addSearch(id_user, recherche, idRecherche);
 		return nosql.searchMusics(tags, idRecherche);
 	}
 	
@@ -90,16 +95,36 @@ public class MuzikFinderService {
 	
 	////====== SQL PART ====== ////
 	
-	public User checkConnection(String username, String password) {
-		return sql.checkConnexion(username, password);
-	}
-	
 	public User createNewUser(String username, String password, String mail, int year, int month, int day) {
 		return sql.createNewUser(username, password, mail, year, month, day);
 	}
 	
+	public User checkConnection(String username, String password) {
+		return sql.checkConnexion(username, password);
+	}
+	
 	public boolean checkLogin(String username) {
 		return sql.checkLogin(username);
+	}
+	
+	public void update(String id_user, String newPassword, String newEmail){
+		sql.update(id_user, newPassword, newEmail);
+	}
+	
+	public void deleteSearchByDateAndUser(String id_user, Date date) {
+		sql.deleteSearchByDateAndUser(id_user, date);
+	}
+	
+	public List<Search> getSearchByDateAndUser(String id_user, Date date) {
+		return sql.getSearchByDateAndUser(id_user, date);
+	}
+
+	public User deleteAccountUser(String id_user) {
+		return sql.deleteAccountUser(id_user);
+	}
+		
+	public void deleteSearchUser(String id_user){
+		sql.deleteSearchUser(id_user);
 	}
 	
 	

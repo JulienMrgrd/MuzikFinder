@@ -178,7 +178,6 @@ public class MySQLService {
 			    
 				String sqlRequest = "INSERT INTO "+SEARCH_DB_NAME+"(id_user,recherche,id_recherche,date) VALUES('"
 						+ id_user+"','"+recherche+"','"+id_recherche+"','"+sqlDate+"');";
-				System.out.println(sqlRequest);
 				stmt.execute(sqlRequest);
 				stmt.close();
 			} catch (SQLException e) {
@@ -254,6 +253,7 @@ public class MySQLService {
 	public List<Search> getSearchByDateAndUser(String id_user, Date date) {
 		
 		List<Search> listSearch = new ArrayList<>();
+		System.out.println(date);
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
 				Statement stmt = connection.createStatement();
@@ -272,8 +272,7 @@ public class MySQLService {
 					ResultSet rs = stmt.getResultSet();
 					try {
 						while (rs.next()) {
-							System.out.println("in while");
-							listSearch.add(new Search(rs.getString("id_user"), rs.getString("recherche"),
+							listSearch.add(0,new Search(rs.getString("id_user"), rs.getString("recherche"),
 									rs.getString("id_recherche"), rs.getDate("date")));
 						}
 					} finally {
@@ -385,15 +384,26 @@ public class MySQLService {
 	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());	
 	    
 		MySQLService mysql = new MySQLService();
-		User us=mysql.checkConnexion("feligo", "password");
-		String id_user=us.getId();
-		//mysql.addSearch(id_user, "recherche leeekn^^peefok lkefo", "id_recherche");
-		mysql.update(id_user, "password", "");	
-	    
-		mysql.deleteAccountUser(id_user);
 		
-		for(Search s:mysql.getSearchByDateAndUser(id_user, null)){
-			System.out.println(s.getIdRecherche());
+		User us=mysql.checkConnexion("julien", "julien");
+		/*mysql.addSearch(us.getId(), "recherche", "845456");
+		mysql.addSearch(us.getId(), "recherche2", "845456");
+		mysql.addSearch(us.getId(), "recherche3", "845456");
+		mysql.addSearch(us.getId(), "recherche4", "845456");*/
+		for(Search s :mysql.getSearchByDateAndUser("2", sqlDate)){
+			System.out.println(s.getRecherche());
 		}
+		//mysql.seeAllDBSearch();
+		//mysql.seeAllDBUser();
+		//User us = mysql.createNewUser("pseudo", "password", "email", 1994, 12, 5);
+		//String id_user=us.getId();
+		//mysql.addSearch(id_user, "recherche leeekn^^peefok lkefo", "id_recherche");
+		//mysql.update(id_user, "password", "");	
+	    
+		//mysql.deleteAccountUser(id_user);
+		
+		/*for(Search s:mysql.getSearchByDateAndUser(id_user, null)){
+			System.out.println(s.getIdRecherche());
+		}*/
 	}
 }

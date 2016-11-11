@@ -11,9 +11,9 @@ public final class MuzikFinderUtils {
 	}
 	
 	public static String getCookieValueByName(String name, Cookie[] cookies){
-		if (cookies != null) {
+		if (cookies != null && name!=null) {
 		    for(Cookie cookie : cookies) {
-		        if(cookie.equals(cookie.getName())) return cookie.getValue();
+		        if(name.equals(cookie.getName())) return cookie.getValue();
 		    }
 		}
 		return null;

@@ -185,8 +185,9 @@ public class MongoServiceSearchUser {
 
 	static List<String> getListIdMostPopularByRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
-		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
+		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
 			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
+		
 		List<String> list_id = new ArrayList<String>();
 		for(IdMusicScore mscore : list_music_score){
 			list_id.add(mscore.getIdMusic());
@@ -285,7 +286,7 @@ public class MongoServiceSearchUser {
 		else
 			list_id_music = getListIdMostPopularByRangeInStats(range);
 
-		if(list_id_music.isEmpty())return;
+		if(list_id_music.isEmpty()) return; // Aucune musique dans le range 
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS_CACHE);
 		GregorianCalendar gc = new GregorianCalendar();
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));

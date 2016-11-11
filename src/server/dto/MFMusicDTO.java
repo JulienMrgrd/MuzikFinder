@@ -18,8 +18,8 @@ public class MFMusicDTO implements MFMusic{
 	private String musicGenre;
 
 	public MFMusicDTO(String trackId, String trackName, String idArtist, String artistName,
-				  String albumId, String albumName, String spotifyId, String soundCloudId, String hasLyrics,
-				  MFLyricsDTO lyrics, String musicGenre){
+			String albumId, String albumName, String spotifyId, String soundCloudId, String hasLyrics,
+			MFLyricsDTO lyrics, String musicGenre){
 		this.trackId=trackId;
 		this.trackName=trackName;
 		this.idArtist=idArtist;
@@ -32,7 +32,7 @@ public class MFMusicDTO implements MFMusic{
 		this.lyrics=lyrics;
 		this.musicGenre=musicGenre;
 	}
-	
+
 	@Override
 	public String getTrackId() {
 		return trackId;
@@ -82,7 +82,7 @@ public class MFMusicDTO implements MFMusic{
 	public void setAlbumId(String albumId) {
 		this.albumId=albumId;
 	}
-	
+
 	@Override
 	public String getAlbumName() {
 		return albumName;
@@ -141,6 +141,20 @@ public class MFMusicDTO implements MFMusic{
 	@Override
 	public void setMusicGenre(String musicGenre) {
 		this.musicGenre = musicGenre;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof MFMusicDTO 
+				&& this.getArtistName().equals(((MFMusic) obj).getArtistName()) 
+				&& this.getTrackName().equals(((MFMusic) obj).getTrackName())){
+			return true;
+		}
+		return false;
+	}
+
+	public int hashCode() {
+		return 0;
 	}
 
 }

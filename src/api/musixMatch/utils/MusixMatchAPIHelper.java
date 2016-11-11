@@ -99,10 +99,16 @@ public final class MusixMatchAPIHelper {
 			JSONObject primary = jsonSong.getJSONObject("primary_genres");
 			JSONArray array = primary.getJSONArray("music_genre_list");
 			JSONObject first = array.getJSONObject(0).getJSONObject("music_genre");
-			return first.getString("music_genre_name");
-		} catch (Exception e){
-			return null;
-		}
+			if(first.getString("music_genre_name")!=null) return first.getString("music_genre_name");
+		} catch (Exception e){}
+		
+		try {
+			JSONObject primary = jsonSong.getJSONObject("secondary_genres");
+			JSONArray array = primary.getJSONArray("music_genre_list");
+			JSONObject first = array.getJSONObject(0).getJSONObject("music_genre");
+			if(first.getString("music_genre_name")!=null) return first.getString("music_genre_name");
+		} catch (Exception e){}
+		return null;
 	}
 
 	public static MFLyrics getLyrics(String json) {

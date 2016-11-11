@@ -127,6 +127,10 @@ public class NoSQLDB {
 	public List<MFMusic> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
 		return mongo.searchMusicsByTagsInLyrics(tags, idRecherche);
 	}
+	
+	public List<MFMusic> getMoreResults(String idRecherche){
+		return mongo.getMoreResults(idRecherche);
+	}
 
 	///////////////PARTIE SEARCH USER/////////////////////////
 	public void addNewSearch(String idMusic, Date userBirth){

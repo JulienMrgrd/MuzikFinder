@@ -83,7 +83,6 @@
 <script> 
 	(function() { 
 		var login = Cookies.get('MUZIKFINDERLOGIN');
-		console.log(login);
 		if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
 		else $("#header").load("htmls/header/headerConnected.html");
 		

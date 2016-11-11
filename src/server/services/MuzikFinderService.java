@@ -89,9 +89,14 @@ public class MuzikFinderService {
 		return nosql.getMusicById(idMusic);
 	}
 	
+	public List<MFMusic> getMoreResults(String idRecherche){
+		return nosql.getMoreResults(idRecherche);
+	}
+	
 	public void addListIdMusicMostPopularAllRange(){
 		nosql.addListIdMusicMostPopularAllRange();
 	}
+	
 	
 	////====== SQL PART ====== ////
 	
@@ -106,7 +111,7 @@ public class MuzikFinderService {
 	public boolean checkLogin(String username) {
 		return sql.checkLogin(username);
 	}
-	
+
 	public void update(String id_user, String newPassword, String newEmail){
 		sql.update(id_user, newPassword, newEmail);
 	}
@@ -126,7 +131,7 @@ public class MuzikFinderService {
 	public void deleteSearchUser(String id_user){
 		sql.deleteSearchUser(id_user);
 	}
-	
+
 	
 	////====== DAEMON PART ====== ////
 	

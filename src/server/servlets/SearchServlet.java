@@ -2,7 +2,9 @@ package server.servlets;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import interfaces.MFMusic;
 import server.services.MuzikFinderService;
 import utils.MuzikFinderPreferences;
 import utils.MuzikFinderUtils;
@@ -52,8 +55,12 @@ public class SearchServlet extends HttpServlet {
 
 			} else {
 				request.setAttribute("success", true);
-				request.setAttribute("results", MuzikFinderService.getInstance().searchMusics(userId,tags, 
-						MuzikFinderUtils.generateRandomIdSearch(userLogin)));
+				String randomSearchId = MuzikFinderUtils.generateRandomIdSearch(userLogin);
+				request.setAttribute("searchId", randomSearchId);
+				
+				List<MFMusic> musics = MuzikFinderService.getInstance().searchMusics(userId, tags, randomSearchId);
+				Set<MFMusic> musicsWithoutDuplicate = new HashSet<>(musics);
+				request.setAttribute("results", musicsWithoutDuplicate);
 				
 				// Regex construction (voir coloration des mots dans search.jsp)
 				String str = tags.get(0);

@@ -176,6 +176,7 @@ public class MongoServiceSearchUser {
 		for(IdMusicScore mscore : list_music_score){
 			list_id.add(mscore.getIdMusic());
 		}
+		System.out.println(list_id);
 		return list_id;
 
 	}

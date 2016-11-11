@@ -52,7 +52,7 @@ public class SearchServlet extends HttpServlet {
 
 			} else {
 				request.setAttribute("success", true);
-				request.setAttribute("results", MuzikFinderService.getInstance().searchMusics(tags, 
+				request.setAttribute("results", MuzikFinderService.getInstance().searchMusics(userId,tags, 
 						MuzikFinderUtils.generateRandomIdSearch(userLogin)));
 				
 				// Regex construction (voir coloration des mots dans search.jsp)

@@ -94,6 +94,7 @@ public class MongoServiceSearchUser {
 
 	@SuppressWarnings("unchecked")
 	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
+		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
 		GregorianCalendar gc = new GregorianCalendar();
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
@@ -115,6 +116,8 @@ public class MongoServiceSearchUser {
 			}
 		}
 		Collections.sort(list_music_score);
+		System.out.println(list_music_score);
+		System.out.println("Fin getListIdMUsicScoreMostPopularByRange : "+range);
 		return list_music_score;
 	}
 

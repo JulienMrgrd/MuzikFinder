@@ -18,6 +18,7 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFMusic;
 import utils.MuzikFinderPreferences;
+import utils.MuzikFinderUtils;
 import utils.TimeInMilliSeconds;
 
 public class MongoService {
@@ -49,6 +50,26 @@ public class MongoService {
 			synchronized(MongoService.class){
 				if (INSTANCE == null){
 					INSTANCE = new MongoService();
+					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
+					try {
+						synchronized (MuzikFinderUtils.class) {
+							MuzikFinderUtils.class.wait(5000);
+						}
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
+					try {
+						synchronized (MuzikFinderUtils.class) {
+							MuzikFinderUtils.class.wait(5000);
+						}
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println(INSTANCE.db +" : "+INSTANCE.getPref(MongoCollectionsAndKeys.POSCOUNTRY_PREFS));
+					System.out.println();
 				}
 			}
 		}

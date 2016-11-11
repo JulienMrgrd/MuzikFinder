@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.bson.Document;
 
@@ -90,13 +91,12 @@ public class MongoServiceSearchUser {
 		}
 		return null;
 	}
-
-
+	
 	@SuppressWarnings("unchecked")
 	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
 		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
-		GregorianCalendar gc = new GregorianCalendar();
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 		System.out.println(week);
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS,new Document("$eq",week));
@@ -201,7 +201,7 @@ public class MongoServiceSearchUser {
 	static List<String> getListIdStringByRangeInStats_Cache(String range){
 		List<String> list_id = new ArrayList<String>();
 		MongoCollection<Document> collection_stats_cache = ms.getCollection(range);
-		GregorianCalendar gc = new GregorianCalendar();
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
 		MongoCursor<Document> cursor = ms.findBy(collection_stats_cache, doc);
@@ -289,7 +289,7 @@ public class MongoServiceSearchUser {
 
 		if(list_id_music.isEmpty()) return; // Aucune musique dans le range 
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS_CACHE);
-		GregorianCalendar gc = new GregorianCalendar();
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
@@ -362,7 +362,7 @@ public class MongoServiceSearchUser {
 	}
 
 
-	// Méthode permettant de rajouter dans la collection Statistique le résultat de la recherche de l'utilisateur.
+	// Méthode permettant de rajouter dans la collection Stats le résultat de la recherche de l'utilisateur.
 	@SuppressWarnings("unchecked")
 	static void addNewSearch(String idMusic, Date userBirth){
 		int age = MathUtils.calculAge(userBirth);
@@ -370,7 +370,7 @@ public class MongoServiceSearchUser {
 		int test = 0;
 		Document fin = new Document();
 		Document old = new Document();
-		GregorianCalendar gc = new GregorianCalendar();
+		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);

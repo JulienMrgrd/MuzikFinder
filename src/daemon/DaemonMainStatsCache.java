@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
-import api.musixMatch.utils.RequestHelper;
 import server.services.MuzikFinderService;
 
 public class DaemonMainStatsCache {
@@ -20,7 +19,6 @@ public class DaemonMainStatsCache {
 		service.addListIdMusicMostPopularAllRange();
 		Instant end = Instant.now();
 		System.out.println(Duration.between(start, end)); // prints PT1M3.553S
-		System.out.println("Nombre de requêtes émises : "+RequestHelper.cpt);
 		System.out.println("=========> Fin du daemon de remplissage de Mongo : Collection Stats_Cache <==========");
 	}
 

@@ -91,7 +91,7 @@ public class MongoServiceSearchUser {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
 		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
@@ -188,7 +188,7 @@ public class MongoServiceSearchUser {
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
 		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
 			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
-		
+
 		List<String> list_id = new ArrayList<String>();
 		for(IdMusicScore mscore : list_music_score){
 			list_id.add(mscore.getIdMusic());
@@ -220,8 +220,9 @@ public class MongoServiceSearchUser {
 		return list_id;
 	}
 
-	static List<MFMusicDTO> getListMFMusicDTOMostPopular(String range){
+	static List<MFMusicDTO> getListMFMusicDTOMostPopularByRange(String range){
 		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
+	
 		List<String> list_id = getListIdStringByRangeInStats_Cache(range);
 		List<MFMusicDTO> list_music_dto = new ArrayList<MFMusicDTO>();
 
@@ -260,23 +261,7 @@ public class MongoServiceSearchUser {
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.GENERAL_STATS_CACHE);
 		System.out.println("Fin appel addList");
 	}
-	
-	public List<MFMusicDTO> getListMFMusicDTOMostPopularAllRange(){
-		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
-		List<String> list_id = getListIdStringByRangeInStats_Cache(MongoCollectionsAndKeys.GENERAL_STATS_CACHE);
-		List<MFMusicDTO> list_music_dto = new ArrayList<MFMusicDTO>();
 
-		for(String id : list_id){
-			Document findQuery = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",id));
-			MongoCursor<Document> cursor_music = ms.findBy(collection_musics, findQuery);	
-			if(cursor_music.hasNext()){
-				Document music_doc = cursor_music.next();
-				System.out.println(music_doc);
-				list_music_dto.add((MFMusicDTO) MongoUtils.transformDocumentIntoMFMusic(music_doc));
-			}
-		}
-		return list_music_dto;
-	}
 
 	@SuppressWarnings("unchecked")
 	static void addListIdMusicMostPopularByRange(String range){
@@ -466,21 +451,5 @@ public class MongoServiceSearchUser {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
 		doc = new Document("time", new Document("$lt",timeNow));
 		ms.deleteMany(collection, doc);
-	}
-
-
-	public static void main(String[] args){
-		//MySQLService mysql = MySQLService.getInstance();
-		//User user = mysql.checkConnexion("llll", "llll");
-		//User user1 = mysql.checkConnexion("aaaa", "aaaa");
-		//addNewSearch("1138154490", user1.getDateBirth());
-		//addNewSearch("100015321", user.getDateBirth());
-		//addListIdMusicMostPopularByRange("-25");
-		/*	List<MFMusicDTO> list = getIdMusicMostPopular(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS); 
-		System.out.println(list);
-		for(MFMusicDTO m : list)
-			System.out.println(m);*/
-		addListIdMusicMostPopularAllRange();
-		//	addListIdMusicMostPopularAllRange();
 	}
 }

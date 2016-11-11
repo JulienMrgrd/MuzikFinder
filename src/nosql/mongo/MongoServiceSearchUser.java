@@ -103,6 +103,7 @@ public class MongoServiceSearchUser {
 		List<IdMusicScore> list_music_score = new ArrayList<IdMusicScore>();
 		if(cursor.hasNext()){
 			Document doc_weeks = cursor.next();
+			System.out.println("doc_weeks : "+doc_weeks);
 			List<Document> list_age_range = (List<Document>) doc_weeks.get(MongoCollectionsAndKeys.AGERANGE_STATS);
 			for(Document doc_range : list_age_range){
 				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS).equals(range)){
@@ -110,6 +111,7 @@ public class MongoServiceSearchUser {
 					for(Document d : doc_musics){
 						IdMusicScore mscore= new IdMusicScore(d.getString(MongoCollectionsAndKeys.IDMUSIC_STATS)
 								,d.getInteger(MongoCollectionsAndKeys.SCOREMUSIC_STATS));
+						System.out.println("mscore : "+mscore);
 						list_music_score.add(mscore);
 					}
 				}

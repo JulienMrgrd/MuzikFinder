@@ -425,7 +425,7 @@ public class MongoServiceSearchUser {
 		if(range==null || range.isEmpty()) return null;
 		
 		List<String> list_id = new ArrayList<String>();
-		MongoCollection<Document> collection_stats_cache = ms.getCollection(range);
+		MongoCollection<Document> collection_stats_cache = ms.getCollection(MongoCollectionsAndKeys.STATS_CACHE);
 		if(collection_stats_cache==null) return null;
 		
 		GregorianCalendar gc = new GregorianCalendar(Locale.US);

@@ -52,6 +52,8 @@ public class FindGoodMusicServlet extends HttpServlet {
 	    PrintWriter out = response.getWriter();
 	    out.print(myResponse);
 	    out.close();
+	    
+	    MuzikFinderUtils.updateTimeCookies(request, response);
 	}
 	
 }

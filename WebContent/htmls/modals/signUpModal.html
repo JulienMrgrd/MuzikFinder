@@ -13,7 +13,7 @@
 					<strong id="strongErrorMessageSignup"></strong>
 				</div>
 				
-				<form id="myAjaxRequestForm" autocomplete="on">
+				<form id="signupAjaxRequestForm" autocomplete="on">
 					<div class="form-group">
 						<label class="form-control-label">Login :</label>
 						<input id="usernameSignup" type="text" name="username" class="form-control" placeholder="5 characters minimum..." checked="checked"/>
@@ -38,7 +38,7 @@
 	$(document).ready(function() {
 
 		//Stops the submit request
-		$("#myAjaxRequestForm").submit(function(e) {
+		$("#signupAjaxRequestForm").submit(function(e) {
 			e.preventDefault();
 		});
 

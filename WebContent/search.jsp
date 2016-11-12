@@ -8,7 +8,7 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="icon" href="images/favicon.png?2">
-	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/ladda-themeless.min.css">
 	<link href="css/search.css" rel="stylesheet">
 	<title>MuzikFinder</title>

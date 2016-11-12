@@ -60,6 +60,7 @@
 					<li class="dropdown"><a id="userLogin" class="dropdown-toggle"
 						data-toggle="dropdown"><span class="caret"></span></a>
 						<ul class="dropdown-menu">
+							<li><a href="./AccountServlet">My account</a></li>
 							<li role="separator" class="divider"></li>
 							<li><a href="" onclick="deleteCookies();">Log out</a></li>
 						</ul>
@@ -84,12 +85,12 @@ function deleteCookies(){ // 2 ways to delete
  	Cookies.remove('MUZIKFINDERLOGIN', { path: '/' });
 	Cookies.remove('MUZIKFINDERUSERID', { path: '/' });
 	Cookies.remove('MUZIKFINDERBIRTH', { path: '/',  });
-	location.reload();
+	location.href="/";
 }
 </script>
 
 <script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="js/spin.min.js"></script>
 <script src="js/ladda.min.js"></script>
 <script src="js/js.cookie.min.js"></script>

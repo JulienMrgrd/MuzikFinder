@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 
 import interfaces.MFMusic;
 import server.services.MuzikFinderService;
+import utils.MuzikFinderUtils;
 
 public class ShowMoreResultsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -64,6 +65,8 @@ public class ShowMoreResultsServlet extends HttpServlet {
 	    PrintWriter out = response.getWriter();
 	    out.print(myResponse);
 	    out.close();
+	    
+	    MuzikFinderUtils.updateTimeCookies(request, response);
 	}
 	
 }

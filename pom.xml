@@ -39,10 +39,10 @@
 		    <version>2.7</version>
 		</dependency>
 		<dependency>
-    <groupId>de.svenkubiak</groupId>
-	    <artifactId>jBCrypt</artifactId>
-	    <version>0.4</version>
-	</dependency>
+			<groupId>de.svenkubiak</groupId>
+			<artifactId>jBCrypt</artifactId>
+			<version>0.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>

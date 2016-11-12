@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import server.services.MuzikFinderService;
 import sql.metier.User;
+import utils.MathUtils;
 import utils.MuzikFinderUtils;
 
 public class SignUpServlet extends HttpServlet {
@@ -28,12 +29,29 @@ public class SignUpServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("SignUpServlet doPost");
 
+		JsonObject myResponse = new JsonObject();
+		MuzikFinderService service = MuzikFinderService.getInstance();
+		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String mail = request.getParameter("mail");
-		
-		JsonObject myResponse = new JsonObject();
-		MuzikFinderService service = MuzikFinderService.getInstance();
+		int day;
+		int month;
+		int year;
+		try{
+			day = Integer.parseInt(request.getParameter("day"));
+			month = Integer.parseInt(request.getParameter("month"));
+			year = Integer.parseInt(request.getParameter("year"));
+		}catch(NumberFormatException e){
+			myResponse.addProperty("message", "Date de naissance invalide");
+			myResponse.addProperty("success", false);
+			response.setCharacterEncoding("UTF-8");
+		    response.setContentType("text/json");
+		    PrintWriter out = response.getWriter();
+		    out.print(myResponse);
+		    out.close();
+		    return;
+		}
 		
 		if(username==null || username.isEmpty() || username.length()<5){
 			myResponse.addProperty("message", "Username invalide");
@@ -51,9 +69,12 @@ public class SignUpServlet extends HttpServlet {
 			myResponse.addProperty("message", "Username already exists");
 			myResponse.addProperty("success", false);
 			
+		} else if(!MathUtils.isDateValid(day, month, year)){
+			myResponse.addProperty("message", "Date de naissance invalide");
+			myResponse.addProperty("success", false);
 		} else {
 			// inscription
-			User user = service.createNewUser(username, password, mail, 1994, 02, 16);
+			User user = service.createNewUser(username, password, mail, year, month, day);
 			if(user!=null){
 				MuzikFinderUtils.createNewCookies(user, response);
 				myResponse.addProperty("success", true);

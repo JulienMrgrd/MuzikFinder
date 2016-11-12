@@ -24,6 +24,22 @@
 						<label class="form-control-label">Email :</label>
 						<input id="mailSignup" type="email" class="form-control" value=""></input>
 					</div>
+					<div class="col-md-4">
+						<div id="day" class="form-group">
+							<input id="daySignup" type="text" maxlength="2" class="form-control" placeholder="day"></input>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div id="month" class="form-group">
+							<input id="monthSignup" type="text" maxlength="2" class="form-control" placeholder="month"></input>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div id="year" class="form-group">
+							<input id="yearSignup" type="text" maxlength="4" class="form-control" placeholder="year"></input>
+						</div>
+					</div>
+					
 					<button id="connectButtonSignup" class="mfBtn ladda-button"
 						data-style="zoom-in" type="submit">Confirm</button>
 				</form>
@@ -33,6 +49,10 @@
 </div>
 
 <script>
+
+$('#datetimepicker').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii'
+});
 	$(document).ready(function() {
 
 		//Stops the submit request
@@ -52,6 +72,9 @@
 					username : $("#usernameSignup").val(),
 					password : $("#passwordSignup").val(),
 					mail : $("#mailSignup").val()
+					day : $("#daySignup").val(),
+					month : $("#monthSignup").val(),
+					year : $("#yearSignup").val()
 				},
 
 				//if received a response from the server
@@ -78,3 +101,10 @@
 		});
 	});
 </script>
+
+<script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />

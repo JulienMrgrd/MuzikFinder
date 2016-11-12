@@ -42,11 +42,11 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">Search tops<span class="caret"></span></a>
+					data-toggle="dropdown" href="#">Top search<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Top artists</a></li>
-						<li><a href="#">Top musics</a></li>
-						<li><a href="#">Top albums</a></li>
+						<li><a href="./TopMusicsServlet">Top musics</a></li>
+						<li class="disabled"><a href="#">Top artists</a></li>
+						<li class="disabled"><a href="#">Top albums</a></li>
 					</ul></li>
 			</ul>
 			<form role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
@@ -55,42 +55,55 @@
 						placeholder="Search by lyrics, artists or musics" />
 				</div>
 			</form>
-			<div class="dropdown">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a id="userLogin" class="dropdown-toggle"
-						data-toggle="dropdown"><span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="./AccountServlet">My account</a></li>
-							<li role="separator" class="divider"></li>
-							<li><a href="" onclick="deleteCookies();">Log out</a></li>
-						</ul>
-				</ul>
-			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#" ><b id="userLogin"></b><span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="./AccountServlet">My account</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="" onclick="deleteCookies();">Log out</a></li>
+					</ul>
+				</li>
+			</ul>
 
 		</div>
 	</div>
 </nav>
 
 <script>
-(function() { 
-	var login = Cookies.get('MUZIKFINDERLOGIN');
-	if(login!=null || login!="") $("#userLogin").text(login);
-	else $("#userLogin").text("Options");
-})();
+	(function() {
+		var login = Cookies.get('MUZIKFINDERLOGIN');
+		if (login != null || login != "")
+			$("#userLogin").text(login);
+		else
+			$("#userLogin").text("Options");
+	})();
 
-function deleteCookies(){ // 2 ways to delete
- 	Cookies.set('MUZIKFINDERLOGIN', '', { path: '/' });
-	Cookies.set('MUZIKFINDERUSERID', '', { path: '/' });
-	Cookies.set('MUZIKFINDERBIRTH', '', { path: '/' });
- 	Cookies.remove('MUZIKFINDERLOGIN', { path: '/' });
-	Cookies.remove('MUZIKFINDERUSERID', { path: '/' });
-	Cookies.remove('MUZIKFINDERBIRTH', { path: '/',  });
-	location.href="/";
-}
+	function deleteCookies() { // 2 ways to delete
+		Cookies.set('MUZIKFINDERLOGIN', '', {
+			path : '/'
+		});
+		Cookies.set('MUZIKFINDERUSERID', '', {
+			path : '/'
+		});
+		Cookies.set('MUZIKFINDERBIRTH', '', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERLOGIN', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERUSERID', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERBIRTH', {
+			path : '/',
+		});
+		location.href = "/";
+	}
 </script>
 
 <script src="js/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/spin.min.js"></script>
 <script src="js/ladda.min.js"></script>
 <script src="js/js.cookie.min.js"></script>

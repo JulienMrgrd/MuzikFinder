@@ -92,4 +92,15 @@
 		<servlet-name>FindGoodMusicServlet</servlet-name>
 		<url-pattern>/FindGoodMusicServlet</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>TopMusicsServlet</display-name>
+		<servlet-name>TopMusicsServlet</servlet-name>
+		<servlet-class>server.servlets.TopMusicsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TopMusicsServlet</servlet-name>
+		<url-pattern>/TopMusicsServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -421,9 +421,13 @@ public class MongoServiceSearchUser {
 	@SuppressWarnings("unchecked")
 	// Méthode permettant de récupérer la liste d'Id dans la collection Stats_Cache à partir d'un range particulier 
 	//( pour range => voir MongoCollectionsAndKeys)
-	static List<String> getListIdStringByRangeInStats_Cache(String range){
+	private static List<String> getListIdStringByRangeInStats_Cache(String range){
+		if(range==null || range.isEmpty()) return null;
+		
 		List<String> list_id = new ArrayList<String>();
 		MongoCollection<Document> collection_stats_cache = ms.getCollection(range);
+		if(collection_stats_cache==null) return null;
+		
 		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS_CACHE,new Document("$eq",week));
@@ -464,7 +468,6 @@ public class MongoServiceSearchUser {
 	public static List<MFMusic> getListMFMusicMostPopularByRange(String range){
 		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 	
-		//TODO: passer par MongoService ??
 		List<String> list_id = getListIdStringByRangeInStats_Cache(range); // on récupère la list d'id (voir méthode correspondante)
 		List<MFMusic> list_music_dto = new ArrayList<MFMusic>();
 		Document findQuery;

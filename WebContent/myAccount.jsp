@@ -8,7 +8,7 @@
 <style>
 .container {
 	margin-top: 100px;
-	margin-bottom: 150px;
+	margin-bottom: 40px;
 }
 
 .btn-info.btn-outline:hover, .btn-info.btn-outline:active{
@@ -25,10 +25,13 @@
 }
 
 </style>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.min.js"></script>
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="images/favicon.png?2">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/ladda-themeless.min.css">
 <title>MuzikFinder</title>
 </head>
@@ -116,8 +119,6 @@
 
 </body>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.min.js"></script>
 <script> 
 	(function() { 
 		var login = Cookies.get('MUZIKFINDERLOGIN');

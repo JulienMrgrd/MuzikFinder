@@ -27,6 +27,16 @@
 .navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
 	color: #eee;
 }
+
+ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all{
+	top:50px;
+}
+.ui-autocomplete { 
+	max-width: 500px; 
+    position: fixed; 
+    cursor: default; 
+    height: 100px; 
+    overflow-x: hidden;}
 </style>
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -51,7 +61,7 @@
 			</ul>
 			<form role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
 				<div class="form-group">
-					<input id="userSearch" name="userSearch" type="text" class="form-control"
+					<input id="userSearch" name="userSearch" type="text" class="form-control" autocomplete="on"
 						placeholder="Search by lyrics, artists or musics" />
 				</div>
 			</form>
@@ -70,6 +80,25 @@
 <div id="modalSignUp"></div>
 <link href="css/modal.css" rel="stylesheet">
 <script> 
+$(function() {
+	$('#userSearch').autocomplete({
+	    source : function(requete, response){ // la fonction anonyme permet de maintenir une requête AJAX directement dans le plugin
+	    $.ajax({
+	            url : 'SpecificSearch', // on appelle le script JSON
+	            dataType: "json",
+	            data : {
+					search : $("#userSearch").val(),
+				},
+	            success : function( data, textStatus, jqXHR) {
+	            	alert(data.trackName);
+	            	alert(data.artist);
+                    response(data.artist);
+                    //response(data.trackName);
+                },
+	        });
+	    }
+	});
+});
 
 (function() { 
 	$("#modalLogin").load("htmls/modals/loginModal.html"); 
@@ -78,5 +107,6 @@
 </script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/spin.min.js"></script>
 <script src="js/ladda.min.js"></script>

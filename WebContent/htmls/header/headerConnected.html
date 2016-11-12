@@ -79,6 +79,17 @@
 			$("#userLogin").text("Options");
 	})();
 
+$('#userSearch').autocomplete({
+    source : function(){ // la fonction anonyme permet de maintenir une requête AJAX directement dans le plugin
+    $.ajax({
+            url : 'SpecificSearch', // on appelle le script JSON
+            dataType : 'json', // on spécifie bien que le type de données est en JSON
+            success : function(){ // on se prépare à renvoyer les données réceptionnées grâce à l'évènement de succès
+            }
+        });
+    }
+});
+
 	function deleteCookies() { // 2 ways to delete
 		Cookies.set('MUZIKFINDERLOGIN', '', {
 			path : '/'

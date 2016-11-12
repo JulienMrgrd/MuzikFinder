@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import sql.metier.Search;
 import sql.metier.User;
 
@@ -50,7 +52,7 @@ public class MySQLService {
 	    String sqlCreate = "CREATE TABLE IF NOT EXISTS " + USER_DB_NAME
 	    		+ " ( id_user INTEGER PRIMARY KEY AUTO_INCREMENT ,"
 	            + "   pseudo           VARCHAR(20),"
-	            + "   password         VARCHAR(20),"
+	            + "   password         VARCHAR(65),"
 	            + "   date             DATE,"
 	            + "   email	           VARCHAR(30))";
 
@@ -126,8 +128,10 @@ public class MySQLService {
 			String dateNow = year+"-"+month+"-"+day;
 			Date sqlDate = Date.valueOf(dateNow);
 			
+			String passwordCrypt = BCrypt.hashpw(password, BCrypt.gensalt());
+			
 			String sqlRequest = "INSERT INTO "+USER_DB_NAME+"(pseudo,password,email,date) VALUES('"
-					+ pseudo+"','"+password+"','"+email+"','"+sqlDate+"');";
+					+ pseudo+"','"+passwordCrypt+"','"+email+"','"+sqlDate+"');";
 	
 			stmt.execute(sqlRequest);
 			stmt.close();
@@ -145,17 +149,20 @@ public class MySQLService {
 		Statement stmt;
 		try {
 			stmt = getConnection().createStatement();
-			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"' and password = '"+password+"';";
+			String sqlRequest = "SELECT * from user "+USER_DB_NAME+" where pseudo = '"+pseudo+"';";
 			boolean results = stmt.execute(sqlRequest);
 	
 			while (results) {
 				ResultSet rs = stmt.getResultSet();
 				try {
 					while (rs.next()) {
-						User user = new User(rs.getString("id_user"),rs.getString("pseudo"),rs.getString("password"),rs.getString("email"), rs.getDate("date"));
+						if(BCrypt.checkpw(password, rs.getString("password"))){
+							User user = new User(rs.getString("id_user"),rs.getString("pseudo"),rs.getString("email"), rs.getDate("date"));
+							return user;
+						}
 						//si on entre dans cette boucle c'est que le pseudo et le password match bien
 						//On retourne alors l'utilisateur
-						return user;
+						return null;
 					}
 				} finally {
 					try { rs.close(); } catch (Throwable ignore) {}
@@ -384,6 +391,14 @@ public class MySQLService {
 			results = stmt.getMoreResults();
 		}
 		stmt.close();
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, URISyntaxException, SQLException{
+
+		MySQLService mysql = new MySQLService();
+		
+		System.out.println(mysql.checkConnexion("moussa", "moussa"));
+				
 	}
 
 }

@@ -17,6 +17,14 @@ public class User {
 		this.email=email;
 		this.dateBirth=dateBirth;
 	}
+	
+	public User(String id, String login, String email, Date dateBirth){
+		this.id=id;
+		this.login=login;
+		this.password="";
+		this.email=email;
+		this.dateBirth=dateBirth;
+	}
 
 	public String getId() {
 		return id;

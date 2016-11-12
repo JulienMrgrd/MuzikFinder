@@ -236,7 +236,7 @@ public class MongoServiceSearchMusic {
 
 	/**
 	 * Méthode retournant un document contenant un regex compréhensible par mongo pour lui signifier
-	 * que les mots passé en paramètre doivent être comprit comme une phrase
+	 * que les mots passés en paramètre doivent être traités comme une phrase
 	 * @param listTags liste des tags à partir desquels le regex doit être formé
 	 * @return le document compréhensible par mongo comprenant le regex
 	 */
@@ -262,7 +262,9 @@ public class MongoServiceSearchMusic {
 	 */
 	static List<MFMusic> getMusicsByArtist(String artistName){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
-		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS, new Document("$eq",artistName));
+		/*String regex ="[,.\\n ]?[,.\\n ]?";
+		artistName+=regex;*/
+		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS, new Document("$regex",artistName).append("$options","i"));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		
 		List<MFMusic> listMusic= new ArrayList<>();
@@ -275,7 +277,7 @@ public class MongoServiceSearchMusic {
 	}
 	
 	/**
-	 * Méthode retournant l'ensemble des musiques d'un albuù à partir de son nom
+	 * Méthode retournant l'ensemble des musiques d'un album à partir de son nom
 	 * @param trackName nom de l'album
 	 * @return liste des MFMusic de l'album
 	 */

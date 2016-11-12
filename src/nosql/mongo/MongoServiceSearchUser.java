@@ -1,10 +1,6 @@
 package nosql.mongo;
 
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -90,8 +86,11 @@ public class MongoServiceSearchUser {
 
 		return listMusic;
 	}
-
-	// Méthode retournant la tranche d'âge correspondante à l'âge de l'utilisateur dans la collection STATS 
+	/**
+	 * Méthode retournant la tranche d'âge correspondante à l'âge de l'utilisateur dans la collection STATS
+	 * @param age
+	 * @return la range correspondante dans la collection STATS
+	 */ 
 	static String getRangeByAge(int age){
 		if(age<18)
 			return MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS;
@@ -103,12 +102,15 @@ public class MongoServiceSearchUser {
 			return MongoCollectionsAndKeys.PLUSFIFTY_STATS;
 	}
 	///////////**********************  PARTIE COLLECTION MONGO STATS ****************///////////////////////////
-
-	// Méthode permettant de rajouter dans la collection Stats le résultat de la recherche de l'utilisateur.
-	// Il faudra gérer les différents cas dans le parcours de la collection. Créer un nouveau document par 
-	// nouvel weeks ( C'est à dire que chaque document offrira des informations des tops pour chaque semaines).
-	// Il faut également savoir où écrire la nouvelle information. Si la range dans lequel l'âge de l'utilisateur
-	// existe déjà, il faut écrire dedans et ne pas créer une nouvelle (clef,valeur). 
+	/**
+	 * Méthode permettant de rajouter dans la collection Stats le résultat de la recherche de l'utilisateur.
+	 * Il faudra gérer les différents cas dans le parcours de la collection. Créer un nouveau document par 
+	 * nouvel weeks ( C'est à dire que chaque document offrira des informations des tops pour chaque semaines).
+	 * Il faut également savoir où écrire la nouvelle information. Si la range dans lequel l'âge de l'utilisateur
+	 * existe déjà, il faut écrire dedans et ne pas créer une nouvelle (clef,valeur). 
+	 * @param l'id de la musique sélectionné par l'utilisateur
+	 * @param la date de naissance de l'utilisateur (pour savoir dans quel range stocké l'id et son score)
+	 */
 	@SuppressWarnings("unchecked")
 	static void addNewSearch(String idMusic, LocalDate userBirth){
 
@@ -216,10 +218,12 @@ public class MongoServiceSearchUser {
 	}
 
 	////////////////******************* PARTIE COLLECTION MONGO STATS_CACHE ***************////////////////////	
-
-	// Méthode permettant d'ajouter dans la collection Stats_Cache les musiques les plus populaires
-	// Elle doit traiter tout les cas possibles. Par exemple, si il existe déjà un champ week, il ne faudra
-	// pas créer un autre document. Il faudra écrire dans ce même document. De même pour chaque clé de la collection.
+	/**
+	 * Méthode permettant d'ajouter dans la collection Stats_Cache les musiques les plus populaires
+	 * Elle doit traiter tout les cas possibles. Par exemple, si il existe déjà un champ week, il ne faudra
+	 * pas créer un autre document. Il faudra écrire dans ce même document. De même pour chaque clé de la collection. 
+	 * @param la range
+	 */
 
 	@SuppressWarnings("unchecked")
 	static void addListIdMusicMostPopularByRange(String range){
@@ -307,8 +311,12 @@ public class MongoServiceSearchUser {
 		}
 	}
 
-	// Méthode permettant de récupérer la list d'id des musiques en se servant de la méthode 
-	// getListIdMusicScoreMostPopularByRange pour avoir un tri correct par score.
+	/**
+	 * Méthode permettant de récupérer la list d'id des musiques en se servant de la méthode 
+	 * getListIdMusicScoreMostPopularByRange pour avoir un tri correct par score.
+	 * @param la range
+	 * @return la liste des id des musiques
+	 */
 	static List<String> getListIdMostPopularByRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
 		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
@@ -324,8 +332,13 @@ public class MongoServiceSearchUser {
 
 
 	@SuppressWarnings("unchecked")
-	// récupère la list d'IdMusicScore pour chaque range. Ceci est fait afin de pouvoir trier proprement
-	// les musiques suivant leur score.
+	/**
+	 * Récupère la list d'IdMusicScore pour chaque range. Ceci est fait afin de pouvoir trier proprement
+	 * les musiques suivant leur score. 
+	 * @param la range
+	 * @return la liste des musiques et de leur score dans la collection STATS par range
+	 */
+
 	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
 		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
@@ -356,11 +369,16 @@ public class MongoServiceSearchUser {
 		System.out.println("Fin getListIdMUsicScoreMostPopularByRange : "+range);
 		return list_music_score;
 	}
-	// Méthode permettant de récupérer la list d'IdMusicScore pour toutes les ranges. Ceci afin de pouvoir les
-	// stocker dans notre collection Stats_Cache. L'idée est de mettre en relation les différents id des musiques
-	// présentes dans toutes les ranges existe pour notre semaine en particulier.
-	// Ainsi, si une musique est présente dans plusieurs range différentes, il faudra additioner les différents scores.
-	// Ceci afin d'obtenir un score général entre toutes les ranges.
+
+	/**
+	 * Méthode permettant de récupérer la list d'IdMusicScore pour toutes les ranges. Ceci afin de pouvoir les
+	 * stocker dans notre collection Stats_Cache. L'idée est de mettre en relation les différents id des musiques
+	 * présentes dans toutes les ranges existe pour notre semaine en particulier.
+	 * Ainsi, si une musique est présente dans plusieurs range différentes, il faudra additioner les différents scores.
+	 * Ceci afin d'obtenir un score général entre toutes les ranges.
+	 * @return la liste des musiques et de leur score toutes ranges confondu (correspond à general dans la collection STATS_CACHE)
+	 */
+
 	static List<IdMusicScore> getListIdMusicScoreMostPopularAllRange(){
 		int test = 0;
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
@@ -408,7 +426,12 @@ public class MongoServiceSearchUser {
 		return list_music_score;
 	}
 
-	// récupère la liste d'id de musique pour toutes les ranges confondus dans l'ordre décroissant suivant le score
+	/**
+	 * récupère la liste d'id de musique pour toutes les ranges confondus dans l'ordre décroissant suivant le score 
+	 * @param range
+	 * @return la liste des id des musiques
+	 */
+
 	static List<String> getListIdMostPopularAllRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularAllRange();
 		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
@@ -423,9 +446,13 @@ public class MongoServiceSearchUser {
 	}
 
 	@SuppressWarnings("unchecked")
-	// Méthode permettant de récupérer la liste d'Id dans la collection Stats_Cache à partir d'un range particulier 
-	//( pour range => voir MongoCollectionsAndKeys)
-	private static List<String> getListIdStringByRangeInStats_Cache(String range){
+	/**
+	 * Méthode permettant de récupérer la liste d'Id dans la collection Stats_Cache à partir d'un range particulier 
+	 * @param range
+	 * @return
+	 */
+
+	static List<String> getListIdStringByRangeInStats_Cache(String range){
 		if(range==null || range.isEmpty()) return null;
 
 		List<String> list_id = new ArrayList<String>();
@@ -453,7 +480,9 @@ public class MongoServiceSearchUser {
 
 	//////////////************************ PARTIE DEAMON AJOUT DANS STATS_CACHE **************///////////////////
 
-	/* Méthode appelée par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
+	/**
+	 * Méthode appelée par le deamon afin de remplir la collection STATS_CACHE toutes les heures
+	 */
 	public static void addListIdMusicMostPopularAllRanges(){
 		System.out.println("Début appel addList");
 		//TODO: passer par MongoService?
@@ -467,8 +496,13 @@ public class MongoServiceSearchUser {
 
 	//////////////////******************* PARTIE FONCTION RECUPERATION DANS STATS_CACHE POUR PAGE WEB *******///////
 
-	// Méthode permettant de récupérer la liste d'id de musique dans la collection STATS_CACHE
-	// et de les convertir en MFMusic afin de les afficher sur la page web.
+	/**
+	 * Méthode permettant de récupérer la liste d'id de musique dans la collection STATS_CACHE
+	 * et de les convertir en MFMusic afin de les afficher sur la page web.
+	 * @param range
+	 * @return la liste des musiques (MFMusic)
+	 */
+
 	public static List<MFMusic> getListMFMusicMostPopularByRange(String range){
 		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 

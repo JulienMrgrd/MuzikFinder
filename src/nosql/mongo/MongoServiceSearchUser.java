@@ -30,6 +30,8 @@ public class MongoServiceSearchUser {
  * */
 	private static MongoService ms = MongoService.getInstance();
 
+	//TODO: A supprimer ou utilisé par Julien pour les classement plus tard
+	//Sachant que la collection searchs existe pas
 	static List<MFMusic> getTopMusicSearchByPeriod(TimeInMilliSeconds timeInMilliSeconds){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH);
@@ -104,10 +106,15 @@ public class MongoServiceSearchUser {
 	static void addNewSearch(String idMusic, LocalDate userBirth){
 		
 		int age = MathUtils.calculateAge(userBirth, LocalDate.now());
+		
+		List<Document> list_id_score;
+		List<Document> list;
+		List<Document> list_range;
 		String range= getRangeByAge(age);
 		int test = 0;
 		Document fin = new Document();
 		Document old = new Document();
+		Document age_range;
 		GregorianCalendar gc = new GregorianCalendar(Locale.US);
 		String week=(gc.get(Calendar.WEEK_OF_YEAR)+"-"+gc.get(Calendar.YEAR));
 
@@ -116,21 +123,24 @@ public class MongoServiceSearchUser {
 		Document doc = new Document(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS,new Document("$eq",week));
 		MongoCursor<Document> cursor = ms.findBy(collection, doc);
 		if(cursor.hasNext()){
+			Document doc1;
 			fin.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS, week);
 			old.put(MongoCollectionsAndKeys.DATEWEEKSYEARS_STATS, week);
 			Document age_range_doc = cursor.next();
 			List<Document> list_age_range =  (List<Document>) age_range_doc.get(MongoCollectionsAndKeys.AGERANGE_STATS);
 			old.append(MongoCollectionsAndKeys.AGERANGE_STATS, list_age_range);	
-			for(Document doc_range : list_age_range)
+			for(Document doc_range : list_age_range){
 				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS).equals(range)){
-					List<Document> list_id_score = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS);
-					List<Document> list = new ArrayList<Document>();
+					list_id_score = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS);
+					list = new ArrayList<Document>();
 					for(Document d : list_id_score){
 						if(d.get(MongoCollectionsAndKeys.IDMUSIC_STATS).equals(idMusic)){
 							int val = d.getInteger(MongoCollectionsAndKeys.SCOREMUSIC_STATS);
 							val = val + 1;
+							//TODO: test peux avoir une autre valeur que 1 ou 0 ??
+							//Si oui renommer test et le mettre en booléen pour les if d'en bas
 							test = 1;
-							Document doc1 = new Document();
+							doc1 = new Document();
 							doc1.put(MongoCollectionsAndKeys.IDMUSIC_STATS, idMusic);
 							doc1.append(MongoCollectionsAndKeys.SCOREMUSIC_STATS, val);
 							list.add(doc1);
@@ -138,36 +148,40 @@ public class MongoServiceSearchUser {
 						else
 							list.add(d);
 					}
+					//TODO: remplacer par un booleen ?
 					if(test == 1){		
-						Document age_range = new Document();
+						age_range = new Document();
 						age_range.put(MongoCollectionsAndKeys.AGE_STATS,range);
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
-						List<Document> list_range = new ArrayList<Document>();
+						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;
 					}
+					//else ??
 					if(test == 0){
 						Document tmp = new Document();
 						tmp.put(MongoCollectionsAndKeys.IDMUSIC_STATS, idMusic);
 						tmp.append(MongoCollectionsAndKeys.SCOREMUSIC_STATS, 1);
 						list.add(tmp);
-						Document age_range = new Document();
+						age_range = new Document();
 						age_range.put(MongoCollectionsAndKeys.AGE_STATS,range);
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
-						List<Document> list_range = new ArrayList<Document>();
+						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;
 					}
 				}
-			Document age_range = new Document();
+			}
+			
+			age_range = new Document();
 			Document id_score = new Document();
 			id_score.put(MongoCollectionsAndKeys.IDMUSIC_STATS,idMusic);
 			id_score.put(MongoCollectionsAndKeys.SCOREMUSIC_STATS,1);
-			List<Document> list_id_score = new ArrayList<Document>();
+			list_id_score = new ArrayList<Document>();
 			list_id_score.add(id_score);
 			age_range.put(MongoCollectionsAndKeys.AGE_STATS,range);
 			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list_id_score);
@@ -184,12 +198,12 @@ public class MongoServiceSearchUser {
 			Document id_score = new Document();
 			id_score.put(MongoCollectionsAndKeys.IDMUSIC_STATS,idMusic);
 			id_score.put(MongoCollectionsAndKeys.SCOREMUSIC_STATS,1);
-			List<Document> list_id_score = new ArrayList<Document>();
+			list_id_score = new ArrayList<Document>();
 			list_id_score.add(id_score);
-			Document age_range = new Document();
+			age_range = new Document();
 			age_range.put(MongoCollectionsAndKeys.AGE_STATS,range);
 			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list_id_score);
-			List<Document> list_range = new ArrayList<Document>();
+			list_range = new ArrayList<Document>();
 			list_range.add(age_range);
 			doc_stat.put(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 			ms.insertOne(collection, doc_stat);
@@ -434,6 +448,7 @@ public class MongoServiceSearchUser {
 	/* Méthode appelée par le deamon afin de remplir la collection STATS_CACHE toutes les heures*/
 	public static void addListIdMusicMostPopularAllRanges(){
 		System.out.println("Début appel addList");
+		//TODO: passer par MongoService?
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
@@ -449,15 +464,17 @@ public class MongoServiceSearchUser {
 	public static List<MFMusic> getListMFMusicMostPopularByRange(String range){
 		MongoCollection<Document> collection_musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 	
+		//TODO: passer par MongoService ??
 		List<String> list_id = getListIdStringByRangeInStats_Cache(range); // on récupère la list d'id (voir méthode correspondante)
 		List<MFMusic> list_music_dto = new ArrayList<MFMusic>();
-
+		Document findQuery;
+		Document music_doc;
+		MongoCursor<Document> cursor_music;
 		for(String id : list_id){
-			Document findQuery = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",id));
-			MongoCursor<Document> cursor_music = ms.findBy(collection_musics, findQuery);	
+			findQuery = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq",id));
+			cursor_music = ms.findBy(collection_musics, findQuery);	
 			if(cursor_music.hasNext()){
-				Document music_doc = cursor_music.next();
-				System.out.println(music_doc);
+				music_doc = cursor_music.next();
 				list_music_dto.add(MongoUtils.transformDocumentIntoMFMusic(music_doc));
 			}
 		}

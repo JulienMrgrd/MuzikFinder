@@ -8,6 +8,11 @@ public class MongoServicePreference {
 	
 	private static MongoService ms = MongoService.getInstance();
 	
+	/**
+	 * Méthode permettant de modifier dans mongo la préference de nom "prefName" en lui attribuant la valeur "param"
+	 * @param prefName nom de la préference à modifier
+	 * @param param nouvelle valeur à attribuer à la préference
+	 */
 	static void setPref(String prefName, String param) {
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.PREFS);
 		Document oldPref = ms.findFirst(collection);
@@ -20,6 +25,10 @@ public class MongoServicePreference {
 		}
 	}
 
+	/**
+	 * Méthode permettant de récupérer dans mongo la préference de nom "prefName"
+	 * @param prefName nom de la préference à récupérer
+	 */
 	static String getPref(String prefName) {
 		try {
 			MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.PREFS);

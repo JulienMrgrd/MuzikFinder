@@ -24,20 +24,6 @@ public class NoSQLDB {
 	}
 
 	//////////////PARTIE INSERT///////////////
-	public boolean insertMusicIfNotExists(String musicId, String lyrics, String artistId, String artistName,
-			String albumId, String albumName, String nameMusic, String language, String spotifyId, 
-			String soundCloudId, String genre){
-		return mongo.insertMusicIfNotExists(musicId, lyrics, artistId, artistName, albumId, albumName, nameMusic, language, spotifyId, soundCloudId, genre);
-	}
-
-	public void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
-		mongo.insertTagIfNotExists(tag, nbOccur, musicId);
-	}
-
-	public boolean insertIdAlbumIfNotExist(String idAlbum){
-		return mongo.insertIdAlbumIfNotExist(idAlbum);
-	}
-
 	public void insertNewMusics(Map<String, List<MFMusic>> mapAlbumIdWithAlbum) {
 		try {
 			mongo.insertNewMusics(mapAlbumIdWithAlbum);
@@ -46,56 +32,11 @@ public class NoSQLDB {
 		}
 	}
 	
-	public void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
-		mongo.insertCacheSearchUser(tags, idMusics, idRecherche);
-	}
-	
 	public void addListIdMusicMostPopularAllRanges(){
 		mongo.addListIdMusicMostPopularAllRanges();
 	}
 
-	///////////////PARTIE CONTAINS//////////////////
-	public boolean containsMusic(String musicId){
-		return mongo.containsMusic(musicId);
-	}
-	
-	public boolean containsTag(String tag) {
-		return mongo.containsTag(tag);
-	}
-
-	public boolean containsIdMusicInTag(String tag, String idMusic){
-		return mongo.containsIdMusicInTag(tag, idMusic);
-	}
-	
-	public boolean containsIdAlbum(String idAlbum) {
-		return mongo.containsIdAlbum(idAlbum);
-	}
-
-	public boolean containsIdRecherche(String idRecherche){
-		return mongo.containsIdRecherche(idRecherche);
-	}
-
 	//////////////PARTIE GETTER///////////////////////
-	public List<String> getIdMusicsByTag(String tag) {
-		return mongo.getIdMusicsByTag(tag);
-	}
-
-	public List<String> getIdMusicsByIdArtist(String idArtist){
-		return mongo.getIdMusicsByIdArtist(idArtist);
-	}
-
-	public List<String> getIdMusicsByChainWords(String chainWords){
-		return mongo.getIdMusicsByChainWords(chainWords);
-	}
-
-	public List<String> getAllAlbumIds(){
-		return mongo.getAllAlbumIds();
-	}
-	
-	public MFMusic getMusicById(String idMusic) {
-		return mongo.getMusicById(idMusic);
-	}
-	
 	public List<String> getListNameArtistBeginWith(String nameArtist){
 		return mongo.getListNameArtistBeginWith(nameArtist);
 	}
@@ -117,25 +58,7 @@ public class NoSQLDB {
 	public List<MFMusic> searchMusics(List<String> tags, String idRecherche){
 		return mongo.searchMusics(tags, idRecherche);
 	}
-	
-	public List<MFMusic> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
-		return mongo.searchMusicsByTagsInTags(tags, idRecherche);
-	}
 
-	/**
-	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par
-	 * l'utilisateur en traitant les tags comme une phrase complète
-	 * @param tags
-	 * @return
-	 */
-	public List<String> matchMusicsWithTags(List<String> tags){
-		return mongo.matchMusicsWithTags(tags);
-	}
-
-	public List<MFMusic> searchMusicsByTagsInLyrics(List<String> tags, String idRecherche){
-		return mongo.searchMusicsByTagsInLyrics(tags, idRecherche);
-	}
-	
 	public List<MFMusic> getMoreResults(String idRecherche){
 		return mongo.getMoreResults(idRecherche);
 	}

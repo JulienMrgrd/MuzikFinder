@@ -22,6 +22,7 @@ public class MongoServiceInsert {
 	private static MongoService ms = MongoService.getInstance();
 
 	@SuppressWarnings("unchecked")
+	//TODO: A renommer
 	static void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.TAGS);
 		Document doc;

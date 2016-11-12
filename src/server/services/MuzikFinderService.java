@@ -67,18 +67,6 @@ public class MuzikFinderService {
 	
 	
 	//// ====== NOSQL PART ====== ////
-	public List<String> getIdMusicsByTagInNoSQL(String tag){
-		return nosql.getIdMusicsByTag(tag);
-	}
-	
-	public List<String> getIdMusicsByIdArtistInNoSQL(String artist){
-		return nosql.getIdMusicsByIdArtist(artist);
-	}
-	
-	public List<String> getIdMusicsByChainWordsInNoSQL(String lyrics){
-		return nosql.getIdMusicsByChainWords(lyrics);
-	}
-	
 	public List<String> getListNameArtistBeginWith(String nameArtist){
 		return nosql.getListNameArtistBeginWith(nameArtist);
 	}
@@ -92,10 +80,6 @@ public class MuzikFinderService {
 		for(String s : tags) recherche+=s+" ";
 		sql.addSearch(id_user, recherche, idRecherche);
 		return nosql.searchMusics(tags, idRecherche);
-	}
-	
-	public MFMusic getMusicById(String idMusic) {
-		return nosql.getMusicById(idMusic);
 	}
 	
 	public List<MFMusic> getMoreResults(String idRecherche){
@@ -114,8 +98,15 @@ public class MuzikFinderService {
 		return nosql.getListMFMusicMostPopularByRange(range);
 	}
 	
+	public List<MFMusic> getTopMusicSearchThisWeek(){
+		return nosql.getTopMusicSearchThisWeek();
+	}
+	
+	public List<MFMusic> getTopMusicSearchThisMonth(){
+		return nosql.getTopMusicSearchThisMonth();
+	}
+	
 	public void addNewSearch(String idMusic, LocalDate userBirth){
-		System.out.println("new search");
 		nosql.addNewSearch(idMusic, userBirth);
 	}
 
@@ -137,6 +128,7 @@ public class MuzikFinderService {
 		sql.update(id_user, newPassword, newEmail);
 	}
 	
+	//TODO/ peut-être à supprimer
 	public void deleteSearchByDateAndUser(String id_user, Date date) {
 		sql.deleteSearchByDateAndUser(id_user, date);
 	}
@@ -145,14 +137,13 @@ public class MuzikFinderService {
 		return sql.getSearchByDateAndUser(id_user, date);
 	}
 
-	public User deleteAccountUser(String id_user) {
-		return sql.deleteAccountUser(id_user);
+	public void deleteAccountUser(String id_user) {
+		sql.deleteAccountUser(id_user);
 	}
 		
 	public void deleteSearchUser(String id_user){
 		sql.deleteSearchUser(id_user);
 	}
-
 	
 	////====== DAEMON PART ====== ////
 	

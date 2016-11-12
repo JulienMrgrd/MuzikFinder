@@ -53,22 +53,11 @@ public class SQLDB {
 		return mySqlService.getSearchByDateAndUser(id_user, date);
 	}
 
-	public User deleteAccountUser(String id_user) {
-		return mySqlService.deleteAccountUser(id_user);
+	public void deleteAccountUser(String id_user) {
+		mySqlService.deleteAccountUser(id_user);
 	}
 		
 	public void deleteSearchUser(String id_user){
 		mySqlService.deleteSearchUser(id_user);
 	}
-	
-	//TODO: A supprimer
-	////////////////METHODE UTILES JUSTE PENDANT LA PERIODE DE DEV/////////////////////
-	public void seeAllDBUser() throws SQLException{
-		mySqlService.seeAllDBUser();
-	}
-	
-	public void seeAllDBSearch() throws SQLException{
-		mySqlService.seeAllDBSearch();
-	}
-
 }

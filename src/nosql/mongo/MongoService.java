@@ -62,15 +62,15 @@ public class MongoService {
 	}
 
 	// this creates collection if not exists
-	protected void updateOne(MongoCollection<Document> collection, Document before, Document after){
+	void updateOne(MongoCollection<Document> collection, Document before, Document after){
 		collection.updateOne(before, after);
 	}
 
-	protected MongoCursor<Document> findAll(MongoCollection<Document> collection){
+	MongoCursor<Document> findAll(MongoCollection<Document> collection){
 		return collection.find().iterator();
 	}
 	
-	protected Document findFirst(MongoCollection<Document> collection){
+	Document findFirst(MongoCollection<Document> collection){
 		try {
 			return collection.find().limit(1).first();
 		} catch (Exception e){
@@ -78,11 +78,11 @@ public class MongoService {
 		}
 	}
 	
-	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
+	MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
 		return collection.find(findQuery).iterator();
 	}
 
-	protected void replaceOne(MongoCollection<Document> collection, Document before, Document after){
+	void replaceOne(MongoCollection<Document> collection, Document before, Document after){
 		collection.replaceOne(before, after);
 	}
 	
@@ -90,53 +90,33 @@ public class MongoService {
 		MongoServiceSearchUser.addListIdMusicMostPopularAllRanges();
 	}
 	
-	protected MongoCursor<Document> findBy(MongoCollection<Document> collection, 
+	MongoCursor<Document> findBy(MongoCollection<Document> collection, 
 			Document findQuery, Document orderBy){
 		return collection.find(findQuery).sort(orderBy).iterator();
 	}
 
-	public MongoCollection<Document> getCollection(String collectionName){
+	MongoCollection<Document> getCollection(String collectionName){
 		return db.getCollection(collectionName);
 	}
 
-	@SuppressWarnings("unused")
-	private boolean dropCollection(String collectionName){
-		try{
-			db.getCollection(collectionName).drop();
-			return true;
-		} catch (Exception e){
-			return false;
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private boolean dropCollection(MongoCollection<Document> collection){
-		try{
-			collection.drop();
-			return true;
-		} catch (Exception e){
-			return false;
-		}
-	}
-	
 	void deleteMany(MongoCollection<Document> collection, 
 			Document findQuery){
 		collection.deleteMany(findQuery);
 	}
 
 	//////////////PARTIE INSERT///////////////
-	public boolean insertMusicIfNotExists(String musicId, String lyrics, String artistId, String artistName,
+	boolean insertMusicIfNotExists(String musicId, String lyrics, String artistId, String artistName,
 			String albumId, String albumName, String nameMusic, String language, String spotifyId, 
 			String soundCloudId, String genre){
 		
 		return MongoServiceInsert.insertMusicIfNotExists(musicId, lyrics, artistId, artistName, albumId, albumName, nameMusic, language, spotifyId, soundCloudId, genre);
 	}
 
-	public void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
+	void insertTagIfNotExists(String tag, Integer nbOccur, String musicId){
 		MongoServiceInsert.insertTagIfNotExists(tag, nbOccur, musicId);
 	}
 
-	public boolean insertIdAlbumIfNotExist(String idAlbum){
+	boolean insertIdAlbumIfNotExist(String idAlbum){
 		return MongoServiceInsert.insertIdAlbumIfNotExist(idAlbum);
 	}
 	
@@ -144,52 +124,36 @@ public class MongoService {
 		MongoServiceInsert.insertNewMusics(mapAlbumIdWithAlbum);
 	}
 	
-	public void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
+	void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
 		MongoServiceInsert.insertCacheSearchUser(tags, idMusics, idRecherche);
 	}
 
 	///////////////PARTIE CONTAINS//////////////////
-	public boolean containsMusic(String musicId){
+	boolean containsMusic(String musicId){
 		return MongoServiceContains.containsMusic(musicId);
 	}
 
-	public boolean containsTag(String tag){
+	boolean containsTag(String tag){
 		return MongoServiceContains.containsTag(tag);
 	}
 
-	public boolean containsIdMusicInTag(String tag, String idMusic){
+	boolean containsIdMusicInTag(String tag, String idMusic){
 		return MongoServiceContains.containsIdMusicInTag(tag, idMusic);
 	}
 
-	public boolean containsIdAlbum(String idAlbum){
+	boolean containsIdAlbum(String idAlbum){
 		return MongoServiceContains.containsIdAlbum(idAlbum);
 	}
 	
-	public boolean containsIdRecherche(String idRecherche){
+	boolean containsIdRecherche(String idRecherche){
 		return MongoServiceContains.containsIdRecherche(idRecherche);
 	}
 
 	//////////////PARTIE GETTER///////////////////////
-	public List<String> getIdMusicsByTag(String tag){
-		return MongoServiceGetId.getIdMusicsByTag(tag);
-	}
-
-	public List<String> getIdMusicsByIdArtist(String idArtist){
-		return MongoServiceGetId.getIdMusicsByIdArtist(idArtist);
-	}
-
-	public List<String> getIdMusicsByChainWords(String chainWords){
-		return MongoServiceGetId.getIdMusicsByChainWords(chainWords);
-	}
-
 	public List<String> getAllAlbumIds(){
 		return MongoServiceGetId.getAllAlbumIds();
 	}
 	
-	public MFMusic getMusicById(String idMusic) {
-		return MongoServiceGetId.getMusicById(idMusic);
-	}
-
 	public List<String> getListNameArtistBeginWith(String nameArtist){
 		return MongoServiceGetId.getListNameArtistBeginWith(nameArtist);
 	}
@@ -199,6 +163,11 @@ public class MongoService {
 	}
 
 	//////////////PARTIE SEARCH////////////////////////
+	/**
+	 * Reduced the given list in parameter if one of these musics exists in Mongo 
+	 * @param musics
+	 * @return the reduced list
+	 */
 	public List<MFMusic> filterByExistingMusics(List<MFMusic> musics) {
 		return MongoServiceSearchMusic.filterByExistingMusics(musics);
 	}
@@ -210,6 +179,7 @@ public class MongoService {
 	public List<MFMusic> searchMusicsByTagsInTags(List<String> tags, String idRecherche){
 		return MongoServiceSearchMusic.searchMusicsByTagsInTags(tags, idRecherche);
 	}
+	
 
 	/**
 	 * Cette méthode permet de chercher les musics correspondantes au tags entrés par

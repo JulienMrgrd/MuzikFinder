@@ -160,8 +160,6 @@ public class MySQLService {
 							User user = new User(rs.getString("id_user"),rs.getString("pseudo"),rs.getString("email"), rs.getDate("date"));
 							return user;
 						}
-						//si on entre dans cette boucle c'est que le pseudo et le password match bien
-						//On retourne alors l'utilisateur
 						return null;
 					}
 				} finally {
@@ -211,7 +209,7 @@ public class MySQLService {
 		}
 	}
 	
-	public void setPassword(String id_user, String newPassword) {
+	private void setPassword(String id_user, String newPassword) {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
@@ -229,7 +227,7 @@ public class MySQLService {
 		}
 	}
 	
-	public void setEmail(String id_user, String newEmail){
+	private void setEmail(String id_user, String newEmail){
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
 				Statement stmt = getConnection().createStatement();
@@ -301,7 +299,7 @@ public class MySQLService {
 		return listSearch;
 	}
 
-	public User deleteAccountUser(String id_user) {
+	public void deleteAccountUser(String id_user) {
 		if(id_user != null && ! id_user.isEmpty()){
 			Statement stmt;
 			try {
@@ -313,13 +311,10 @@ public class MySQLService {
 				stmt.execute(sqlRequest);
 				stmt.close();
 				deleteSearchUser(id_user);
-				return null;
 			} catch (SQLException e) {
 				System.out.println("deleteAccountUser a rencontré un problème");
-				return null;
 			}
 		}
-		return null;
 	}
 		
 	public void deleteSearchUser(String id_user){
@@ -339,66 +334,4 @@ public class MySQLService {
 	
 		}
 	}
-	
-	//TODO: A supprimer
-	////////////////METHODE UTILES JUSTE PENDANT LA PERIODE DE DEV/////////////////////
-	public void seeAllDBUser() throws SQLException{
-		
-		Statement stmt = getConnection().createStatement();
-		String sqlRequest = "SELECT * from user "+USER_DB_NAME+";";
-		boolean results = stmt.execute(sqlRequest);
-
-		while (results) {
-			ResultSet rs = stmt.getResultSet();
-			try {
-				while (rs.next()) {
-					User user = new User(rs.getString("id_user"),rs.getString("pseudo"),
-								rs.getString("password"),rs.getString("email"), rs.getDate("date"));
-					System.out.println(user.toString());
-					//si on entre dans cette boucle c'est que le pseudo et le password match bien
-					//On retourne alors l'utilisateur
-				}
-			} finally {
-				try { rs.close(); } catch (Throwable ignore) {}
-			}
-
-			// Parcourir les autres resultat de la requête si il y en a
-			results = stmt.getMoreResults();
-		}
-		stmt.close();
-	}
-	
-	public void seeAllDBSearch() throws SQLException{
-		
-		Statement stmt = getConnection().createStatement();
-		String sqlRequest = "SELECT * from "+SEARCH_DB_NAME+";";
-		boolean results = stmt.execute(sqlRequest);
-
-		while (results) {
-			ResultSet rs = stmt.getResultSet();
-			try {
-				while (rs.next()) {
-					System.out.println(rs.getString("id_user")+" "+rs.getString("recherche")
-								+" "+rs.getDate("date"));
-					//si on entre dans cette boucle c'est que le pseudo et le password match bien
-					//On retourne alors l'utilisateur
-				}
-			} finally {
-				try { rs.close(); } catch (Throwable ignore) {}
-			}
-
-			// Parcourir les autres resultat de la requête si il y en a
-			results = stmt.getMoreResults();
-		}
-		stmt.close();
-	}
-	
-	public static void main(String[] args) throws ClassNotFoundException, URISyntaxException, SQLException{
-
-		MySQLService mysql = new MySQLService();
-		
-		System.out.println(mysql.checkConnexion("moussa", "moussa"));
-				
-	}
-
 }

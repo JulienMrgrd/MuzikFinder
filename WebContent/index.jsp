@@ -14,7 +14,13 @@
 	<link rel="stylesheet" href="css/index.css">
 	<title>MuzikFinder</title>
 </head>
+<style>
 
+h3{
+	text-align: center;
+}
+
+</style>
 <body>
 	<div id="header"></div>
 	<div id="carousel"></div>
@@ -23,8 +29,9 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-6">
-					<h2>Quick & easy music search</h2>
-					<h4><p>Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter Texte un peu long à ajouter</p></h4>
+					<h2 style="text-align:center">Quick & easy music search</h2>
+					<h3><p>Vous avez une musique en tête ? <br> <br>Ne la cherchez plus, retrouvez la facilement grâce à Muzik Finder©<br><br>
+					      Inscrivez-vous vite, site 100% gratuits et sans aucune utilisation commerciale de vos données personnelles.</h3>
 				</div>
 				<div class="col-md-6">
 					<div class="albums">

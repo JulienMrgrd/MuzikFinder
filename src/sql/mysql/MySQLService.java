@@ -186,7 +186,8 @@ public class MySQLService {
 			
 				java.util.Date utilDate = new java.util.Date();
 			    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());		
-			    
+			    recherche = recherche.replace("'", "\\'");
+			    System.out.println(recherche);
 				String sqlRequest = "INSERT INTO "+SEARCH_DB_NAME+"(id_user,recherche,id_recherche,date) VALUES('"
 						+ id_user+"','"+recherche+"','"+id_recherche+"','"+sqlDate+"');";
 				stmt.execute(sqlRequest);

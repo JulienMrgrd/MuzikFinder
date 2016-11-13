@@ -1,8 +1,11 @@
 package api.musixMatch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import api.musixMatch.utils.MusixMatchAPIHelper;
 import api.musixMatch.utils.MusixMatchConstants;
@@ -63,13 +66,32 @@ public class MusixMatchService {
 	}
 
 	public List<MFMusic> getTopMusics(int from, int to, String country) {
-		Map<String, String> params = new HashMap<>();
-		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(to));
-		params.put(MusixMatchConstants.PAGE, Integer.toString(from));
+		if(from<=0) from = 1;
+		Set<MFMusic> res = new HashSet<MFMusic>(to); // évite les doublons
+		
+		Map<String, String> params = new HashMap<>(3);
 		params.put(MusixMatchConstants.COUNTRY, country);
+
+		int quotient = to/100;
+		int modulo = to%100;
+		
+		// Si to>100, on boucle autant de fois qu'il y a de paquet de 100 (contrainte de l'API), et on passe à la page suivante
+		for(int i=0; i<quotient; i++){
+			params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(100));
+			params.put(MusixMatchConstants.PAGE, Integer.toString(from));
+			String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_CHART_GET, params);
+			String response = RequestHelper.sendRequest(request);
+			res.addAll(MusixMatchAPIHelper.getMusicsList(response));
+			from++;
+		}
+		
+		params.put(MusixMatchConstants.PAGE_SIZE, Integer.toString(modulo));
+		params.put(MusixMatchConstants.PAGE, Integer.toString(from));
 		String request = RequestHelper.createRequest(MusixMatchConstants.TRACK_CHART_GET, params);
 		String response = RequestHelper.sendRequest(request);
-		return MusixMatchAPIHelper.getMusicsList(response);
+		res.addAll(MusixMatchAPIHelper.getMusicsList(response));
+		
+		return new ArrayList<MFMusic>(res);
 	}
 	
 	public List<MFArtist> getTopArtists(int pos, int nbArtistsToGet, String country) {

@@ -37,7 +37,7 @@ public class SignUpServlet extends HttpServlet {
 			month = Integer.parseInt(request.getParameter("month"));
 			year = Integer.parseInt(request.getParameter("year"));
 		}catch(NumberFormatException e){
-			myResponse.addProperty("message", "Date de naissance invalide");
+			myResponse.addProperty("message", "Invalid birthday.");
 			myResponse.addProperty("success", false);
 			response.setCharacterEncoding("UTF-8");
 		    response.setContentType("text/json");
@@ -48,15 +48,15 @@ public class SignUpServlet extends HttpServlet {
 		}
 		
 		if(username==null || username.isEmpty() || username.length()<5){
-			myResponse.addProperty("message", "Username invalide");
+			myResponse.addProperty("message", "Invalid username.");
 			myResponse.addProperty("success", false);
 			
 		} else if(password==null || password.isEmpty() || password.length()<5){
-			myResponse.addProperty("message", "Password invalide");
+			myResponse.addProperty("message", "Invalid password.");
 			myResponse.addProperty("success", false);
 			
 		} else if(mail==null || mail.isEmpty() || !mail.contains("@")){
-			myResponse.addProperty("message", "Email invalide");
+			myResponse.addProperty("message", "Invalid email.");
 			myResponse.addProperty("success", false);
 			
 		} else if (service.checkLogin(username)){
@@ -64,7 +64,7 @@ public class SignUpServlet extends HttpServlet {
 			myResponse.addProperty("success", false);
 			
 		} else if(!MuzikFinderUtils.isDateValid(day, month, year)){
-			myResponse.addProperty("message", "Date de naissance invalide");
+			myResponse.addProperty("message", "Invalid birthday.");
 			myResponse.addProperty("success", false);
 		} else {
 			// inscription
@@ -74,7 +74,7 @@ public class SignUpServlet extends HttpServlet {
 				myResponse.addProperty("success", true);
 			} else {
 				myResponse.addProperty("success", true);
-				myResponse.addProperty("message", "Inscription impossible...");
+				myResponse.addProperty("message", "Signup not possible for the moment...");
 			}
 			
 		}

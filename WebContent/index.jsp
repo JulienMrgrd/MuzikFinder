@@ -15,13 +15,7 @@
 	<link rel="stylesheet" href="css/ladda-themeless.min.css">
 	<title>MuzikFinder</title>
 </head>
-<style>
 
-h3{
-	text-align: center;
-}
-
-</style>
 <body>
 	<div id="header"></div>
 	<div id="carousel"></div>
@@ -30,10 +24,15 @@ h3{
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-6">
-					<h2 style="text-align:center">Quick & easy music search</h2>
-					<h3><p>Vous avez une musique en tête ? <br> <br>Ne la cherchez plus, retrouvez la facilement grâce à Muzik Finder©<br><br>
-					      Inscrivez-vous vite, site 100% gratuits et sans aucune utilisation commerciale de vos données personnelles.</h3>
+					<h2>Quick &amp; easy music search</h2>
+					<p class="paraph">
+						Do you have music in mind ?<br>You do not know the title or the singer? 
+						<br><br>Look no further in the void, 
+						<br>and find it easily with <span style="font-size: 22px;">MuzikFinder</span><span style="font-size: 10px;">©</span>.
+						<br><br>Register quickly, everything is free and without any commercial use of your personal data. Promised!
+					</p>
 				</div>
+				
 				<div class="col-md-6">
 					<div class="albums">
 						<div id="album-slot1">
@@ -67,13 +66,18 @@ h3{
 				</div>
 				<div class="col-md-6">
 					<h2> What's hot ?  <img class="emoji" src="images/1f525.png"/></h2>
-					<h4>Texte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouter</h4>
+					<p class="paraph">
+						See the most sought-after musics, <br><br>globally and by age group.
+					</p>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<h2>Stats about you !</h2>
-					<h4>Texte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouterTexte un peu long à ajouter</h4>
+					<h2>Search by artist</h2>
+					<p class="paraph">
+						Try our new feature: the research by artist. 
+						<br><br>You will see all his songs, as well as his featurings !
+					</p>
 				</div>
 				<div class="col-md-6">
 					<div class="stats">

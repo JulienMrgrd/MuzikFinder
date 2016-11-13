@@ -184,7 +184,7 @@ public class MongoServiceSearchMusic {
 			MongoCursor<Document> cursor_Musics;
 			Document doc_Musics, findQuery_MusicByIdMusic;
 			
-			for(int i=0; i<idMusics.size() && i < MuzikFinderPreferences.LIMITACCEPTABLETEMPS; i++){
+			for(int i=0; i<idMusics.size() && i < MuzikFinderPreferences.LIMITACCEPTABLE_NB_MUSICS; i++){
 				
 				collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 				findQuery_MusicByIdMusic = new Document(MongoCollectionsAndKeys.IDMUSIC_MUSICS, new Document("$eq", idMusics.get(i)));

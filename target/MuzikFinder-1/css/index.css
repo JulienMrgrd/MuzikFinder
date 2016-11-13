@@ -36,13 +36,29 @@
 	padding-left: 50px;
 }
 
+.paraph{
+	font-size: 19px; 
+	margin-top:5%;
+	text-align: center;
+	font-family:initial, bold;
+}
+
+h2{
+	text-align:center;
+}
+
 .classement{
 	text-align: center;
 	vertical-align: middle;
 }
 
+@media (min-width: 992px){
+	.classement img{
+		margin-right: 3%;
+	}
+}
+
 .classement img {
-	margin: 0 auto;
 	width: 70%;
     height: 70%;
 }

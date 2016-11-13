@@ -16,10 +16,10 @@ import server.services.MuzikFinderService;
 /**
  * Servlet implementation class SpecificSearch
  */
-public class SpecificSearchServlet extends HttpServlet {
+public class AutoArtistSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public SpecificSearchServlet() {}
+    public AutoArtistSearchServlet() {}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("SpecificSearch doPost");

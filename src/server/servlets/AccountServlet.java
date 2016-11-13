@@ -31,7 +31,7 @@ public class AccountServlet extends HttpServlet {
 		
 		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());		
 		if(userId == null){
-			request.setAttribute("message", "Veuillez vous connecter");
+			request.setAttribute("message", "Please login");
 			request.setAttribute("success", false);
 		} else {
 			request.setAttribute("success", true);

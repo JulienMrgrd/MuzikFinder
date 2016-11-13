@@ -268,8 +268,8 @@ public class MongoServiceSearchUser {
 	 */
 	static List<String> getListIdMostPopularByRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(range);
-		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
-			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
+		if(list_music_score.size() > MuzikFinderPreferences.LIMITACCEPTABLE_NB_MUSICS)
+			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLE_NB_MUSICS);
 
 		List<String> list_id = new ArrayList<String>();
 		for(IdMusicScore mscore : list_music_score){
@@ -366,8 +366,8 @@ public class MongoServiceSearchUser {
 	 */
 	static List<String> getListIdMostPopularAllRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularAllRange();
-		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
-			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLETEMPS);
+		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLE_NB_MUSICS)
+			list_music_score.subList(0, MuzikFinderPreferences.LIMITACCEPTABLE_NB_MUSICS);
 		List<String> list_id = new ArrayList<String>();
 		for(IdMusicScore mscore : list_music_score){
 			list_id.add(mscore.getIdMusic());

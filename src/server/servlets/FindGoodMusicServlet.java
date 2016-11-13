@@ -33,7 +33,7 @@ public class FindGoodMusicServlet extends HttpServlet {
 			String userBirth = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_BIRTH, request.getCookies());
 			if(userBirth == null){
 				myResponse.addProperty("success", false);
-				myResponse.addProperty("message", "Session expirée. Veuillez vous reconnecter.");
+				myResponse.addProperty("message", "Expired session. Please login.");
 			} else {
 				
 				LocalDate dateUser = LocalDate.parse(userBirth); // see sql.Date.toString() method

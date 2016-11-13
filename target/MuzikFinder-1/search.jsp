@@ -140,7 +140,7 @@
 			      		else genre = item.musicGenre;
 			      		
 			      		var goodButton = "";
-			      		if($("#goodMusicAlreadyClicked")==null){
+			      		if(!$("#showMoreResults").hasClass( "goodMusicAlreadyClicked" )){
 			      			goodButton = '<a id=\"'+item.trackId+'\" class=\"btn btn-success btn-outline btn-sm good\" onclick=\"confirmGoodMusic(this)\">Good !</a>';
 			      		}
 			      		
@@ -149,8 +149,7 @@
 											'<a class="panel-title" data-toggle="collapse" data-parent="#panel-results"'+
 												'href="#panel-element-'+item.trackId+'">'+item.artistName+' - '+item.trackName+'</a>'+
 											'<div style="float: right;">'+
-												'<span class="badge" style="margin-right:5px;"><i>'+genre+'</i></span>'+
-												goodButton+
+												'<span class="badge" style="margin-right:5px;"><i>'+genre+'</i></span>'+goodButton+
 											'</div>'+
 										'</div>'+
 										'<div id="panel-element-'+item.trackId+'" class="panel-collapse collapse">'+

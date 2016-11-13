@@ -6,7 +6,7 @@ $(function() {
 		$('#userSearch').typeahead({
 			source : function(query, process){
 			    return $.ajax({
-		            url : 'SpecificSearchServlet',
+		            url : 'AutoArtistSearchServlet',
 		            type : "GET",
 		            dataType: "json",
 		            data : { search : $("#userSearch").val() },

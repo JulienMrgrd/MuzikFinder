@@ -35,10 +35,11 @@ public class SearchServlet extends HttpServlet {
 		
 		if(userLogin == null){
 			success = false;
-			request.setAttribute("message", "Veuillez vous connecter");
+			request.setAttribute("message", "Please login.");
 		} else if(userSearch==null || userSearch.isEmpty()){
 			success = false;
-			request.setAttribute("message", "Veuillez renseigner au moins 3 mots ...");
+			request.setAttribute("message", "Please enter at least "
+						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" words ...");
 		}
 		
 		boolean isSearchArtist = (artistOrLyrics!=null && artistOrLyrics.equals("artist"));
@@ -50,12 +51,12 @@ public class SearchServlet extends HttpServlet {
 			
 			if(!isSearchArtist && tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
-				request.setAttribute("message", "Veuillez renseigner au moins "
-						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" mots ...");
+				request.setAttribute("message", "Please enter at least "
+						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" words ...");
 				
 			} else if(!isSearchArtist && tags.size() > MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
-				request.setAttribute("message", "Veuillez renseigner au maximum "
+				request.setAttribute("message", "Please enter a maximum of "
 						+MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH+" mots ...");
 
 			} else {

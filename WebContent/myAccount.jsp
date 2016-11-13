@@ -44,10 +44,9 @@
 			<div class="tabbable" id="tabs-362910">
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#panel-Modification"
-						data-toggle="tab">Modification coordonnées</a></li>
-					<li><a href="#panel-Historique" data-toggle="tab">Historique
-							de recherche</a></li>
-					<li><a href="#panel-Suppression" data-toggle="tab">Suppresion</a>
+						data-toggle="tab">Change contact informations</a></li>
+					<li><a href="#panel-Historique" data-toggle="tab">Search history</a></li>
+					<li><a href="#panel-Suppression" data-toggle="tab">Delete</a>
 					</li>
 				</ul>
 
@@ -59,7 +58,7 @@
 							<strong id="errorMessageStrong"></strong>
 						</div>
 						<div id="successMessage" class="alert alert-success fade in" style="display:none;">
-							<strong id="successMessageStrong">Modifications OK.</strong>
+							<strong id="successMessageStrong">Changes ok !</strong>
 						</div>
 						<form action="AccountServlet" method="post">
 							<div class="form-group">
@@ -78,7 +77,7 @@
 									autocomplete="on" />
 							</div>
 							<button id="buttonSetAccount" type="submit" class="btn btn-info btn-outline btn-sm ladda-button" 
-								data-style="expand-right">Modifier mes informations</button>
+								data-style="expand-right">Change my information</button>
 
 						</form>
 					</div>
@@ -86,7 +85,7 @@
 
 					<div class="tab-pane" id="panel-Historique">
 						<p>
-						<h4 style="margin-bottom: 10px;">Historique de vos recherches :</h4>
+						<h4 style="margin-bottom: 10px;">Your search history :</h4>
 							<%	@SuppressWarnings("unchecked")
 								List<Search> listSearch = (List<Search>) request.getAttribute("results");
 								if(listSearch!=null){
@@ -109,7 +108,7 @@
 					<form action="AccountServlet" method="post">
 						<div>
 							<button id="buttonDeleteAccount" class="btn btn-danger" style="float:left;"
-								type="submit">Supprimer mon compte</button>
+								type="submit">Delete my account</button>
 						</div>
 					</form>
 					</div>

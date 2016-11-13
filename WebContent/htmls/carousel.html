@@ -1,36 +1,43 @@
+<style>
+.carouselImg {
+  width: auto;
+  height: 1500px;
+  max-height: 1500px;
+}
+
+@media (max-width: 700px){
+	.carousel{
+		margin-top: 50px;
+	}
+}
+</style>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-16">
-			<div class="carousel slide" id="carousel-725737">
+			<div class="carousel slide" id="carousel-725737" data-ride="carousel">
 				<ol class="carousel-indicators">
-					<li class="active" data-slide-to="0" data-target="#carousel-725737">
-					</li>
+					<li class="active" data-slide-to="0" data-target="#carousel-725737"></li>
 					<li data-slide-to="1" data-target="#carousel-725737"></li>
-					<li data-slide-to="2" data-target="#carousel-725737"></li>
 				</ol>
+				
 				<div class="carousel-inner">
 					<div class="item active">
-						<img alt="Carousel Bootstrap First"
-							src="images/first.png">
+						<img class="carouselImg" alt="Carousel Bootstrap First"
+							src="images/carousel1.jpg">
 						<div class="carousel-caption">
-							<h4>Onglet 1</h4>
-							<p>Texte du onglet 1</p>
+							<h1>Few words, a lot of results</h1>
+							<p>Search with a few words you've heard, and we'll try to find you THE music you were looking for so much.</p>
 						</div>
 					</div>
 					<div class="item">
-						<img alt="Carousel Bootstrap Second"
-							src="images/second.png">
+						<img class="carouselImg" alt="Carousel Bootstrap Second"
+							src="images/carousel2.jpg">
 						<div class="carousel-caption">
-							<h4>Onglet 2</h4>
-							<p>Texte du onglet 2</p>
-						</div>
-					</div>
-					<div class="item">
-						<img alt="Carousel Bootstrap Third"
-							src="images/third.png">
-						<div class="carousel-caption">
-							<h4>Onglet 3</h4>
-							<p>Texte du onglet 3</p>
+							<h1 style="display:inline-block;">Try it free ... </h1>
+							<h2 style="display:inline-block;">free ...</h2>
+							<h3 style="display:inline-block;">free ...</h3>
+							<h4 style="display:inline-block;">free</h4>
 						</div>
 					</div>
 				</div>
@@ -44,3 +51,11 @@
 		</div>
 	</div>
 </div>
+
+<script type='text/javascript'>
+    $(document).ready(function() {
+         $('.carousel').carousel({
+             interval: 3000
+         })
+    });    
+</script>

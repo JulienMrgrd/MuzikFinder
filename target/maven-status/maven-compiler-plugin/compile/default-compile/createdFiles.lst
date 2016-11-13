@@ -39,7 +39,7 @@ sql\metier\Search.class
 server\servlets\LoginServlet.class
 server\servlets\SearchServlet.class
 api\musixMatch\utils\MusixMatchAPIHelper.class
-server\servlets\SpecificSearchServlet.class
+server\servlets\AutoArtistSearchServlet.class
 api\API.class
 nosql\mongo\MongoServiceInsert.class
 nosql\NoSQLDB.class

@@ -28,11 +28,11 @@ public class LoginServlet extends HttpServlet {
 		JsonObject myResponse = new JsonObject();
 		
 		if(username==null || username.isEmpty() || username.length()<MuzikFinderPreferences.MIN_SIZE_OF_USERNAME){
-			myResponse.addProperty("message", "Username invalide");
+			myResponse.addProperty("message", "Username invalid");
 			myResponse.addProperty("success", false);
 			
 		} else if(password==null || password.isEmpty() || password.length()<MuzikFinderPreferences.MIN_SIZE_OF_PASSWORD){
-			myResponse.addProperty("message", "Password invalide");
+			myResponse.addProperty("message", "Password invalid");
 			myResponse.addProperty("success", false);
 			
 		} else {
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 			
 			} else {
 				myResponse.addProperty("success", false);
-				myResponse.addProperty("message", "Login ou mot de passe incorrect.");
+				myResponse.addProperty("message", "Invalid login or password.");
 			}
 			
 		}

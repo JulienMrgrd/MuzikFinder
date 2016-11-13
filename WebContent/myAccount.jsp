@@ -31,6 +31,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="images/favicon.png?2">
+<link rel="stylesheet" href="css/navbar.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/ladda-themeless.min.css">
 <title>MuzikFinder</title>

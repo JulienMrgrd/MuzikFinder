@@ -328,17 +328,19 @@ public class MongoServiceSearchUser {
 	 */
 	
 	static List<IdMusicScore> concatListIdMusicScore(List<IdMusicScore> list1, List<IdMusicScore> list2 ){
-		boolean test = false;
+		int cpt = 0;
 		List<IdMusicScore> list_tmp = new ArrayList<IdMusicScore>();
-		for(IdMusicScore id_score_tmp : list1){
-			for(IdMusicScore id_score : list2){
+		for(IdMusicScore id_score_tmp : list2){
+			cpt = 0;
+			for(IdMusicScore id_score : list1){
 				if(id_score_tmp.getIdMusic().equals(id_score.getIdMusic())){
-					test = true;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
+					id_score.setScore(id_score_tmp.getScore()+id_score.getScore());
 				}
-				if(!test)
-					list_tmp.add(id_score);
+				else
+					cpt++;
 			}
+			if(cpt==list1.size())
+				list_tmp.add(id_score_tmp);
 		}
 		list1.addAll(list_tmp);
 		return list1;

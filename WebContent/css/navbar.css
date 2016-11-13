@@ -1,0 +1,29 @@
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+.navbar-inverse {
+	margin: 0 auto;
+	padding-right: 10%;
+	padding-left: 10%;
+	opacity: 0.9;
+	color: #99979c;
+}
+
+.navbar-form .form-control{
+	background-color: #99979c;
+	border-color: #222222;
+	width: 300px;
+	color: #ddd;
+}
+.navbar-form .form-control::-moz-placeholder{
+	color: #eee;
+}
+.navbar-brand img{
+	max-width: 120px; 
+	margin-top: -7px;
+}
+
+.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
+	color: #eee;
+}

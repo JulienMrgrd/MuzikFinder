@@ -4,7 +4,6 @@ nosql\mongo\MongoCollectionsAndKeys.class
 nosql\mongo\MongoServiceGetId.class
 nosql\mongo\MongoServiceSearchUser.class
 api\musixMatch\metier\Lyrics.class
-tests\Test.class
 api\musixMatch\utils\MusixMatchUtils.class
 sql\mysql\MySQLService.class
 server\services\MuzikFinderService.class

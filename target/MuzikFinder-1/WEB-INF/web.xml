@@ -48,7 +48,7 @@
 		<servlet-name>SignUpServlet</servlet-name>
 		<url-pattern>/SignUpServlet</url-pattern>
 	</servlet-mapping>
-	
+ 	
 	<servlet>
 		<description></description>
 		<display-name>SearchServlet</display-name>
@@ -91,5 +91,27 @@
 	<servlet-mapping>
 		<servlet-name>FindGoodMusicServlet</servlet-name>
 		<url-pattern>/FindGoodMusicServlet</url-pattern>
+	</servlet-mapping>
+  
+  	<servlet>
+		<description></description>
+    	<display-name>SpecificSearchServlet</display-name>
+    	<servlet-name>SpecificSearchServlet</servlet-name>
+    	<servlet-class>server.servlets.SpecificSearchServlet</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>SpecificSearchServlet</servlet-name>
+    	<url-pattern>/SpecificSearchServlet</url-pattern>
+ 	</servlet-mapping>
+  
+	<servlet>
+		<description></description>
+		<display-name>TopMusicsServlet</display-name>
+		<servlet-name>TopMusicsServlet</servlet-name>
+		<servlet-class>server.servlets.TopMusicsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TopMusicsServlet</servlet-name>
+		<url-pattern>/TopMusicsServlet</url-pattern>
 	</servlet-mapping>
 </web-app>

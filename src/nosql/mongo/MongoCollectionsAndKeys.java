@@ -9,7 +9,7 @@ public final class MongoCollectionsAndKeys {
 	public static final String ALBUMS = "Albums";
 	public static final String PREFS = "Preferences";
 	public static final String SEARCH = "Search";
-	public static final String CACHE = "Cache";
+	public static final String SEARCH_CACHE = "Search_Cache";
 	public static final String STATS = "Stats";
 	public static final String STATS_CACHE = "Stats_Cache";
 

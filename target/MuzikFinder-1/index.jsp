@@ -4,10 +4,12 @@
 <!DOCTYPE html>
 <html>
 
+<script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.min.js"></script>
 <head>
 	<meta charset="utf-8">
 	<link rel="icon" href="images/favicon.png?2">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/ladda-themeless.min.css">
 	<link rel="stylesheet" href="css/index.css">
 	<title>MuzikFinder</title>
@@ -78,16 +80,14 @@
 	<div id="footer"></div>
 </body>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.min.js"></script>
 <script> 
-	(function() { 
-		var login = Cookies.get('MUZIKFINDERLOGIN');
-		if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
-		else $("#header").load("htmls/header/headerConnected.html");
-		
-		$("#carousel").load("htmls/carousel.html");
-		$("#footer").load("htmls/footer.html");
-	})(); 
+(function() { 
+	var login = Cookies.get('MUZIKFINDERLOGIN');
+	if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
+	else $("#header").load("htmls/header/headerConnected.html");
+	
+	$("#carousel").load("htmls/carousel.html");
+	$("#footer").load("htmls/footer.html");
+})(); 
 </script>
 </html>

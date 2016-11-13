@@ -27,6 +27,7 @@ public class SearchServlet extends HttpServlet {
 		
 		boolean success = true;
 		String userSearch = (String) request.getParameter("userSearch");
+		String artistOrLyrics = (String) request.getParameter("artistOrLyrics");
 		
 		String userLogin = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_LOGIN, request.getCookies());
 		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());
@@ -40,17 +41,19 @@ public class SearchServlet extends HttpServlet {
 			request.setAttribute("message", "Veuillez renseigner au moins 3 mots ...");
 		}
 		
+		boolean isSearchArtist = (artistOrLyrics!=null && artistOrLyrics.equals("artist"));
+		
 		if(!success){
 			request.setAttribute("success", false);
-		}else {	
+		}else {
 			List<String> tags = Arrays.asList(userSearch.split(" "));
 			
-			if(tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
+			if(!isSearchArtist && tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
 				request.setAttribute("message", "Veuillez renseigner au moins "
 						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" mots ...");
 				
-			} else if(tags.size() > MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH){
+			} else if(!isSearchArtist && tags.size() > MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
 				request.setAttribute("message", "Veuillez renseigner au maximum "
 						+MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH+" mots ...");
@@ -59,17 +62,25 @@ public class SearchServlet extends HttpServlet {
 				request.setAttribute("success", true);
 				String randomSearchId = MuzikFinderUtils.generateRandomIdSearch(userLogin);
 				request.setAttribute("searchId", randomSearchId);
+				MuzikFinderService ms = MuzikFinderService.getInstance();
+				List<MFMusic> musics;
 				
-				List<MFMusic> musics = MuzikFinderService.getInstance().searchMusics(userId, tags, randomSearchId);
+				if(isSearchArtist){ // recherche par artist
+					request.setAttribute("artist", userSearch);
+					musics = ms.getMusicsByArtist(userSearch);
+				
+				} else { // recherche par lyrics
+					musics = ms.searchMusics(userId, tags, randomSearchId);
+					// Regex construction (voir coloration des mots dans search.jsp)
+					String str = tags.get(0);
+					for(int i=1; i<tags.size(); i++){
+						if(tags.get(i)!=null && !tags.get(i).isEmpty()) str+="|"+tags.get(i);
+					}
+					request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
+				}
 				Set<MFMusic> musicsWithoutDuplicate = new HashSet<>(musics);
 				request.setAttribute("results", musicsWithoutDuplicate);
 				
-				// Regex construction (voir coloration des mots dans search.jsp)
-				String str = tags.get(0);
-				for(int i=1; i<tags.size(); i++){
-					if(tags.get(i)!=null && !tags.get(i).isEmpty()) str+="|"+tags.get(i);
-				}
-				request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
 				MuzikFinderUtils.updateTimeCookies(userLogin, userId, userBirth, response);
 			}
 		}
@@ -78,9 +89,4 @@ public class SearchServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("SearchServlet doPost");
-		doGet(request, response);
-	}
-	
 }

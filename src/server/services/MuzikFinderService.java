@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import api.API;
 import interfaces.MFArtist;
@@ -67,12 +68,12 @@ public class MuzikFinderService {
 	
 	
 	//// ====== NOSQL PART ====== ////
-	public List<String> getListNameArtistBeginWith(String nameArtist){
-		return nosql.getListNameArtistBeginWith(nameArtist);
+	public Set<String> getArtistNamesBeginWith(String nameArtist){
+		return nosql.getArtistNamesBeginWith(nameArtist);
 	}
 	
-	public List<String> getListTrackNameBeginWith(String trackName){
-		return nosql.getListTrackNameBeginWith(trackName);
+	public Set<String> getTrackNamesBeginWith(String trackName){
+		return nosql.getTrackNamesBeginWith(trackName);
 	}
 	
  	public List<MFMusic> searchMusics(String id_user,List<String> tags, String idRecherche) {

@@ -8,7 +8,7 @@
 <style>
 .container {
 	margin-top: 100px;
-	margin-bottom: 150px;
+	margin-bottom: 40px;
 }
 
 .btn-info.btn-outline:hover, .btn-info.btn-outline:active{
@@ -25,10 +25,13 @@
 }
 
 </style>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.min.js"></script>
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="images/favicon.png?2">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/ladda-themeless.min.css">
 <title>MuzikFinder</title>
 </head>
@@ -100,8 +103,6 @@
 					<div class="tab-pane" id="panel-Suppression">
 					<form action="AccountServlet" method="post">
 						<div>
-							<button id="buttonDeleteSearch" class="btn btn-warning" style="margin-right: 10px; float:left;"
-								type="submit">Supprimer Recherche</button>
 							<button id="buttonDeleteAccount" class="btn btn-danger" style="float:left;"
 								type="submit">Supprimer mon compte</button>
 						</div>
@@ -116,8 +117,6 @@
 
 </body>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.min.js"></script>
 <script> 
 	(function() { 
 		var login = Cookies.get('MUZIKFINDERLOGIN');
@@ -130,6 +129,28 @@
 		//Stops the submit request
 		$("#accountAjaxRequestForm").submit(function(e) {
 			e.preventDefault();
+		});
+		
+		$("#buttonDeleteAccount").click(function(e){
+			console.log("delete cookies");
+			Cookies.set('MUZIKFINDERLOGIN', '', {
+				path : '/'
+			});
+			Cookies.set('MUZIKFINDERUSERID', '', {
+				path : '/'
+			});
+			Cookies.set('MUZIKFINDERBIRTH', '', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERLOGIN', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERUSERID', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERBIRTH', {
+				path : '/',
+			});
 		});
 
 		//checks for the button click event

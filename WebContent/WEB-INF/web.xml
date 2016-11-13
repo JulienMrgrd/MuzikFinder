@@ -95,13 +95,13 @@
   
   	<servlet>
 		<description></description>
-    	<display-name>SpecificSearch</display-name>
-    	<servlet-name>SpecificSearch</servlet-name>
-    	<servlet-class>server.servlets.SpecificSearch</servlet-class>
+    	<display-name>SpecificSearchServlet</display-name>
+    	<servlet-name>SpecificSearchServlet</servlet-name>
+    	<servlet-class>server.servlets.SpecificSearchServlet</servlet-class>
   	</servlet>
   	<servlet-mapping>
-    	<servlet-name>SpecificSearch</servlet-name>
-    	<url-pattern>/SpecificSearch</url-pattern>
+    	<servlet-name>SpecificSearchServlet</servlet-name>
+    	<url-pattern>/SpecificSearchServlet</url-pattern>
  	</servlet-mapping>
   
 	<servlet>

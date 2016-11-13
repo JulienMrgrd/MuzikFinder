@@ -10,6 +10,8 @@ import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
+import utils.MuzikFinderPreferences;
+
 public class MongoServiceGetId {
 	
 	private static MongoService ms = MongoService.getInstance();
@@ -38,29 +40,27 @@ public class MongoServiceGetId {
 		return listIdMusicDocument;
 	}
 
-	static List<String> getListNameArtistBeginWith(String nameArtist){
+	static Set<String> getSetNameArtistBeginWith(String nameArtist){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 		Document findQuery = new Document(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS, new Document("$regex","^"+nameArtist).append("$options", "i"));
-		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		MongoCursor<Document> cursor = ms.findByWithLimit(collection, findQuery, MuzikFinderPreferences.SIZE_OF_TYPEAHEAD);
 
 		Set<String> setNameArtist = new HashSet<String>();
-		while(cursor.hasNext() && setNameArtist.size()<6){
+		while(cursor.hasNext()){
 			setNameArtist.add(cursor.next().getString(MongoCollectionsAndKeys.ARTISTSNAME_MUSICS));
 		}
-		List<String> listNameArtist = new ArrayList<String>(setNameArtist);
-		return listNameArtist;
+		return setNameArtist;
 	}
 	
-	static List<String> getListTrackNameBeginWith(String trackName){
+	static Set<String> getSetTrackNameBeginWith(String trackName){
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
 		Document findQuery = new Document(MongoCollectionsAndKeys.MUSICNAME_MUSICS, new Document("$regex","^"+trackName).append("$options", "i"));
-		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
+		MongoCursor<Document> cursor = ms.findByWithLimit(collection, findQuery, MuzikFinderPreferences.SIZE_OF_TYPEAHEAD);
 
 		Set<String> setTrackNAme = new HashSet<String>();
-		while(cursor.hasNext() && setTrackNAme.size()<6){
+		while(cursor.hasNext()){
 			setTrackNAme.add(cursor.next().getString(MongoCollectionsAndKeys.MUSICNAME_MUSICS));
 		}
-		List<String> listTrackNAme = new ArrayList<String>(setTrackNAme);
-		return listTrackNAme;
+		return setTrackNAme;
 	}
 }

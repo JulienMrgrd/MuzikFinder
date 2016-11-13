@@ -23,6 +23,9 @@ public class AccountServlet extends HttpServlet {
        
     public AccountServlet() {}
 
+    /**
+     * Insertion de données dans la page "My account"
+     */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("AccountServlet doGet");
 		
@@ -41,6 +44,9 @@ public class AccountServlet extends HttpServlet {
 		MuzikFinderUtils.updateTimeCookies(request, response);
 	}
 
+	/**
+	 * 
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("AccountServlet doPost");
 		
@@ -69,17 +75,11 @@ public class AccountServlet extends HttpServlet {
         		myResponse.addProperty("success", true);
         	}
        
-        } else if (id_user!=null && type.equals("deleteSearch")) {
-//        	//TODO: A voir la forme que sa a pour le transformer en sqlDate
-//        	String date = request.getParameter("date");
-//        	//String dateNow = year+"-"+month+"-"+day;
-//			Date sqlDate = Date.valueOf(date);
-//        	mzf.deleteSearchByDateAndUser(id_user,sqlDate);
-        	myResponse.addProperty("success", true);
-        	
         } else if (id_user!=null && type.equals("deleteAccount")) {
-//        	mzf.deleteAccountUser(id_user);
-        	myResponse.addProperty("success", true);
+        	mzf.deleteAccountUser(id_user);
+    		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+    		dispatcher.forward(request, response);
+    		return;
         } else {
         	myResponse.addProperty("message", "Unknown error...");
         	myResponse.addProperty("success", false);

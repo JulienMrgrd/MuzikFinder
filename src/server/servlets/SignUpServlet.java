@@ -20,11 +20,6 @@ public class SignUpServlet extends HttpServlet {
 
     public SignUpServlet() { }
 
-    // test if login already exist or if password is bad
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("SignUpServlet doGet");
-	}
-
 	// create account
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("SignUpServlet doPost");

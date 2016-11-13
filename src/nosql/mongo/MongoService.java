@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,6 +82,11 @@ public class MongoService {
 	MongoCursor<Document> findBy(MongoCollection<Document> collection, Document findQuery){
 		return collection.find(findQuery).iterator();
 	}
+	
+	MongoCursor<Document> findByWithLimit(MongoCollection<Document> collection, Document findQuery, int limit){
+		if(limit>0)	return collection.find(findQuery).limit(limit).iterator();
+		return null;
+	}
 
 	void replaceOne(MongoCollection<Document> collection, Document before, Document after){
 		collection.replaceOne(before, after);
@@ -154,12 +160,12 @@ public class MongoService {
 		return MongoServiceGetId.getAllAlbumIds();
 	}
 	
-	public List<String> getListNameArtistBeginWith(String nameArtist){
-		return MongoServiceGetId.getListNameArtistBeginWith(nameArtist);
+	public Set<String> getArtistNamesBeginWith(String nameArtist){
+		return MongoServiceGetId.getSetNameArtistBeginWith(nameArtist);
 	}
 	
-	public List<String> getListTrackNameBeginWith(String trackName){
-		return MongoServiceGetId.getListTrackNameBeginWith(trackName);
+	public Set<String> getTrackNamesBeginWith(String trackName){
+		return MongoServiceGetId.getSetTrackNameBeginWith(trackName);
 	}
 
 	//////////////PARTIE SEARCH////////////////////////

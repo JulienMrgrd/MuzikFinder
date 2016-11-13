@@ -81,13 +81,13 @@
 </body>
 
 <script> 
-	(function() { 
-		var login = Cookies.get('MUZIKFINDERLOGIN');
-		if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
-		else $("#header").load("htmls/header/headerConnected.html");
-		
-		$("#carousel").load("htmls/carousel.html");
-		$("#footer").load("htmls/footer.html");
-	})(); 
+(function() { 
+	var login = Cookies.get('MUZIKFINDERLOGIN');
+	if(login==null || login=="") $("#header").load("htmls/header/headerNotConnected.html");
+	else $("#header").load("htmls/header/headerConnected.html");
+	
+	$("#carousel").load("htmls/carousel.html");
+	$("#footer").load("htmls/footer.html");
+})(); 
 </script>
 </html>

@@ -20,11 +20,6 @@ public class FindGoodMusicServlet extends HttpServlet {
 
     public FindGoodMusicServlet() { }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("FindGoodMusicServlet doGet");
-		doPost(request, response);
-	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("FindGoodMusicServlet doPost");
 		

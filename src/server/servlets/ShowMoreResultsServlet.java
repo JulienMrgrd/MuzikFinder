@@ -23,11 +23,6 @@ public class ShowMoreResultsServlet extends HttpServlet {
 
     public ShowMoreResultsServlet() { }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("ShowMoreResultsServlet doGet");
-		doPost(request, response);
-	}
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("ShowMoreResultsServlet doPost");
 		

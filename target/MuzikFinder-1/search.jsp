@@ -5,10 +5,12 @@
 <!DOCTYPE html>
 <html>
 
+<script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.min.js"></script>
 <head>
 	<meta charset="utf-8">
 	<link rel="icon" href="images/favicon.png?2">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/ladda-themeless.min.css">
 	<link href="css/search.css" rel="stylesheet">
 	<title>MuzikFinder</title>
@@ -28,10 +30,18 @@
 					Set<MFMusic> musics = (Set<MFMusic>) request.getAttribute("results");
 					if(musics == null || musics.isEmpty()){ %>
 						<div id="errorMessageSearch" class="alert alert-danger fade in">
-							<strong id="strongErrorMessageSearch">Aucun résultat...</strong>
+							<strong id="strongErrorMessageSearch">No results...</strong>
 						</div>
-			<%		} else {  		%>
-						<h4>Résultats de votre recherche : </h4><input id="searchId" type="hidden" name="searchId" value="<%=request.getAttribute("searchId") %>"/>
+			<%		} else {  		
+						String artist = (String) request.getAttribute("artist");
+						if(artist!=null){
+			%>
+							<h4>Your research by artist "<%=artist %>" : </h4>
+			<%			} else {  	%>
+							<h4>Your lyrics search results : </h4>
+			<% 			} %>
+							<input id="searchId" type="hidden" name="searchId" 
+								value="<%=request.getAttribute("searchId") %>"/>
 						<div class="panel-group" id="panel-results">
 						
 			<%			for(MFMusic music : musics){
@@ -49,7 +59,7 @@
 							String lyricsToDisplay;
 							String regex = (String) request.getAttribute("tagsRegex");
 							if(music.getLyrics()==null || music.getLyrics().getLyricsBody().isEmpty()){
-								lyricsToDisplay = "Pas de lyrics disponibles...";
+								lyricsToDisplay = "No lyrics available...";
 							} else if(regex==null || regex.isEmpty()){
 								lyricsToDisplay = music.getLyrics().getLyricsBody();
 							} else {
@@ -76,7 +86,7 @@
 			<%			} 	%>
 						</div>
 						<div id="showMoreResultsMessage" class="alert alert-danger fade in" style="display:none;">
-							<strong>Aucun résultat...</strong>
+							<strong>No results...</strong>
 						</div>
 						<button id="showMoreResults" class="btn moreResults ladda-button" data-spinner-color="#000" 
 								data-style="expand-right" >Show more results >></button>
@@ -91,8 +101,6 @@
 	<div id="footer"></div>
 </body>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.min.js"></script>
 <script> 
 (function() { 
 	var login = Cookies.get('MUZIKFINDERLOGIN');

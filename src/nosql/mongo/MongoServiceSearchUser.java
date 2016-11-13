@@ -13,11 +13,8 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mysql.jdbc.MySQLConnection;
 
 import interfaces.MFMusic;
-import sql.metier.User;
-import sql.mysql.MySQLService;
 import utils.IdMusicScore;
 import utils.MathUtils;
 import utils.MuzikFinderPreferences;
@@ -29,12 +26,12 @@ public class MongoServiceSearchUser {
 	 * A LIRE POUR COMPRENDRE PLUS FACILEMENT LE CODE
 	 * range : correspondant aux différentes tranches d'âge (se référer à MongoCollectionsAndKeys pour comprendre)
 	 * De même pour tout les noms de clés utilisés dans le code et les collections.
-	 * Les méthodes sont légérement expliqués pour en comprendre l'idée général. 
+	 * Les méthodes sont légérement expliquées pour en comprendre l'idée générale. 
 	 * */
 	private static MongoService ms = MongoService.getInstance();
 
-	//TODO: A supprimer ou utilisé par Julien pour les classement plus tard
-	//Sachant que la collection searchs existe pas
+	//TODO: A supprimer ou utiliser par Julien pour les classement plus tard
+	//Sachant que la collection searchs n'existe pas
 	static List<MFMusic> getTopMusicSearchByPeriod(TimeInMilliSeconds timeInMilliSeconds){
 		List<IdMusicScore> idMusicScore = new ArrayList<>();
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH);
@@ -485,7 +482,6 @@ public class MongoServiceSearchUser {
 	 */
 	public static void addListIdMusicMostPopularAllRanges(){
 		System.out.println("Début appel addList");
-		//TODO: passer par MongoService?
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
 		addListIdMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
@@ -525,7 +521,7 @@ public class MongoServiceSearchUser {
 	//////////////////**************** PARTIE DAEMON *******//////////////////////
 	public static void deleteCacheUserExceed(long time){
 		Document doc;
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH_CACHE);
 		doc = new Document("time", new Document("$lt",time));
 		ms.deleteMany(collection, doc);
 	}

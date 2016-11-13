@@ -217,7 +217,7 @@ public class MongoServiceSearchMusic {
 	 */
 	@SuppressWarnings("unchecked")
 	static List<MFMusic> getMoreResults(String idRecherche){
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH_CACHE);
 		Document findQuery = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 		MongoCursor<Document> cursor = ms.findBy(collection, findQuery);
 		

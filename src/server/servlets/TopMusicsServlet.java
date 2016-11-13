@@ -47,9 +47,4 @@ public class TopMusicsServlet extends HttpServlet {
 		MuzikFinderUtils.updateTimeCookies(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("TopMusicsServlet doPost");
-		doGet(request, response);
-	}
-
 }

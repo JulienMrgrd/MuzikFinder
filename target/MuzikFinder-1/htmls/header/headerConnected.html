@@ -1,33 +1,4 @@
-<style>
-.dropdown:hover .dropdown-menu {
-	display: block;
-}
-
-.navbar-inverse {
-	margin: 0 auto;
-	padding-right: 10%;
-	padding-left: 10%;
-	opacity: 0.9;
-	color: #99979c;
-}
-
-.navbar-form .form-control{
-	background-color: #99979c;
-	border-color: #222222;
-	width: 300px;
-}
-.navbar-form .form-control::-moz-placeholder{
-	color: #eee;
-}
-.navbar-brand img{
-	max-width: 120px; 
-	margin-top: -7px;
-}
-
-.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
-	color: #eee;
-}
-</style>
+<link rel="stylesheet" href="css/navbar.css">
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
@@ -42,55 +13,74 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">Search tops<span class="caret"></span></a>
+					data-toggle="dropdown" href="#">Top search<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Top artists</a></li>
-						<li><a href="#">Top musics</a></li>
-						<li><a href="#">Top albums</a></li>
+						<li><a href="./TopMusicsServlet">Top musics</a></li>
+						<li class="disabled"><a href="#">Top artists</a></li>
+						<li class="disabled"><a href="#">Top albums</a></li>
 					</ul></li>
 			</ul>
-			<form role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
+			<form id="searchForm" role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
 				<div class="form-group">
-					<input id="userSearch" name="userSearch" type="text" class="form-control"
-						placeholder="Search by lyrics, artists or musics" />
+					<input id="userSearch" name="userSearch" type="text" data-provide="typeahead" data-items="10" 
+						class="form-control" autocomplete="off" placeholder="Search artists or lyrics" />
 				</div>
+				<input type="hidden" name="artistOrLyrics">
 			</form>
-			<div class="dropdown">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a id="userLogin" class="dropdown-toggle"
-						data-toggle="dropdown"><span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="./AccountServlet">My account</a></li>
-							<li role="separator" class="divider"></li>
-							<li><a href="" onclick="deleteCookies();">Log out</a></li>
-						</ul>
-				</ul>
-			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#" ><b id="userLogin"></b><span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="./AccountServlet">My account</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="" onclick="deleteCookies();">Log out</a></li>
+					</ul>
+				</li>
+			</ul>
 
 		</div>
 	</div>
 </nav>
 
+<div id="modalLogin"></div>
+<div id="modalSignUp"></div>
+<link href="css/modal.css" rel="stylesheet">
+
+<script src="js/autocompleteArtist.js"></script>
 <script>
-(function() { 
-	var login = Cookies.get('MUZIKFINDERLOGIN');
-	if(login!=null || login!="") $("#userLogin").text(login);
-	else $("#userLogin").text("Options");
-})();
+	(function() {
+		var login = Cookies.get('MUZIKFINDERLOGIN');
+		if (login != null || login != "")
+			$("#userLogin").text(login);
+		else
+			$("#userLogin").text("Options");
+	})();
 
-function deleteCookies(){ // 2 ways to delete
- 	Cookies.set('MUZIKFINDERLOGIN', '', { path: '/' });
-	Cookies.set('MUZIKFINDERUSERID', '', { path: '/' });
-	Cookies.set('MUZIKFINDERBIRTH', '', { path: '/' });
- 	Cookies.remove('MUZIKFINDERLOGIN', { path: '/' });
-	Cookies.remove('MUZIKFINDERUSERID', { path: '/' });
-	Cookies.remove('MUZIKFINDERBIRTH', { path: '/',  });
-	location.href="/";
-}
+	function deleteCookies() { // 2 ways to delete
+		Cookies.set('MUZIKFINDERLOGIN', '', {
+			path : '/'
+		});
+		Cookies.set('MUZIKFINDERUSERID', '', {
+			path : '/'
+		});
+		Cookies.set('MUZIKFINDERBIRTH', '', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERLOGIN', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERUSERID', {
+			path : '/'
+		});
+		Cookies.remove('MUZIKFINDERBIRTH', {
+			path : '/',
+		});
+		location.href = "/";
+	}
 </script>
-
 <script src="js/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/spin.min.js"></script>
+<script src="js/bootstrap3-typeahead.min.js"></script>
 <script src="js/ladda.min.js"></script>
 <script src="js/js.cookie.min.js"></script>

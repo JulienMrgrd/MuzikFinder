@@ -135,7 +135,7 @@ public class MongoServiceInsert {
 
 	static void insertCacheSearchUser(List<String> tags, List<String> idMusics, String idRecherche){
 		Document doc;
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.CACHE);
+		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH_CACHE);
 		if(ms.containsIdRecherche(idRecherche)){
 			doc = new Document(MongoCollectionsAndKeys.SEARCHID_CACHE, new Document("$eq",idRecherche));
 			MongoCursor<Document> cursor = ms.findBy(collection, doc);

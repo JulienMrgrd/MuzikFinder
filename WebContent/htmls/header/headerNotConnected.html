@@ -1,43 +1,4 @@
-<style>
-.dropdown:hover .dropdown-menu {
-	display: block;
-}
-
-.navbar-inverse {
-	margin: 0 auto;
-	padding-right: 10%;
-	padding-left: 10%;
-	opacity: 0.9;
-	color: #99979c;
-}
-
-.navbar-form .form-control{
-	background-color: #99979c;
-	border-color: #222222;
-	width: 300px;
-}
-.navbar-form .form-control::-moz-placeholder{
-	color: #eee;
-}
-.navbar-brand img{
-	max-width: 120px; 
-	margin-top: -7px;
-}
-
-.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
-	color: #eee;
-}
-
-ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all{
-	top:50px;
-}
-.ui-autocomplete { 
-	max-width: 500px; 
-    position: fixed; 
-    cursor: default; 
-    height: 100px; 
-    overflow-x: hidden;}
-</style>
+<link rel="stylesheet" href="css/navbar.css">
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
@@ -59,11 +20,12 @@ ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all{
 						<li class="disabled"><a href="#">Top albums</a></li>
 					</ul></li>
 			</ul>
-			<form role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
+			<form id="searchForm" role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
 				<div class="form-group">
-					<input id="userSearch" name="userSearch" type="text" class="form-control" autocomplete="on"
-						placeholder="Search by lyrics, artists or musics" />
+					<input id="userSearch" name="userSearch" type="text" data-provide="typeahead" data-items="10" 
+						class="form-control" autocomplete="off" placeholder="Search artists or lyrics" />
 				</div>
+				<input type="hidden" name="artistOrLyrics">
 			</form>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -75,38 +37,20 @@ ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all{
 	</div>
 </nav>
 
-
 <div id="modalLogin"></div>
 <div id="modalSignUp"></div>
 <link href="css/modal.css" rel="stylesheet">
+
+<script src="js/autocompleteArtist.js"></script>
 <script> 
 $(function() {
-	$('#userSearch').autocomplete({
-	    source : function(requete, response){ // la fonction anonyme permet de maintenir une requête AJAX directement dans le plugin
-	    $.ajax({
-	            url : 'SpecificSearch', // on appelle le script JSON
-	            dataType: "json",
-	            data : {
-					search : $("#userSearch").val(),
-				},
-	            success : function( data, textStatus, jqXHR) {
-	            	alert(data.trackName);
-	            	alert(data.artist);
-                    response(data.artist);
-                    //response(data.trackName);
-                },
-	        });
-	    }
-	});
-});
-
-(function() { 
 	$("#modalLogin").load("htmls/modals/loginModal.html"); 
 	$("#modalSignUp").load("htmls/modals/signUpModal.html");
-})(); 
+});
+
 </script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap3-typeahead.min.js"></script>
 <script src="js/spin.min.js"></script>
 <script src="js/ladda.min.js"></script>

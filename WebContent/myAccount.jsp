@@ -103,8 +103,6 @@
 					<div class="tab-pane" id="panel-Suppression">
 					<form action="AccountServlet" method="post">
 						<div>
-							<button id="buttonDeleteSearch" class="btn btn-warning" style="margin-right: 10px; float:left;"
-								type="submit">Supprimer Recherche</button>
 							<button id="buttonDeleteAccount" class="btn btn-danger" style="float:left;"
 								type="submit">Supprimer mon compte</button>
 						</div>
@@ -131,6 +129,28 @@
 		//Stops the submit request
 		$("#accountAjaxRequestForm").submit(function(e) {
 			e.preventDefault();
+		});
+		
+		$("#buttonDeleteAccount").click(function(e){
+			console.log("delete cookies");
+			Cookies.set('MUZIKFINDERLOGIN', '', {
+				path : '/'
+			});
+			Cookies.set('MUZIKFINDERUSERID', '', {
+				path : '/'
+			});
+			Cookies.set('MUZIKFINDERBIRTH', '', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERLOGIN', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERUSERID', {
+				path : '/'
+			});
+			Cookies.remove('MUZIKFINDERBIRTH', {
+				path : '/',
+			});
 		});
 
 		//checks for the button click event

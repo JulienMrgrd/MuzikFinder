@@ -3,6 +3,7 @@ package nosql;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import interfaces.MFMusic;
 import nosql.mongo.MongoService;
@@ -37,12 +38,12 @@ public class NoSQLDB {
 	}
 
 	//////////////PARTIE GETTER///////////////////////
-	public List<String> getListNameArtistBeginWith(String nameArtist){
-		return mongo.getListNameArtistBeginWith(nameArtist);
+	public Set<String> getArtistNamesBeginWith(String nameArtist){
+		return mongo.getArtistNamesBeginWith(nameArtist);
 	}
 
-	public List<String> getListTrackNameBeginWith(String trackName){
-		return mongo.getListTrackNameBeginWith(trackName);
+	public Set<String> getTrackNamesBeginWith(String trackName){
+		return mongo.getTrackNamesBeginWith(trackName);
 	}
 	
 	//////////////PARTIE SEARCH///////////////////////

@@ -103,6 +103,10 @@ public class MongoServiceSearchUser {
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
 						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
+						for(Document doc_range1 : list_age_range)
+							for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+								if(!doc_range1.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
+									list_range.add(doc_tmp);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;
@@ -117,6 +121,10 @@ public class MongoServiceSearchUser {
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
 						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
+						for(Document doc_range1 : list_age_range)
+							for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+								if(!doc_range1.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
+									list_range.add(doc_tmp);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;
@@ -208,7 +216,7 @@ public class MongoServiceSearchUser {
 						if(!doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
 							list_range.add(doc_tmp);
 					fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
-					System.out.println(old);
+					//System.out.println(old);
 					ms.replaceOne(collection,old,fin);
 					return;
 				}
@@ -222,11 +230,11 @@ public class MongoServiceSearchUser {
 				doc_id.put(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE, id);
 				list_id_music_doc.add(doc_id);
 			}
-			age_range.put(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
+			age_range.append(MongoCollectionsAndKeys.MUSICS_STATS_CACHE,list_id_music_doc);
 			List<Document> list_range = new ArrayList<Document>();
 			list_range.add(age_range);
 			for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
-				if(!(list_range.contains(doc_tmp)))
+				if(!doc_tmp.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
 					list_range.add(doc_tmp);
 			fin.append(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE,list_range);
 			ms.replaceOne(collection, old, fin);
@@ -469,4 +477,8 @@ public class MongoServiceSearchUser {
 		doc = new Document("time", new Document("$lt",time));
 		ms.deleteMany(collection, doc);
 	}
-}
+
+	public static void main(String[] args){
+		addListIdMusicMostPopularAllRanges();
+	}
+} 

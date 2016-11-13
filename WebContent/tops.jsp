@@ -66,11 +66,11 @@
 							<h3>
 								Top of this week !
 							</h3>
-							<%	 if(topMusicMoins18==null || topMusicMoins18.isEmpty()){ %>
-									<p>Aucune donnée pour le moment...</p>
+							<%	 if(general==null || general.isEmpty()){ %>
+									<p>Nothing for the moment...</p>
 							<%	} else { %>
 									<ul>
-							<%		for(MFMusic music : topMusicMoins18){  %>
+							<%		for(MFMusic music : general){  %>
 										<li><%=music.getArtistName()+" - "+music.getTrackName() %></li>
 							<%		} %>
 									</ul>
@@ -86,7 +86,7 @@
 								Under 18 years
 							</h3>
 							<%	 if(topMusicMoins18==null || topMusicMoins18.isEmpty()){ %>
-									<p>Aucune donnée pour le moment...</p>
+									<p>Nothing for the moment...</p>
 							<%	} else { %>
 									<ul>
 							<%		for(MFMusic music : topMusicMoins18){  %>
@@ -103,7 +103,7 @@
 								Under 25 years
 							</h3>
 							<%	 if(topMusicMoins25==null || topMusicMoins25.isEmpty()){ %>
-									<p>Aucune donnée pour le moment...</p>
+									<p>Nothing for the moment...</p>
 							<%	} else { %>
 									<ul>
 							<%		for(MFMusic music : topMusicMoins25){  %>
@@ -122,7 +122,7 @@
 								Under 50 years
 							</h3>
 							<%	 if(topMusicMoins50==null || topMusicMoins50.isEmpty()){ %>
-									<p>Aucune donnée pour le moment...</p>
+									<p>Nothing for the moment...</p>
 							<%	} else { %>
 									<ul>
 							<%		for(MFMusic music : topMusicMoins50){  %>
@@ -139,7 +139,7 @@
 								Over 50
 							</h3>
 							<%	 if(topMusicPlus50==null || topMusicPlus50.isEmpty()){ %>
-									<p>Aucune donnée pour le moment...</p>
+									<p>Nothing for the moment...</p>
 							<%	} else { %>
 									<ul>
 							<%		for(MFMusic music : topMusicPlus50){  %>

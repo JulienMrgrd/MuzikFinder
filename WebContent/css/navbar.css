@@ -6,14 +6,14 @@
 	margin: 0 auto;
 	padding-right: 10%;
 	padding-left: 10%;
-	opacity: 0.9;
+	opacity: 0.95;
 	color: #99979c;
 }
 
 .navbar-form .form-control{
 	background-color: #99979c;
 	border-color: #222222;
-	width: 300px;
+	width: 300px !important;
 	color: #ddd;
 }
 .navbar-form .form-control::-moz-placeholder{
@@ -25,5 +25,5 @@
 }
 
 .navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand{
-	color: #eee;
+	color: #ececec !important;
 }

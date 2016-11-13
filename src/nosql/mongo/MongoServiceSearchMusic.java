@@ -114,7 +114,7 @@ public class MongoServiceSearchMusic {
 		if(docRegex!=null){
 			ArrayList<String> result = new ArrayList<String>();
 			MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
-			MongoCursor<Document> cursor_Music = ms.findBy(collection_Musics, formRegexForSearch(tags));
+			MongoCursor<Document> cursor_Music = ms.findBy(collection_Musics, docRegex);
 			
 			// On sors les variables temporaires du for pour utiliser efficacement l'espace mémoire
 			Document doc_lyrics;
@@ -161,12 +161,9 @@ public class MongoServiceSearchMusic {
 			}
 			i++;
 		}
-		//TODO: Voir si il faut pas lancer l'appel en passant par MogoService
 		return generateListMFMusicWithListId(tags, tmp, idRecherche);
 	}
 
-	//TODO : le nom de ta fonction à l'air de dire qu'il va juste transformer des Musics en MFMusic, sauf qu'il insère aussi dans cache
-	// donc peut-etre à sortir dans une autre fonction. C'est normalement pas son rôle. Sortir la partie cache dans une autre fonction
 	/**
 	 * Méthode permettant de générer une liste de MFMusic à partir d'une liste d'identifiant de musique passé en paramètre
 	 * Si il y a trop de musiques passé en paramètre (Plus de MuzifFinderPreferences.LIMITACCEPTABLETEMPS) les 

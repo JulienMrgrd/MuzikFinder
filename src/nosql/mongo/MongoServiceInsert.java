@@ -108,9 +108,12 @@ public class MongoServiceInsert {
 						
 						String lyrics = mfL.getLyricsBody();
 						if(lyrics != null && !lyrics.isEmpty()){
-							// delete last MusixMatch characters
-							lyrics = mfL.getLyricsBody().substring(0, mfL.getLyricsBody().length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
-
+							
+							try{
+								// delete last MusixMatch characters
+								lyrics = lyrics.substring(0, lyrics.length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
+							} catch (IndexOutOfBoundsException e){ /* SIZE_OF_LYRICS_END < 75 */}
+							
 							// on récupère les lyrics et on insère dans la base mongo Lyrics
 							boolean exists = ms.insertMusicIfNotExists(mf.getTrackId(), lyrics, mf.getArtistId(), mf.getArtistName(), 
 									mf.getAlbumId(), mf.getAlbumName(), mf.getTrackName(),mfL.getLyrics_language(), 

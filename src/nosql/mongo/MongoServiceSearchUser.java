@@ -323,56 +323,39 @@ public class MongoServiceSearchUser {
 	 * présentes dans toutes les ranges existe pour notre semaine en particulier.
 	 * Ainsi, si une musique est présente dans plusieurs range différentes, il faudra additioner les différents scores.
 	 * Ceci afin d'obtenir un score général entre toutes les ranges.
+	 * javadoc pour les deux méthodes ci dessous
 	 * @return la liste des musiques et de leur score toutes ranges confondu (correspond à general dans la collection STATS_CACHE)
 	 */
+	
+	static List<IdMusicScore> concatListIdMusicScore(List<IdMusicScore> list1, List<IdMusicScore> list2 ){
+		List<IdMusicScore> list_tmp = new ArrayList<IdMusicScore>();
+		for(IdMusicScore id_score_tmp : list1){
+			for(IdMusicScore id_score : list2){
+				if(id_score_tmp.getIdMusic().equals(id_score.getIdMusic())){
+					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
+					continue;
+				}
+				list_tmp.add(id_score);
+			}
+		}
+		list1.addAll(list_tmp);
+		return list1;
+	}
 
 	static List<IdMusicScore> getListIdMusicScoreMostPopularAllRange(){
-		int test = 0;
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS);
 		List<IdMusicScore> list_music_score_min_twenty_five = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSTWENTYFIVE_STATS);
 		List<IdMusicScore> list_music_score_min_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
 		List<IdMusicScore> list_music_score_plus_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
 
-		for(IdMusicScore id_score : list_music_score_min_twenty_five){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
-		for(IdMusicScore id_score : list_music_score_min_fifty){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
-		for(IdMusicScore id_score : list_music_score_plus_fifty){
-			for(IdMusicScore id_score_tmp : list_music_score){
-				if(id_score.getIdMusic() == id_score_tmp.getIdMusic()){
-					test = 1;
-					id_score_tmp.setScore(id_score_tmp.getScore()+id_score.getScore());
-				}
-			}
-			if(test==0){
-				list_music_score.add(id_score);
-			}
-			test = 0;
-		}
+		
+		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_min_twenty_five);
+		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_min_fifty);
+		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_plus_fifty);
+		
 		Collections.sort(list_music_score);
 		return list_music_score;
 	}
-
 	/**
 	 * récupère la liste d'id de musique pour toutes les ranges confondus dans l'ordre décroissant suivant le score 
 	 * @param range

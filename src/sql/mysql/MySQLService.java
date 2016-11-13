@@ -83,7 +83,7 @@ public class MySQLService {
 	}
 	
 	private User getUserByLogin(String pseudo) {
-
+		pseudo=pseudo.replaceAll("'", "\\'");
 		Statement stmt;
 		try {
 			stmt = getConnection().createStatement();
@@ -120,7 +120,8 @@ public class MySQLService {
 	}
 	
 	public User createNewUser(String pseudo, String password, String email, int year, int month, int day){
-
+		pseudo=pseudo.replaceAll("'", "\\'");
+		email=email.replaceAll("'", "\\'");
 		Statement stmt;
 		try {
 			stmt = getConnection().createStatement();
@@ -145,7 +146,7 @@ public class MySQLService {
 	}
 	
 	public User checkConnexion(String pseudo, String password) {
-
+		pseudo=pseudo.replaceAll("'", "\\'");
 		Statement stmt;
 		try {
 			stmt = getConnection().createStatement();
@@ -215,9 +216,9 @@ public class MySQLService {
 			Statement stmt;
 			try {
 				stmt = getConnection().createStatement();
-			
+				String newPasswordCrypt = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 				String sqlRequest = "UPDATE "+USER_DB_NAME+" "
-						+ "SET password='"+newPassword+"'"
+						+ "SET password='"+newPasswordCrypt+"'"
 						+ "WHERE id_user='"+id_user+"'";
 				
 				stmt.execute(sqlRequest);
@@ -229,6 +230,7 @@ public class MySQLService {
 	}
 	
 	private void setEmail(String id_user, String newEmail){
+		newEmail=newEmail.replaceAll("'", "\\'");
 		if(id_user != null && ! id_user.isEmpty()){
 			try{
 				Statement stmt = getConnection().createStatement();

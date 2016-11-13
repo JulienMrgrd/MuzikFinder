@@ -19,7 +19,6 @@ import com.mongodb.client.MongoDatabase;
 
 import interfaces.MFMusic;
 import utils.MuzikFinderPreferences;
-import utils.TimeInMilliSeconds;
 
 public class MongoService {
 
@@ -220,14 +219,6 @@ public class MongoService {
 	
 	public List<MFMusic> getListMFMusicMostPopularByRange(String range) {
 		return MongoServiceSearchUser.getListMFMusicMostPopularByRange(range);
-	}
-	
-	public List<MFMusic> getTopMusicSearchThisWeek(){
-		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.WEEK);
-	}
-	
-	public List<MFMusic> getTopMusicSearchThisMonth(){
-		return MongoServiceSearchUser.getTopMusicSearchByPeriod(TimeInMilliSeconds.MONTH);
 	}
 	
 	public void deleteCacheUserExceed(long time){

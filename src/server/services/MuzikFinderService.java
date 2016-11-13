@@ -99,14 +99,6 @@ public class MuzikFinderService {
 		return nosql.getListMFMusicMostPopularByRange(range);
 	}
 	
-	public List<MFMusic> getTopMusicSearchThisWeek(){
-		return nosql.getTopMusicSearchThisWeek();
-	}
-	
-	public List<MFMusic> getTopMusicSearchThisMonth(){
-		return nosql.getTopMusicSearchThisMonth();
-	}
-	
 	public void addNewSearch(String idMusic, LocalDate userBirth){
 		nosql.addNewSearch(idMusic, userBirth);
 	}

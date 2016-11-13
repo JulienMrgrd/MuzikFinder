@@ -81,14 +81,6 @@ public class NoSQLDB {
 		return mongo.getListMFMusicMostPopularByRange(range);
 	}
 	
-	public List<MFMusic> getTopMusicSearchThisWeek(){
-		return mongo.getTopMusicSearchThisWeek();
-	}
-	
-	public List<MFMusic> getTopMusicSearchThisMonth(){
-		return mongo.getTopMusicSearchThisMonth();
-	}
-
 	public void deleteCacheUserExceed(long time){
 		mongo.deleteCacheUserExceed(time);
 	}

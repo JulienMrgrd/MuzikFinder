@@ -35,7 +35,7 @@ public final class MongoCollectionsAndKeys {
 	public static final String MUSICID_TAGS = "musicId";
 	public static final String SCORE_TAGS = "score";
 
-	/// Collection CACHE
+	/// Collection SEARCH_CACHE
 	public static final String TAGS_CACHE = "tags";
 	public static final String SEARCHID_CACHE = "searchId";
 	public static final String MUSICSID_CACHE = "musicsId";
@@ -56,8 +56,6 @@ public final class MongoCollectionsAndKeys {
 	public static final String PLUSFIFTY_STATS = "+50";
 	public static final String IDMUSIC_STATS = "musicId";
 	public static final String SCOREMUSIC_STATS = "score";
-	//public static final String ID_MUSIC_SCORE_SEARCH = "musicsScore";
-	/// Collection SEARCH
 	
 	/// Collection STATS_CACHE
 	public static final String DATEWEEKSYEARS_STATS_CACHE = "weeks";
@@ -67,5 +65,4 @@ public final class MongoCollectionsAndKeys {
 	public static final String GENERAL_STATS_CACHE = "general";
 	public static final String MUSICS_STATS_CACHE = "musics";
 	public static final String MUSIC_ID_STATS_CACHE = "musicId";
-	//TODO:
 }

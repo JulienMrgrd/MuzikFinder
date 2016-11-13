@@ -30,7 +30,8 @@ public class TopMusicsServlet extends HttpServlet {
 			request.setAttribute("success", false);
 		} else {
 			request.setAttribute("success", true);
-			request.setAttribute("topMusicWeek",  MuzikFinderService.getInstance().getTopMusicSearchThisWeek());
+			request.setAttribute("topMusicWeek",  
+					MuzikFinderService.getInstance().getListMFMusicMostPopularByRange(MongoCollectionsAndKeys.GENERAL_STATS_CACHE));
 			request.setAttribute("topMusic-18",  
 					MuzikFinderService.getInstance().getListMFMusicMostPopularByRange(MongoCollectionsAndKeys.MINUSEIGHTEEN_STATS));
 			request.setAttribute("topMusic-25",  

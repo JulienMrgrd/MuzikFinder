@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +17,6 @@ import interfaces.MFMusic;
 import utils.IdMusicScore;
 import utils.MathUtils;
 import utils.MuzikFinderPreferences;
-import utils.TimeInMilliSeconds;
 
 public class MongoServiceSearchUser {
 	/*
@@ -30,59 +28,6 @@ public class MongoServiceSearchUser {
 	 * */
 	private static MongoService ms = MongoService.getInstance();
 
-	//TODO: A supprimer ou utiliser par Julien pour les classement plus tard
-	//Sachant que la collection searchs n'existe pas
-	static List<MFMusic> getTopMusicSearchByPeriod(TimeInMilliSeconds timeInMilliSeconds){
-		List<IdMusicScore> idMusicScore = new ArrayList<>();
-		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.SEARCH);
-		MongoCursor<Document> cursor = ms.findAll(collection);
-
-		boolean presentInList=false;
-		String idMusic="";
-		long timeOfSearch;
-		Date utilDate = new Date();
-
-		while(cursor.hasNext()){
-			idMusic=cursor.next().getString("idMusic");
-			timeOfSearch=cursor.next().getLong("dateSearch");
-			if(!((utilDate.getTime()-timeOfSearch) > timeInMilliSeconds.value)){
-				for(IdMusicScore musicScore : idMusicScore){
-					if(musicScore.getIdMusic().equals(idMusic)){
-						musicScore.incrementScore();
-						presentInList=true;
-						break;
-					} 
-				}
-				if(!presentInList){
-					idMusicScore.add(new IdMusicScore(idMusic, 1));
-				}
-			}
-		}
-		Collections.sort(idMusicScore);
-
-		MFMusic msDTO;
-		List<MFMusic> listMusic= new ArrayList<MFMusic>(idMusicScore.size());
-		MongoCollection<Document> collection_Musics = ms.getCollection(MongoCollectionsAndKeys.MUSICS);
-
-		// On sors les variables temporaires du for pour utiliser efficacement l'espace mÃ©moire
-		MongoCursor<Document> cursor_Musics;
-		Document doc_Musics, findQuery_MusicByIdMusic;
-
-		for(IdMusicScore ims : idMusicScore){
-			findQuery_MusicByIdMusic = new Document("idMusic", new Document("$eq",ims.getIdMusic()));
-			cursor_Musics = ms.findBy(collection_Musics, findQuery_MusicByIdMusic);
-
-			if(cursor_Musics.hasNext()){ // On rÃ©cupere l'ensemble du document dans Musics faisant 
-				doc_Musics = cursor_Musics.next(); // reference a la musique avec l'id ms.getIdMusic
-
-				msDTO = MongoUtils.transformDocumentIntoMFMusic(doc_Musics);
-				if(msDTO != null) listMusic.add(msDTO);
-
-			}
-		}
-
-		return listMusic;
-	}
 	/**
 	 * Méthode retournant la tranche d'âge correspondante à l'âge de l'utilisateur dans la collection STATS
 	 * @param age
@@ -221,7 +166,6 @@ public class MongoServiceSearchUser {
 	 * pas créer un autre document. Il faudra écrire dans ce même document. De même pour chaque clé de la collection. 
 	 * @param la range
 	 */
-
 	@SuppressWarnings("unchecked")
 	static void addListIdMusicMostPopularByRange(String range){
 		System.out.println("addList : "+range);

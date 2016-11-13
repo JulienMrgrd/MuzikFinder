@@ -103,10 +103,9 @@ public class MongoServiceSearchUser {
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
 						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
-						for(Document doc_range1 : list_age_range)
-							for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
-								if(!doc_range1.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
-									list_range.add(doc_tmp);
+						for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+							if(!doc_tmp.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
+								list_range.add(doc_tmp);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;
@@ -121,10 +120,9 @@ public class MongoServiceSearchUser {
 						age_range.put(MongoCollectionsAndKeys.MUSICS_STATS,list);
 						list_range = new ArrayList<Document>();
 						list_range.add(age_range);
-						for(Document doc_range1 : list_age_range)
-							for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
-								if(!doc_range1.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
-									list_range.add(doc_tmp);
+						for(Document doc_tmp : (ArrayList<Document>)old.get(MongoCollectionsAndKeys.AGERANGE_STATS_CACHE))
+							if(!doc_tmp.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range))
+								list_range.add(doc_tmp);
 						fin.append(MongoCollectionsAndKeys.AGERANGE_STATS,list_range);
 						ms.replaceOne(collection, old, fin);
 						return;

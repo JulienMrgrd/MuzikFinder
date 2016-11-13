@@ -55,24 +55,12 @@
 	})();
 
 	function deleteCookies() { // 2 ways to delete
-		Cookies.set('MUZIKFINDERLOGIN', '', {
-			path : '/'
-		});
-		Cookies.set('MUZIKFINDERUSERID', '', {
-			path : '/'
-		});
-		Cookies.set('MUZIKFINDERBIRTH', '', {
-			path : '/'
-		});
-		Cookies.remove('MUZIKFINDERLOGIN', {
-			path : '/'
-		});
-		Cookies.remove('MUZIKFINDERUSERID', {
-			path : '/'
-		});
-		Cookies.remove('MUZIKFINDERBIRTH', {
-			path : '/',
-		});
+		Cookies.set('MUZIKFINDERLOGIN', '', {path : '/'});
+		Cookies.set('MUZIKFINDERUSERID', '', {path : '/'});
+		Cookies.set('MUZIKFINDERBIRTH', '', {path : '/'});
+		Cookies.remove('MUZIKFINDERLOGIN', {path : '/'});
+		Cookies.remove('MUZIKFINDERUSERID', {path : '/'});
+		Cookies.remove('MUZIKFINDERBIRTH', {path : '/',});
 		location.href = "/";
 	}
 </script>

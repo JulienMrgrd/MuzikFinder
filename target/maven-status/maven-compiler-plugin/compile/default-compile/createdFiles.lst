@@ -12,6 +12,7 @@ api\musixMatch\utils\RequestHelper.class
 server\servlets\FindGoodMusicServlet.class
 api\musixMatch\metier\Album.class
 sql\metier\User.class
+utils\parser\ParserMaison.class
 server\servlets\AccountServlet.class
 utils\TimeInMilliSeconds.class
 interfaces\MFMusic.class
@@ -27,8 +28,8 @@ daemon\DaemonMain$1.class
 utils\IdMusicScore.class
 server\dto\MFMusicDTO.class
 nosql\mongo\MongoServiceSearchMusic.class
+server\servlets\TopMusicsServlet.class
 server\servlets\ShowMoreResultsServlet.class
-utils\textMining\ParserMaison.class
 nosql\mongo\MongoUtils.class
 daemon\DaemonMain.class
 utils\MuzikFinderUtils.class
@@ -38,7 +39,7 @@ sql\metier\Search.class
 server\servlets\LoginServlet.class
 server\servlets\SearchServlet.class
 api\musixMatch\utils\MusixMatchAPIHelper.class
-utils\MathUtils.class
+server\servlets\SpecificSearchServlet.class
 api\API.class
 nosql\mongo\MongoServiceInsert.class
 nosql\NoSQLDB.class

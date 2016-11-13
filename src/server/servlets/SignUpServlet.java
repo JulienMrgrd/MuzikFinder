@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 
 import server.services.MuzikFinderService;
 import sql.metier.User;
-import utils.MathUtils;
 import utils.MuzikFinderUtils;
 
 public class SignUpServlet extends HttpServlet {
@@ -64,7 +63,7 @@ public class SignUpServlet extends HttpServlet {
 			myResponse.addProperty("message", "Username already exists");
 			myResponse.addProperty("success", false);
 			
-		} else if(!MathUtils.isDateValid(day, month, year)){
+		} else if(!MuzikFinderUtils.isDateValid(day, month, year)){
 			myResponse.addProperty("message", "Date de naissance invalide");
 			myResponse.addProperty("success", false);
 		} else {

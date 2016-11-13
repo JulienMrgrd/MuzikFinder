@@ -15,7 +15,7 @@ import api.musixMatch.utils.MusixMatchUtils;
 import interfaces.MFLyrics;
 import interfaces.MFMusic;
 import utils.IdMusicScore;
-import utils.textMining.ParserMaison;
+import utils.parser.ParserMaison;
 
 public class MongoServiceInsert {
 	
@@ -112,15 +112,17 @@ public class MongoServiceInsert {
 							lyrics = mfL.getLyricsBody().substring(0, mfL.getLyricsBody().length()-MusixMatchUtils.SIZE_OF_LYRICS_END);
 
 							// on récupère les lyrics et on insère dans la base mongo Lyrics
-							ms.insertMusicIfNotExists(mf.getTrackId(), lyrics, mf.getArtistId(), mf.getArtistName(), 
+							boolean exists = ms.insertMusicIfNotExists(mf.getTrackId(), lyrics, mf.getArtistId(), mf.getArtistName(), 
 									mf.getAlbumId(), mf.getAlbumName(), mf.getTrackName(),mfL.getLyrics_language(), 
 									mf.getTrackSpotifyId(), mf.getTrackSoundcloudId(), mf.getMusicGenre());
 							
-							// Début de la création des tags pour chaque lyrics
-							Map<String, Integer> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
-							if(tags != null && !tags.isEmpty()){
-								for( String tag : tags.keySet() ) {
-									ms.insertTagIfNotExists(tag, tags.get(tag), mf.getTrackId());
+							if(!exists){
+								// Début de la création des tags pour chaque lyrics
+								Map<String, Integer> tags = ParserMaison.parserProcess(lyrics, mfL.getLyrics_language());
+								if(tags != null && !tags.isEmpty()){
+									for( String tag : tags.keySet() ) {
+										ms.insertTagIfNotExists(tag, tags.get(tag), mf.getTrackId());
+									}
 								}
 							}
 						}

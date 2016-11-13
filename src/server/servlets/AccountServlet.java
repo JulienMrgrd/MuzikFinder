@@ -44,13 +44,11 @@ public class AccountServlet extends HttpServlet {
 		MuzikFinderUtils.updateTimeCookies(request, response);
 	}
 
-	/**
-	 * 
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("AccountServlet doPost");
 		
 		String type = request.getParameter("type");
+		System.out.println(type);
 		String password = request.getParameter("password");
 		String passwordBis = request.getParameter("passwordBis");
 		String mail = request.getParameter("mail");
@@ -77,8 +75,7 @@ public class AccountServlet extends HttpServlet {
        
         } else if (id_user!=null && type.equals("deleteAccount")) {
         	mzf.deleteAccountUser(id_user);
-    		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-    		dispatcher.forward(request, response);
+        	myResponse.addProperty("success", true);
     		return;
         } else {
         	myResponse.addProperty("message", "Unknown error...");

@@ -31,6 +31,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="images/favicon.png?2">
+<link rel="stylesheet" href="css/navbar.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link rel="stylesheet" href="css/ladda-themeless.min.css">
 <title>MuzikFinder</title>
@@ -88,16 +89,20 @@
 						<h4 style="margin-bottom: 10px;">Historique de vos recherches :</h4>
 							<%	@SuppressWarnings("unchecked")
 								List<Search> listSearch = (List<Search>) request.getAttribute("results");
-								String tags;
-								for(Search search : listSearch){
-									tags = search.getRecherche();
-									tags=tags.replaceAll(" ", "+");
-									if(!tags.isEmpty()){
-										tags = tags.substring(0, tags.length()-1);
-									} %>
-									<a href="./SearchServlet?userSearch=<%=tags%>" 
-										class="list-group-item"><i><%=search.getDateSearch()%> : </i><b><%=tags%></b></a>
-					<%			} 	%>
+								if(listSearch!=null){
+									String tags;
+									for(Search search : listSearch){
+										tags = search.getRecherche();
+										tags=tags.replaceAll(" ", "+");
+										if(!tags.isEmpty()){
+											tags = tags.substring(0, tags.length()-1);
+										} %>
+										<a href="./SearchServlet?userSearch=<%=tags%>" 
+											class="list-group-item"><i><%=search.getDateSearch()%> : </i><b><%=tags%></b></a>
+						<%			} 	
+								}
+						%>
+						
 					</div>
 					
 					<div class="tab-pane" id="panel-Suppression">
@@ -132,24 +137,28 @@
 		});
 		
 		$("#buttonDeleteAccount").click(function(e){
-			console.log("delete cookies");
-			Cookies.set('MUZIKFINDERLOGIN', '', {
-				path : '/'
-			});
-			Cookies.set('MUZIKFINDERUSERID', '', {
-				path : '/'
-			});
-			Cookies.set('MUZIKFINDERBIRTH', '', {
-				path : '/'
-			});
-			Cookies.remove('MUZIKFINDERLOGIN', {
-				path : '/'
-			});
-			Cookies.remove('MUZIKFINDERUSERID', {
-				path : '/'
-			});
-			Cookies.remove('MUZIKFINDERBIRTH', {
-				path : '/',
+			e.preventDefault();
+			
+			$.ajax({
+				type : "POST",
+				url : "AccountServlet",
+				data : {
+					type : "deleteAccount"
+				},
+				success : function(data, textStatus, jqXHR) {
+					Cookies.set('MUZIKFINDERLOGIN', '', {path : '/'});
+					Cookies.set('MUZIKFINDERUSERID', '', {path : '/'});
+					Cookies.set('MUZIKFINDERBIRTH', '', {path : '/'});
+					Cookies.remove('MUZIKFINDERLOGIN', {path : '/'});
+					Cookies.remove('MUZIKFINDERUSERID', {path : '/'});
+					Cookies.remove('MUZIKFINDERBIRTH', {path : '/',});
+					location.href = "/MuzikFinder";
+				},
+
+				error : function(jqXHR, textStatus, errorThrown) {
+					$("#errorMessageStrong").text("No response from the server...");
+					$("#errorMessage").show();
+				}
 			});
 		});
 

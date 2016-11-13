@@ -1,4 +1,4 @@
-package utils.textMining;
+package utils.parser;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -15,17 +15,17 @@ import com.mongodb.client.MongoCursor;
 
 import interfaces.MFMusic;
 import utils.IdMusicScore;
-import utils.MathUtils;
 import utils.MuzikFinderPreferences;
+import utils.MuzikFinderUtils;
 
 public class MongoServiceSearchUser {
-	/*
-	 * 
-	 * A LIRE POUR COMPRENDRE PLUS FACILEMENT LE CODE
+	
+	/* A LIRE POUR COMPRENDRE PLUS FACILEMENT LE CODE
 	 * range : correspondant aux différentes tranches d'âge (se référer à MongoCollectionsAndKeys pour comprendre)
 	 * De même pour tout les noms de clés utilisés dans le code et les collections.
 	 * Les méthodes sont légérement expliquées pour en comprendre l'idée générale. 
 	 * */
+	
 	private static MongoService ms = MongoService.getInstance();
 
 	/**
@@ -43,6 +43,8 @@ public class MongoServiceSearchUser {
 		else
 			return MongoCollectionsAndKeys.PLUSFIFTY_STATS;
 	}
+	
+	
 	///////////**********************  PARTIE COLLECTION MONGO STATS ****************///////////////////////////
 	/**
 	 * Méthode permettant de rajouter dans la collection Stats le résultat de la recherche de l'utilisateur.
@@ -56,7 +58,7 @@ public class MongoServiceSearchUser {
 	@SuppressWarnings("unchecked")
 	static void addNewSearch(String idMusic, LocalDate userBirth){
 
-		int age = MathUtils.calculateAge(userBirth, LocalDate.now());
+		int age = MuzikFinderUtils.calculateAge(userBirth, LocalDate.now());
 
 		List<Document> list_id_score;
 		List<Document> list;
@@ -285,7 +287,6 @@ public class MongoServiceSearchUser {
 	 * @param la range
 	 * @return la liste des musiques et de leur score dans la collection STATS par range
 	 */
-
 	static List<IdMusicScore> getListIdMusicScoreMostPopularByRange(String range){
 		System.out.println("Début getListIdMUsicScoreMostPopularByRange : "+range);
 		MongoCollection<Document> collection = ms.getCollection(MongoCollectionsAndKeys.STATS);
@@ -323,10 +324,8 @@ public class MongoServiceSearchUser {
 	 * présentes dans toutes les ranges existe pour notre semaine en particulier.
 	 * Ainsi, si une musique est présente dans plusieurs range différentes, il faudra additioner les différents scores.
 	 * Ceci afin d'obtenir un score général entre toutes les ranges.
-	 * javadoc pour les deux méthodes ci dessous
 	 * @return la liste des musiques et de leur score toutes ranges confondu (correspond à general dans la collection STATS_CACHE)
 	 */
-	
 	static List<IdMusicScore> concatListIdMusicScore(List<IdMusicScore> list1, List<IdMusicScore> list2 ){
 		int cpt = 0;
 		List<IdMusicScore> list_tmp = new ArrayList<IdMusicScore>();
@@ -352,7 +351,6 @@ public class MongoServiceSearchUser {
 		List<IdMusicScore> list_music_score_min_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.MINUSFIFTY_STATS);
 		List<IdMusicScore> list_music_score_plus_fifty = getListIdMusicScoreMostPopularByRange(MongoCollectionsAndKeys.PLUSFIFTY_STATS);
 
-		
 		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_min_twenty_five);
 		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_min_fifty);
 		list_music_score = concatListIdMusicScore(list_music_score, list_music_score_plus_fifty);
@@ -360,12 +358,12 @@ public class MongoServiceSearchUser {
 		Collections.sort(list_music_score);
 		return list_music_score;
 	}
+	
 	/**
 	 * récupère la liste d'id de musique pour toutes les ranges confondus dans l'ordre décroissant suivant le score 
 	 * @param range
 	 * @return la liste des id des musiques
 	 */
-
 	static List<String> getListIdMostPopularAllRangeInStats(String range){
 		List<IdMusicScore> list_music_score = getListIdMusicScoreMostPopularAllRange();
 		if(list_music_score.size()> MuzikFinderPreferences.LIMITACCEPTABLETEMPS)
@@ -385,7 +383,6 @@ public class MongoServiceSearchUser {
 	 * @param range
 	 * @return
 	 */
-
 	static List<String> getListIdStringByRangeInStats_Cache(String range){
 		if(range==null || range.isEmpty()) return null;
 

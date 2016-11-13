@@ -6,12 +6,10 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\NoSQLDB.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\LoginServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoServiceInsert.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoServiceSearchMusic.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MathUtils.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Artist.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFLyrics.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\services\MuzikFinderService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoServicePreference.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\services\SignUpServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\MuzikFinderUtils.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\utils\RequestHelper.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\AccountServlet.java
@@ -22,10 +20,10 @@ C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\nosql\mongo\MongoUt
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\SQLDB.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFMusic.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\API.java
-C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\textMining\ParserMaison.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFArtist.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\InitServlet.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\server\servlets\SpecificSearchServlet.java
+C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\utils\parser\ParserMaison.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\sql\mysql\MySQLService.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\interfaces\MFAlbum.java
 C:\Users\JulienM\Dev\Workspaces\WorkspaceDAR\MuzikFinder\src\api\musixMatch\metier\Album.java

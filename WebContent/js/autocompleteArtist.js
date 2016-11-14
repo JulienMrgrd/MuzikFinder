@@ -1,9 +1,7 @@
 $(function() {
-	$('#userSearch').on('input', function() {
-			$('input[name=artistOrLyrics]').val(""); // lancera une recherche des morceaux par lyrics
+		$('#userSearch').on('input', function() {
+			$('input[name=artistOrLyrics]').attr('disabled', true); // lancera une recherche des morceaux par lyrics
 		});
-	
-		window.query_cache = {};
 		
 		$('#userSearch').typeahead({
 			source : function(query, process){
@@ -13,14 +11,7 @@ $(function() {
 		            dataType: "json",
 		            data : { search : $("#userSearch").val() },
 		            success : function( data ) {
-		            	if(data.artist==null || data.artist.length==0){
-		            		$('.typeahead').hide();
-		            		return;
-		            	} else {
-		            		$('.typeahead').show();
-		            		return process(data.artist);
-		            	}
-		            	
+	            		return process(data.artist);
 	                }
 		        });
 		    },
@@ -28,6 +19,7 @@ $(function() {
 				$('input[name=artistOrLyrics]').val("artist"); // lancera une recherche des morceaux d'un artist
 				$('#userSearch').val(item);
 				$('#searchForm').submit();
-		    }
+		    },
+		    autoSelect: false
     });
 });

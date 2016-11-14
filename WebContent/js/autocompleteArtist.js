@@ -2,6 +2,8 @@ $(function() {
 	$('#userSearch').on('input', function() {
 			$('input[name=artistOrLyrics]').val(""); // lancera une recherche des morceaux par lyrics
 		});
+	
+		window.query_cache = {};
 		
 		$('#userSearch').typeahead({
 			source : function(query, process){
@@ -11,7 +13,14 @@ $(function() {
 		            dataType: "json",
 		            data : { search : $("#userSearch").val() },
 		            success : function( data ) {
-		            	return process(data.artist);
+		            	if(data.artist==null || data.artist.length==0){
+		            		$('.typeahead').hide();
+		            		return;
+		            	} else {
+		            		$('.typeahead').show();
+		            		return process(data.artist);
+		            	}
+		            	
 	                }
 		        });
 		    },

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 import server.services.MuzikFinderService;
 
@@ -22,21 +22,24 @@ public class AutoArtistSearchServlet extends HttpServlet {
     public AutoArtistSearchServlet() {}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("SpecificSearch doPost");
+		String search = (String) request.getParameter("search");
 		
-		String search = request.getParameter("search");
 		if(search!=null && !search.isEmpty() && !search.equals("null")){
 			MuzikFinderService mzf = MuzikFinderService.getInstance();
 			Set<String> listArtist = mzf.getArtistNamesBeginWith(search);
 			//Set<String> listTrackName = mzf.getTrackNamesBeginWith(search); //not today unfortunately...
-			JSONObject js=new JSONObject();
+			JSONArray js=new JSONArray();
 			for(String s: listArtist){
-				js.append("artist", s);
+				js.put(s);
 			}
 			PrintWriter out = response.getWriter();
 		    out.print(js);
 		    out.close();
 		}
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doPost");
 	}
 
 }

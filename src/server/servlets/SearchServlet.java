@@ -27,7 +27,7 @@ public class SearchServlet extends HttpServlet {
 		
 		boolean success = true;
 		String userSearch = (String) request.getParameter("userSearch");
-		String artistOrLyrics = (String) request.getParameter("artistOrLyrics");
+		String artist = (String) request.getParameter("isArtist");
 		
 		String userLogin = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_LOGIN, request.getCookies());
 		String userId = MuzikFinderUtils.getCookieValueByName(MuzikFinderPreferences.COOKIE_USERID, request.getCookies());
@@ -42,19 +42,17 @@ public class SearchServlet extends HttpServlet {
 						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" words ...");
 		}
 		
-		boolean isSearchArtist = (artistOrLyrics!=null && artistOrLyrics.equals("artist"));
-		
 		if(!success){
 			request.setAttribute("success", false);
 		}else {
 			List<String> tags = Arrays.asList(userSearch.split(" "));
 			
-			if(!isSearchArtist && tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
+			if(artist==null && tags.size() < MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
 				request.setAttribute("message", "Please enter at least "
 						+MuzikFinderPreferences.MIN_SIZE_OF_TAGS_FOR_SEARCH+" words ...");
 				
-			} else if(!isSearchArtist && tags.size() > MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH){
+			} else if(artist==null && tags.size() > MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH){
 				request.setAttribute("success", false);
 				request.setAttribute("message", "Please enter a maximum of "
 						+MuzikFinderPreferences.MAX_SIZE_OF_TAGS_FOR_SEARCH+" mots ...");
@@ -66,7 +64,7 @@ public class SearchServlet extends HttpServlet {
 				MuzikFinderService ms = MuzikFinderService.getInstance();
 				List<MFMusic> musics;
 				
-				if(isSearchArtist){ // recherche par artist
+				if(artist!=null){ // recherche par artist
 					request.setAttribute("artist", userSearch);
 					musics = ms.getMusicsByArtist(userSearch);
 				
@@ -77,7 +75,8 @@ public class SearchServlet extends HttpServlet {
 					for(int i=1; i<tags.size(); i++){
 						if(tags.get(i)!=null && !tags.get(i).isEmpty()) str+="|"+tags.get(i);
 					}
-					request.setAttribute("tagsRegex", "([ -'](?i)("+str+")[ -'])"); // exemple : "(?i)(work|let|roses)"
+					request.setAttribute("tagsRegex", "([ ',](?i)("+str+")[ ',])"); // exemple : "(?i)(work|let|roses)"
+					request.setAttribute("tags", str.replaceAll("[|]", " "));
 				}
 				Set<MFMusic> musicsWithoutDuplicate = new HashSet<>(musics);
 				request.setAttribute("results", musicsWithoutDuplicate);

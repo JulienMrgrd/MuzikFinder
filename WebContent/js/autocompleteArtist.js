@@ -1,25 +1,31 @@
 $(function() {
-		$('#userSearch').on('input', function() {
-			$('input[name=artistOrLyrics]').attr('disabled', true); // lancera une recherche des morceaux par lyrics
+		$('#userSearch').on('keypress', function (e) {
+	         if(e.which === 13){
+	        	$('input[name=isArtist]').attr('disabled', true);
+	 			$('#searchForm').submit();
+	         }
+	   });
+	
+		var artists = new Bloodhound({
+		  datumTokenizer: Bloodhound.tokenizers.whitespace,
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,		  
+		  remote:{ 
+			  url: 'AutoArtistSearchServlet?search=%QUERY', 
+			  wildcard: '%QUERY',
+		  }
+
 		});
-		
-		$('#userSearch').typeahead({
-			source : function(query, process){
-			    return $.ajax({
-		            url : 'AutoArtistSearchServlet',
-		            type : "GET",
-		            dataType: "json",
-		            data : { search : $("#userSearch").val() },
-		            success : function( data ) {
-	            		return process(data.artist);
-	                }
-		        });
-		    },
-		    updater:function (item) {
-				$('input[name=artistOrLyrics]').val("artist"); // lancera une recherche des morceaux d'un artist
-				$('#userSearch').val(item);
-				$('#searchForm').submit();
-		    },
-		    autoSelect: false
-    });
+		artists.initialize();
+		 
+		$('.typeahead').typeahead(null,
+		{
+		  name: 'artists',
+		  source: artists.ttAdapter()
+		}).on('typeahead:selected',function(evt,datum){ // artist selectionné
+			console.log(datum);
+			$('input[name=isArtist]').attr('disabled', false);
+			$('input[name=isArtist]').val("true");
+			$('#searchForm').submit();
+		});	    
+	
 });

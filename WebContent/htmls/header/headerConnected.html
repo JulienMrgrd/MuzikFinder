@@ -20,10 +20,10 @@
 			</ul>
 			<form id="searchForm" role="search" method="get" action="SearchServlet" class="navbar-form navbar-left">
 				<div class="form-group">
-					<input id="userSearch" name="userSearch" type="text" data-provide="typeahead" data-items="10" 
-						class="form-control" autocomplete="off" placeholder="Search artists or lyrics" />
+					<input id="userSearch" name="userSearch" type="text" 
+						class="form-control typeahead" autocomplete="off" placeholder="Search artists or lyrics" />
 				</div>
-				<input type="hidden" name="artistOrLyrics">
+				<input type="hidden" name="isArtist">
 			</form>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a class="dropdown-toggle"
@@ -31,7 +31,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="./AccountServlet">My account</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="index.jsp" onclick="deleteCookies();">Log out</a></li>
+						<li><a onclick="deleteCookies();">Log out</a></li> <!-- href="index.jsp"  --> 
 					</ul>
 				</li>
 			</ul>
@@ -43,6 +43,7 @@
 <div id="modalLogin"></div>
 <div id="modalSignUp"></div>
 <link href="css/modal.css" rel="stylesheet">
+<link href="css/typeahead.css" rel="stylesheet">
 
 <script src="js/autocompleteArtist.js"></script>
 <script>
@@ -67,6 +68,6 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/spin.min.js"></script>
-<script src="js/bootstrap3-typeahead.min.js"></script>
+<script src="js/typeahead.bundle.js"></script>
 <script src="js/ladda.min.js"></script>
 <script src="js/js.cookie.min.js"></script>

@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="java.util.Set"%>
 <%@page import="interfaces.MFMusic"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
@@ -35,11 +36,15 @@
 						</div>
 			<%		} else {  		
 						String artist = (String) request.getAttribute("artist");
+						String tags = (String) request.getAttribute("tags");
 						if(artist!=null){
 			%>
 							<h4>Your research by artist "<%=artist %>" : </h4>
+			<%			} else if(tags!=null){
+							%>
+							<h4>Results for "<%=tags%>" : </h4>
 			<%			} else {  	%>
-							<h4>Your lyrics search results : </h4>
+							<h4>Results for your music search : </h4>
 			<% 			} %>
 							<input id="searchId" type="hidden" name="searchId" 
 								value="<%=request.getAttribute("searchId") %>"/>
@@ -57,7 +62,7 @@
 							String genre = music.getMusicGenre();
 							if(genre==null) genre="N/C";
 							
-							String lyricsToDisplay;
+							String lyricsToDisplay = "";
 							String regex = (String) request.getAttribute("tagsRegex");
 							if(music.getLyrics()==null || music.getLyrics().getLyricsBody().isEmpty()){
 								lyricsToDisplay = "No lyrics available...";

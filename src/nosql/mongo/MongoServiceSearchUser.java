@@ -401,6 +401,7 @@ public class MongoServiceSearchUser {
 				if(doc_range.getString(MongoCollectionsAndKeys.AGE_STATS_CACHE).equals(range)){
 					List<Document> doc_musics = (List<Document>) doc_range.get(MongoCollectionsAndKeys.MUSICS_STATS_CACHE);
 					for(Document d : doc_musics){
+						if(list_id.size()==MuzikFinderPreferences.NB_MAX_TOPS_TO_DISPLAY) break;
 						list_id.add(d.getString(MongoCollectionsAndKeys.MUSIC_ID_STATS_CACHE));
 					}
 				}

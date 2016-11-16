@@ -21,6 +21,7 @@ public final class MuzikFinderPreferences {
 	public static final int LIMITACCEPTABLE_NB_MUSICS = 15;
 	public static final int MAX_SIZE_OF_TAGS_FOR_SEARCH = 10;
 	public static final int MIN_SIZE_OF_TAGS_FOR_SEARCH = 3;
+	public static final int NB_MAX_TOPS_TO_DISPLAY = 10;
 	
 	///// COOKIES
 	public static final int COOKIE_DURATION = 60*60*2; // 2 hour

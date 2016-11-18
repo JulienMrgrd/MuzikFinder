@@ -146,8 +146,8 @@ public class MFMusicDTO implements MFMusic{
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof MFMusicDTO 
-				&& this.getArtistName().equals(((MFMusic) obj).getArtistName()) 
-				&& this.getTrackName().equals(((MFMusic) obj).getTrackName())){
+				&& this.getArtistName().equalsIgnoreCase(((MFMusic) obj).getArtistName()) 
+				&& this.getTrackName().equalsIgnoreCase(((MFMusic) obj).getTrackName())){
 			return true;
 		}
 		return false;

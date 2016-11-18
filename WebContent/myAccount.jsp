@@ -104,7 +104,7 @@
 						
 					</div>
 					
-					<div class="tab-pane" id="panel-Suppression">
+					<div class="tab-pane" id="panel-Suppression" style="margin-bottom: 20%">
 					<form action="AccountServlet" method="post">
 						<div>
 							<button id="buttonDeleteAccount" class="btn btn-danger" style="float:left;"
@@ -151,7 +151,7 @@
 					Cookies.remove('MUZIKFINDERLOGIN', {path : '/'});
 					Cookies.remove('MUZIKFINDERUSERID', {path : '/'});
 					Cookies.remove('MUZIKFINDERBIRTH', {path : '/',});
-					location.href = "/MuzikFinder";
+					location.href = "/";
 				},
 
 				error : function(jqXHR, textStatus, errorThrown) {

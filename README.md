@@ -6,7 +6,7 @@ Il permet de :
 
   - Rechercher des musiques par paroles
   - Rechercher toutes les musiques d'un artiste
-  - Obtenir des statistiques ananonymes de recherche
+  - Obtenir des statistiques anonymes de recherche
   - Gestion de votre compte (historique, changements,...)
 
 

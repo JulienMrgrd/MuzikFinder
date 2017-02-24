@@ -1,4 +1,4 @@
-# MuzikFinder web app 
+# MuzikFinder (Projet de Master STL : 18/20)
 [https://muzikfinder.herokuapp.com] [MuzikFinder]
 
 MuzikFinder est un moteur de recherche de musiques, basé sur la recherche par tag.

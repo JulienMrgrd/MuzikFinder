@@ -1,7 +1,6 @@
 # MuzikFinder (Projet de Master STL : 18/20)
-[https://muzikfinder.herokuapp.com] [MuzikFinder]
 
-MuzikFinder est un moteur de recherche de musiques, basé sur la recherche par tag.
+[MuzikFinder] est un moteur de recherche de musiques, basé sur la recherche par tag.
 Il permet de :
 
   - Rechercher des musiques par paroles
@@ -26,16 +25,15 @@ MuzikFinder utilise un certains d'outils et techno open sources:
 * [MongoDB]
 * [Heroku]
 * [Daemons heroku]
-* [API MusixMatch] [MusixMatch]
+* [API MusixMatch]
 
 ### Développement
 
 Application WEB développée dans le cadre de l'UE DAR (Développement d'Applications Réticulaires) du **M2 STL** de l'UPMC (Paris 6 - Jussieu).
 Réalisé par [@mouned], [@feligo] et [@JulienMrgrd], et encadré par [Romain Demangeon].
 
-* [Rapport] [Rapport]
-* [Soutenance] [Soutenance]
-
+* [Rapport]
+* [Soutenance]
 
 ![HomePage](https://github.com/JulienMrgrd/MuzikFinder/blob/master/Rapport%20et%20soutenance/MuzikFinder_home.png)
 
@@ -62,7 +60,7 @@ Réalisé par [@mouned], [@feligo] et [@JulienMrgrd], et encadré par [Romain De
    [Bootstrap]: <http://twitter.github.com/bootstrap/>
    [jQuery]: <http://jquery.com>
    [Heroku]: <https://www.heroku.com/>
-   [MusixMatch]: <https://www.musixmatch.com/>
+   [API MusixMatch]: <https://www.musixmatch.com/>
    [Daemons heroku]: <https://scheduler.heroku.com>
    [JSP/Servlets]: <https://www.google.fr/search?q=jsp+servlets>
    [Javascript]: <https://www.javascript.com/>

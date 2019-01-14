@@ -1,17 +1,15 @@
 # MuzikFinder (Projet de Master STL : 18/20)
 
-[MuzikFinder] est un moteur de recherche de musiques, basé sur la recherche par tag.
+[MuzikFinder] est un moteur de recherche de musiques, basé sur la recherche par parole/tag.
 Il permet de :
 
-  - Rechercher des musiques par paroles
+  - Rechercher des musiques par parole
   - Rechercher toutes les musiques d'un artiste
   - Obtenir des statistiques anonymes de recherche
   - Gestion de votre compte (historique, changements,...)
 
 
 ### Technos et outils
-
-MuzikFinder utilise un certains d'outils et techno open sources:
 
 ##### Client side
 * [HTML5]
@@ -30,7 +28,7 @@ MuzikFinder utilise un certains d'outils et techno open sources:
 ### Développement
 
 Application WEB développée dans le cadre de l'UE DAR (Développement d'Applications Réticulaires) du **M2 STL** de l'UPMC (Paris 6 - Jussieu).
-Réalisé par [@mouned], [@feligo] et [@JulienMrgrd], et encadré par [Romain Demangeon].
+Réalisé par [@JulienMrgrd], [@mouned] et [@feligo], et encadré par [Romain Demangeon].
 
 * [Rapport]
 * [Soutenance]
